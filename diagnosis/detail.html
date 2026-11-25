@@ -3,372 +3,392 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>낙농 정밀진단 · 쿼터·번식·유질·사료·경영 숫자로 진단</title>
+<title>Thanks for Giving · 낙농 정밀진단 · 바를 밀어서 진단</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
 <style>
 :root{
-  --ink:#1f2a24; --sub:#5d6b63; --line:#e4e2da; --bg:#faf8f3; --card:#fff;
-  --brand:#2d5f8a; --brand2:#e8f0f7; --mall:#2f5d46; --accent:#c8862b;
-  --good:#2f7d4f; --mid:#c8862b; --bad:#b5463a;
+  --ink:#1c2333; --sub:#6b7385; --line:#e6e8ef; --bg:#f3f4f8; --card:#fff;
+  --gold:#c9a227; --gold2:#f6efd6; --dark:#3a3d44; --navy:#1e3466; --navy2:#e9eef8;
+  --good:#2f7d4f; --mid:#c8862b; --bad:#c2453a;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Pretendard,-apple-system,"Malgun Gothic",sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+body{font-family:Pretendard,-apple-system,"Malgun Gothic",sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-tap-highlight-color:transparent}
 a{color:inherit;text-decoration:none}
 button,input,select,textarea{font-family:inherit}
 button{cursor:pointer}
-.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+/* Thanks for Giving — 헤더 전용 스타일 */
+@font-face{font-family:"Tilt Neon";src:url("tilt-neon.woff2") format("woff2")}
 
-header{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
-header .wrap{display:flex;align-items:center;gap:14px;height:60px}
-.logo{font-weight:800;font-size:19px;color:var(--brand)}
-.logo span{font-size:12px;font-weight:600;color:var(--sub);background:var(--brand2);padding:3px 8px;border-radius:20px;margin-left:6px}
-.tomall:first-of-type{margin-left:auto}.tomall{font-size:14px;font-weight:700;color:var(--mall);background:#e9f0ea;padding:8px 14px;border-radius:9px}
+.tfg-header{position:relative;overflow:hidden;display:flex;justify-content:space-between;align-items:center;
+  padding:14px 20px;background:linear-gradient(90deg,#1E3466 0%,#2F5596 55%,#6E9BD1 100%)}
 
-.hero{padding:30px 0 10px}
-.hero h1{font-size:28px;font-weight:800;letter-spacing:-.4px}
-.hero h1 em{font-style:normal;color:var(--brand)}
-.hero p{color:var(--sub);margin-top:6px}
+/* 금빛 별 */
+.tfg-star{position:absolute;width:4px;height:4px;border-radius:50%;background:#F5D06F;
+  box-shadow:0 0 6px 2px rgba(245,208,111,.75);animation:tfg-twinkle 2.4s ease-in-out infinite}
+.tfg-star.sm{width:3px;height:3px}
+@keyframes tfg-twinkle{0%,100%{opacity:.15;transform:scale(.7)}50%{opacity:1;transform:scale(1.2)}}
 
-/* 가로 단계 표시 A→E→결과 */
-.steps{display:flex;gap:0;margin:20px 0 16px;overflow-x:auto;padding-bottom:4px}
-.st{flex:1;min-width:112px;display:flex;align-items:center}
-.st button{flex:1;border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 8px;text-align:left;color:var(--sub)}
-.st button .k{display:block;font-size:12px;font-weight:800;letter-spacing:.5px}
-.st button .n{font-size:14px;font-weight:700}
-.st.on button{border-color:var(--brand);background:var(--brand);color:#fff}
-.st.done button{border-color:var(--brand);color:var(--brand)}
-.st .ar{color:#b9b6ad;padding:0 4px;font-weight:800}
+/* 로고: 금빛 소 + 네온 YULDANG */
+.tfg-brand{position:relative;display:flex;align-items:center;gap:14px}
+.tfg-logo{display:flex;flex-direction:column;align-items:center;gap:3px}
+.tfg-logo img{height:48px;filter:drop-shadow(0 0 5px rgba(245,208,111,.55))}
+.tfg-logo span{font-family:"Tilt Neon",sans-serif;font-size:12px;letter-spacing:2.5px;color:#F3E6C4;
+  text-shadow:0 0 3px rgba(245,208,111,.55),0 0 7px rgba(245,208,111,.25);animation:tfg-neon 6s ease-in-out infinite}
+@keyframes tfg-neon{0%,100%{opacity:.9}50%{opacity:1}}
 
-.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 6px 24px rgba(45,95,138,.06)}
-.panel h2{font-size:20px;font-weight:800}
-.panel .why{color:var(--sub);font-size:14px;margin:4px 0 18px}
-.fields{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.f{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fcfbf8}
-.f label{display:block;font-size:14px;font-weight:700}
-.f .t{font-size:12px;color:var(--sub);margin:2px 0 8px}
-.f .in{display:flex;align-items:center;gap:6px}
-.f input,.f select{width:100%;font-size:17px;padding:10px 12px;border:1.5px solid var(--line);border-radius:9px;background:#fff;outline:none}
-.f input:focus{border-color:var(--brand)}
-.f .u{font-size:13px;color:var(--sub);white-space:nowrap}
-.nav{display:flex;gap:10px;justify-content:space-between;margin-top:18px;align-items:center}
-.btn{border:0;border-radius:11px;padding:13px 22px;font-size:16px;font-weight:800}
-.btn.p{background:var(--brand);color:#fff}
-.btn.g{background:#efede6;color:var(--sub)}
-.skip{font-size:13px;color:var(--sub)}
+/* 황금 반짝이 제목 */
+.tfg-title{font-family:Georgia,"Times New Roman",serif;font-size:28px;font-weight:500;letter-spacing:.5px;margin:0;
+  background:linear-gradient(100deg,#B8860B 0%,#F5D06F 25%,#FFF6C8 45%,#F5D06F 60%,#B8860B 100%);
+  background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 6px rgba(245,208,111,.6));animation:tfg-shine 3.5s linear infinite}
+@keyframes tfg-shine{0%{background-position:100% 0}100%{background-position:-150% 0}}
 
-/* 결과 */
-.res-top{display:flex;gap:16px;align-items:stretch;flex-wrap:wrap}
-.total{background:var(--brand);color:#fff;border-radius:16px;padding:18px 22px;min-width:200px}
-.total .s{font-size:44px;font-weight:900;line-height:1.1}
-.total .g{font-size:14px;opacity:.9}
-.areas{flex:1;display:flex;gap:10px;overflow-x:auto}
-.area{flex:1;min-width:140px;border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff}
-.area .k{font-size:12px;font-weight:800;color:var(--sub)}
-.area .nm{font-weight:800}
-.area .sc{font-size:28px;font-weight:900}
-.bar{height:7px;background:#eee;border-radius:9px;overflow:hidden;margin-top:6px}
-.bar i{display:block;height:100%}
-.na{color:var(--sub);font-size:13px}
+/* 메뉴 */
+.tfg-nav{position:relative;display:flex;gap:16px;font-size:13px}
+.tfg-nav a{color:#fff;text-decoration:none}
+.tfg-menu-btn{display:none;position:relative;background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
 
-.sec{display:flex;align-items:baseline;gap:10px;margin:28px 0 12px}
-.sec h3{font-size:19px;font-weight:800}
-.sec p{color:var(--sub);font-size:14px}
+/* 휴대폰 */
+@media (max-width:600px){
+  .tfg-title{font-size:22px}
+  .tfg-nav{display:none}
+  .tfg-nav.open{display:flex;flex-direction:column;position:absolute;right:16px;top:64px;
+    background:#1E3466;padding:12px 16px;border-radius:8px;z-index:10}
+  .tfg-menu-btn{display:block}
+}
+/* 움직임 줄이기 설정을 켠 사용자는 애니메이션 끔 */
+@media (prefers-reduced-motion:reduce){.tfg-star,.tfg-title,.tfg-logo span{animation:none}}
 
-/* 약점 → 할 일 → 제품 → 전문가 : 가로 흐름 */
-.weak{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px}
-.wcard{min-width:300px;flex:1;border:2px solid var(--line);border-radius:16px;background:#fff;padding:16px}
-.wcard.star{border-color:var(--accent)}
-.wcard .hd{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.wcard .hd b{font-size:16px}
-.wcard .star-t{color:var(--accent);font-weight:900}
-.wcard .v{font-size:13px;color:var(--sub);margin:4px 0 10px}
-.wcard ol{padding-left:18px;font-size:14px}
-.wcard ol li{margin:3px 0}
-.wcard .lk{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.pchip{background:#e9f0ea;color:var(--mall);font-size:13px;font-weight:700;padding:6px 11px;border-radius:20px}
-.echip{background:var(--brand2);color:var(--brand);font-size:13px;font-weight:700;padding:6px 11px;border-radius:20px;border:0}
 
-.flow{display:flex;align-items:stretch;overflow-x:auto;gap:0;padding-bottom:6px}
-.fs{flex:1;min-width:170px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
-.fs .k{font-size:12px;font-weight:800;color:var(--brand)}
-.fs h4{font-size:15px;margin:2px 0}
-.fs p{font-size:13px;color:var(--sub)}
-.fs.star{border:2px solid var(--accent)}
-.fs.back{background:var(--brand);color:#fff;border-color:var(--brand)}
-.fs.back .k,.fs.back p{color:#e3edf6}
-.fa{display:flex;align-items:center;color:#b9b6ad;font-weight:900;padding:0 6px}
 
-.cta{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.cbox{border:1px solid var(--line);border-radius:16px;background:#fff;padding:18px}
-.cbox h4{font-size:17px}
-.cbox .pr{font-size:13px;color:var(--accent);font-weight:800;margin:2px 0 8px}
-.cbox ul{font-size:14px;color:var(--sub);padding-left:18px;margin-bottom:12px}
+/* 서브바 */
+.subbar{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.subbar .in{max-width:1180px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:10px;height:56px}
+.subbar .ttl{font-weight:800;font-size:17px;color:var(--navy)}
+.subbar .ttl span{font-size:12px;font-weight:700;color:#8a6d10;background:var(--gold2);padding:3px 8px;border-radius:20px;margin-left:6px}
+.subbar .r{margin-left:auto;display:flex;gap:6px}
+.subbar .r a{font-size:13px;font-weight:700;padding:7px 11px;border-radius:9px;background:var(--navy2);color:var(--navy)}
+.subbar .r a.m{background:#e9f0ea;color:#2f5d46}
 
-.modal{position:fixed;inset:0;background:rgba(20,30,25,.45);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.wrap{max-width:1180px;margin:0 auto;padding:18px 20px 120px}
+.intro h1{font-size:26px;font-weight:800;letter-spacing:-.4px}
+.intro h1 em{font-style:normal;color:var(--gold)}
+.intro p{color:var(--sub);margin-top:4px}
+
+/* A~E 이동 (가로) */
+.jump{display:flex;gap:0;overflow-x:auto;margin:16px 0 14px;padding-bottom:2px}
+.jp{display:flex;align-items:center;flex:1;min-width:104px}
+.jp a{flex:1;display:block;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+.jp a .k{font-size:12px;font-weight:800;color:var(--navy)}
+.jp a .n{font-size:13px;font-weight:700;display:block}
+.jp a .c{font-size:11px;color:var(--sub)}
+.jp a.on{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold2)}
+.jp i{font-style:normal;color:#c3c6cf;font-weight:900;padding:0 4px}
+
+.grid{display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:start}
+
+/* 슬라이더 카드 */
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px 22px;margin-bottom:14px;scroll-margin-top:70px}
+.card .ch{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.card .ch .lb{font-size:13px;font-weight:800;color:#59627a;letter-spacing:.3px}
+.card .ch .sc{font-size:13px;font-weight:800}
+.card .why{font-size:13px;color:var(--sub);margin-bottom:6px}
+.it{padding:12px 0 8px;border-top:1px dashed var(--line)}
+.it:first-of-type{border-top:0}
+.it .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.it .nm{font-size:16px;font-weight:700}
+.it .nm small{display:block;font-size:12px;font-weight:500;color:var(--sub)}
+.it .val{display:flex;align-items:center;gap:6px}
+.it .val input{width:78px;text-align:right;font-size:18px;font-weight:800;border:1.5px solid transparent;border-radius:8px;padding:3px 6px;color:var(--ink);background:transparent;-moz-appearance:textfield}
+.it .val input::-webkit-outer-spin-button,.it .val input::-webkit-inner-spin-button{-webkit-appearance:none}
+.it .val input:focus{border-color:var(--gold);outline:none;background:#fffdf5}
+.it .val .u{font-size:15px;font-weight:700}
+.st{font-size:11px;font-weight:800;padding:3px 7px;border-radius:6px;white-space:nowrap}
+.st.g{background:#e6f3ec;color:var(--good)} .st.m{background:#fbf0e0;color:var(--mid)} .st.b{background:#fbe9e7;color:var(--bad)} .st.n{background:#eef0f4;color:#8a90a0}
+
+.sl{position:relative;margin:12px 0 4px;height:26px}
+.sl input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:26px;background:transparent;position:relative;z-index:2;cursor:pointer}
+.sl input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:9px;background:linear-gradient(90deg,var(--gold) 0 var(--p),var(--dark) var(--p) 100%)}
+.sl input[type=range]::-moz-range-track{height:8px;border-radius:9px;background:linear-gradient(90deg,var(--gold) 0 var(--p),var(--dark) var(--p) 100%)}
+.sl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--gold);border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.3);margin-top:-7px}
+.sl input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--gold);border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.3)}
+.it.off .sl input[type=range]::-webkit-slider-runnable-track{background:#d9dbe1}
+.it.off .sl input[type=range]::-moz-range-track{background:#d9dbe1}
+.it.off .sl input[type=range]::-webkit-slider-thumb{background:#b9bcc5}
+.it.off .val input{color:#a7acb8}
+.tgt{position:absolute;top:-2px;width:2px;height:12px;background:#2f7d4f;z-index:3;pointer-events:none}
+.tgtband{position:absolute;top:-4px;height:4px;background:rgba(47,125,79,.55);border-radius:3px;z-index:1;pointer-events:none}
+.it .ft{display:flex;justify-content:space-between;font-size:12px;color:var(--sub)}
+.it .ft b{color:var(--good);font-weight:700}
+.it .clr{display:none}.it:not(.off) .clr{display:inline}.it:not(.off) .mx{display:none}
+.it .ft button{background:none;border:0;color:var(--sub);font-size:12px;text-decoration:underline}
+
+/* 결과 패널 */
+.res{position:sticky;top:70px}
+.rbox{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:12px}
+.total{display:flex;align-items:center;gap:14px}
+.ring{width:96px;height:96px;flex:none}
+.total .t b{font-size:15px}
+.total .t small{display:block;color:var(--sub);font-size:13px}
+.abars{display:flex;gap:6px;margin-top:14px}
+.ab{flex:1;text-align:center}
+.ab .bw{height:64px;background:#eef0f4;border-radius:8px;position:relative;overflow:hidden}
+.ab .bw i{position:absolute;left:0;right:0;bottom:0;border-radius:8px}
+.ab .k{font-size:12px;font-weight:800;margin-top:4px}
+.ab .v{font-size:12px;color:var(--sub)}
+.wk{border-left:4px solid var(--bad);background:#fdf6f5;border-radius:10px;padding:11px 12px;margin-top:10px}
+.wk b{font-size:14px}
+.wk .s{font-size:12px;color:var(--sub);margin:2px 0 5px}
+.wk ol{padding-left:16px;font-size:13px}
+.wk .lk{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.pchip{font-size:12px;font-weight:700;background:#e9f0ea;color:#2f5d46;padding:4px 9px;border-radius:14px}
+.empty{font-size:14px;color:var(--sub);padding:6px 0}
+.btn{display:block;width:100%;border:0;border-radius:12px;padding:13px;font-size:15px;font-weight:800;margin-top:8px}
+.btn.k{background:#FEE500;color:#191919}
+.btn.n{background:var(--navy);color:#fff}
+.btn.l{background:#fff;color:var(--navy);border:1.5px solid var(--navy)}
+.small{font-size:12px;color:var(--sub);margin-top:8px;line-height:1.6}
+
+/* 휴대폰 하단 점수 바 */
+.mbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid var(--line);box-shadow:0 -4px 16px rgba(0,0,0,.06);padding:10px 16px;align-items:center;gap:12px}
+.mbar .s{font-size:24px;font-weight:900}
+.mbar .t{flex:1;font-size:13px;color:var(--sub)}
+.mbar button{background:var(--navy);color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:800}
+
+.ktoast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#222;color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:60;max-width:90vw;text-align:center}
+.ktoast.show{opacity:1}
+
+/* 신청 모달 */
+.modal{position:fixed;inset:0;background:rgba(20,25,35,.45);display:none;align-items:flex-end;justify-content:center;z-index:50}
 .modal.on{display:flex}
-.mbox{background:#fff;border-radius:18px;padding:22px;max-width:460px;width:100%;max-height:92vh;overflow:auto}
+.mbox{background:#fff;border-radius:20px 20px 0 0;padding:22px;max-width:500px;width:100%;max-height:92vh;overflow:auto}
+@media(min-width:700px){.modal{align-items:center}.mbox{border-radius:20px}}
 .mbox h3{font-size:19px}
-.mbox .s{color:var(--sub);font-size:14px;margin:4px 0 14px}
+.mbox .s{color:var(--sub);font-size:14px;margin:4px 0 12px}
 .mbox label{display:block;font-size:14px;font-weight:700;margin:10px 0 4px}
-.mbox input,.mbox select,.mbox textarea{width:100%;font-size:16px;padding:10px 12px;border:1.5px solid var(--line);border-radius:9px}
-.mbox .agree{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--sub);margin-top:12px;font-weight:500}
+.mbox label small{font-weight:500;color:var(--sub);margin-left:4px}
+.mbox input,.mbox textarea{width:100%;font-size:16px;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px}
+.mbox .agree{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--sub);font-weight:500;margin-top:12px}
 .mbox .agree input{width:auto;margin-top:3px}
-.mbox .row{display:flex;gap:8px;margin-top:16px}
-.mbox .row .btn{flex:1}
-.ok{padding:12px;background:#e9f0ea;color:var(--mall);border-radius:10px;font-weight:700;margin-top:12px;display:none}
-
-.note{font-size:12px;color:var(--sub);margin:26px 0 40px;line-height:1.6}
+.mbox .row{display:flex;gap:10px;margin-top:16px}
+.mbox .row button{flex:1;border:0;border-radius:11px;padding:13px;font-size:16px;font-weight:800}
+.mbox .ok{display:none;margin-top:12px;padding:12px;border-radius:10px;background:#e9f0ea;color:#2f5d46;font-weight:700}
 .hide{display:none}
 
-@media(max-width:900px){.fields{grid-template-columns:1fr 1fr}.cta{grid-template-columns:1fr}}
-@media(max-width:520px){.fields{grid-template-columns:1fr}.hero h1{font-size:23px}.total{width:100%}.st{min-width:96px}}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.res{position:static}.mbar{display:flex}}
+@media(max-width:520px){.wrap{padding:14px 14px 110px}.card{padding:16px}.intro h1{font-size:22px}.it .nm{font-size:15px}.subbar .r a.d{display:none}}
 </style>
 </head>
 <body>
-
-<header><div class="wrap">
-  <div class="logo">🔢 낙농 정밀진단<span>숫자 입력</span></div>
-  <a class="tomall" href="./" style="background:#e8f0f7;color:#2d5f8a">← 30초 진단</a><a class="tomall" href="../" style="margin-left:6px">🛒 축산몰</a>
-</div></header>
-
-<section class="hero"><div class="wrap">
-  <h1>우리 목장 <em>약한 곳 2개</em>를 찾아, 바로 해결책까지</h1>
-  <p>아는 숫자만 넣으세요. 모르는 칸은 비워두면 그 항목만 빼고 계산합니다.</p>
-</div></section>
+<header class="tfg-header">
+  <span class="tfg-star" style="top:12px;left:44%"></span>
+  <span class="tfg-star sm" style="top:36px;left:56%;animation-delay:.7s"></span>
+  <span class="tfg-star" style="top:16px;left:66%;animation-delay:1.4s"></span>
+  <span class="tfg-star sm" style="top:52px;left:50%;animation-delay:.3s"></span>
+  <span class="tfg-star sm" style="top:8px;left:80%;animation-delay:1.9s"></span>
+  <div class="tfg-brand">
+    <div class="tfg-logo"><img src="logo-yuldang-cow-gold.png" alt="율당 금빛 소 로고"><span>YULDANG</span></div>
+    <h1 class="tfg-title">Thanks for Giving</h1>
+  </div>
+  <button class="tfg-menu-btn" aria-label="메뉴" onclick="document.querySelector('.tfg-nav').classList.toggle('open')">☰</button>
+  <nav class="tfg-nav"><a href="./">간이 진단</a><a href="detail.html">정밀진단</a><a href="#" id="tfgPro">전문가 등록</a><a href="../">축산몰</a></nav>
+</header>
+<div class="subbar"><div class="in">
+  <div class="ttl">🎚️ 정밀진단<span>바를 밀어서</span></div>
+  <div class="r"><a class="d" href="./">30초 진단</a><a class="m" href="../">🛒 축산몰</a></div>
+</div></div>
 
 <main class="wrap">
-  <div class="steps" id="steps"></div>
-  <div id="stage"></div>
-  <p class="note">
-    ※ 목표치·경고치는 일반적인 낙농 관리 지침을 바탕으로 잡은 <b>가정값</b>입니다. 목장 규모·사양 방식에 따라 달라질 수 있으며, 정확한 판단은 상세 컨설팅 보고서에서 실제 기록(검정성적·납유 내역 등)으로 확인합니다.<br>
-    ※ 입력값은 이 기기에만 저장되며, 신청서를 보낼 때만 함께 전달됩니다.
-  </p>
+  <div class="intro">
+    <h1>바를 밀어 <em>우리 목장 숫자</em>를 맞춰 보세요</h1>
+    <p>아는 항목만 움직이면 됩니다. 움직인 항목만 점수에 들어가고, 숫자를 눌러 직접 입력할 수도 있어요.</p>
+  </div>
+  <nav class="jump" id="jump"></nav>
+  <div class="grid">
+    <div id="cards"></div>
+    <aside class="res" id="res"></aside>
+  </div>
+  <p class="small">※ 목표치와 점수 구간은 일반적인 낙농 관리 지침을 바탕으로 잡은 <b>가정값</b>입니다. 정확한 판단은 실제 기록(검정성적·납유 명세)으로 확인합니다. 입력값은 이 기기에만 저장되고 신청할 때만 함께 전달됩니다.</p>
 </main>
 
-<!-- 신청 모달 -->
+<div class="mbar" id="mbar"><div class="s" id="mS">–</div><div class="t" id="mT">바를 움직이면 점수가 나와요</div><button id="mGo">결과 보기 ↓</button></div>
+<div class="ktoast" id="ktoast"></div>
+
 <div class="modal" id="modal"><div class="mbox">
-  <h3 id="mTitle">신청</h3>
-  <p class="s" id="mSub"></p>
-  <form id="reqForm" name="dx-request-detail" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+  <h3 id="fmT">상담 신청</h3><p class="s" id="fmS"></p>
+  <form id="fm" name="dx-request-detail" method="POST" data-netlify="true" netlify-honeypot="bot-field">
     <input type="hidden" name="form-name" value="dx-request-detail">
     <input type="hidden" name="type" id="fType">
-    <input type="hidden" name="summary" id="fSummary">
-    <p class="hide"><label>비워두세요 <input name="bot-field"></label></p>
-    <label>성함</label><input name="name" required>
-    <label>연락처</label><input name="phone" type="tel" required placeholder="010-">
-    <label>목장명</label><input name="farm" id="fFarm">
-    <label>지역</label><input name="region" id="fRegion">
-    <div id="expertWrap">
-      <label>필요한 전문가</label>
-      <select name="expert" id="fExpert">
-        <option>번식·인공수정·수정란이식</option>
-        <option>수의사 (유방염·질병)</option>
-        <option>사양·영양 (TMR·사료)</option>
-        <option>착유기·설비 점검</option>
-        <option>경영·재무 컨설팅</option>
-      </select>
-    </div>
-    <label>하고 싶은 말 (선택)</label><textarea name="memo" rows="3"></textarea>
-    <label class="agree"><input type="checkbox" required> 상담 연락을 위해 성함·연락처·진단 결과를 수집하는 데 동의합니다. (목적 달성 후 파기)</label>
-    <div class="row"><button type="button" class="btn g" id="mClose">닫기</button><button class="btn p" type="submit">보내기</button></div>
-    <div class="ok" id="ok">접수됐습니다. 영업일 기준 1~2일 안에 연락드릴게요.</div>
+    <input type="hidden" name="summary" id="fSum">
+    <p class="hide"><label>비워두세요<input name="bot-field"></label></p>
+    <label>성함<span style="color:var(--bad)">*</span></label><input name="name" required autocomplete="name">
+    <label>연락처<span style="color:var(--bad)">*</span></label><input name="phone" type="tel" required placeholder="010-" inputmode="tel" autocomplete="tel">
+    <label>목장명·지역<small>선택</small></label><input name="farm" placeholder="예) ○○목장, 충남 당진">
+    <label>하고 싶은 말<small>선택</small></label><textarea name="memo" rows="3"></textarea>
+    <label class="agree"><input type="checkbox" required> 연락을 위해 성함·연락처·진단 결과를 수집하는 데 동의합니다. (목적 달성 후 파기)</label>
+    <div class="row"><button type="button" id="fmX" style="background:#eef0f4;color:#555">닫기</button><button style="background:var(--navy);color:#fff">보내기</button></div>
+    <div class="ok" id="ok"></div>
   </form>
 </div></div>
 
+<script src="config.js"></script>
 <script>
-/* ---------- 진단 항목 (목표=좋음, 경고=나쁨, 그 사이는 비례 점수) ---------- */
+/* ===== 항목: min·max·step, 목표(goal)·경고(bad) 또는 적정 구간(band), 기본 위치(def) ===== */
 const AREAS=[
- {id:'quota',k:'B',name:'쿼터·경영',why:'쿼터는 낙농 경영의 뼈대입니다. 못 채우면 놀리는 권리, 넘기면 낮은 단가 원유가 생깁니다.',items:[
-  {id:'quota',name:'쿼터 대비 납유율',u:'%',band:[95,103],bad:[80,115]},
-  {id:'var',name:'달별 납유량 편차 (최대÷최소-1)',u:'%',goal:10,bad:30,low:true},
-  {id:'lact',name:'착유우 비율 (착유우÷경산우)',u:'%',goal:85,bad:70},
-  {id:'cull',name:'연간 도태율',u:'%',band:[25,33],bad:[15,45]},
-  {id:'labor',name:'1인당 관리 경산우',u:'두',goal:40,bad:20}]},
- {id:'repro',k:'C',name:'번식',why:'번식이 늦어지면 착유 일수와 송아지 수가 같이 줄어듭니다.',items:[
-  {id:'ci',name:'분만간격',u:'일',goal:395,bad:480,low:true},
-  {id:'open',name:'평균 공태일수',u:'일',goal:120,bad:180,low:true},
-  {id:'conc',name:'첫 수정 수태율',u:'%',goal:45,bad:25},
-  {id:'spc',name:'수태당 수정횟수',u:'회',goal:2.0,bad:3.5,low:true,step:0.1}]},
- {id:'milk',k:'D',name:'유량·유질',why:'유대는 양 × 등급입니다. 체세포·세균 등급이 한 칸만 떨어져도 단가가 깎입니다.',items:[
-  {id:'yield',name:'착유우 두당 일 유량',u:'kg',goal:33,bad:25,step:0.1},
-  {id:'scc',name:'체세포수',u:'만/ml',goal:20,bad:50,low:true},
-  {id:'bact',name:'세균수',u:'만/ml',goal:3,bad:25,low:true,step:0.1},
-  {id:'mast',name:'월 임상 유방염 발생률',u:'%',goal:2,bad:8,low:true,step:0.1}]},
- {id:'feed',k:'E',name:'사료·송아지',why:'사료비는 생산비에서 가장 큰 몫이고, 송아지는 다음 세대 착유우입니다.',items:[
-  {id:'fe',name:'사료효율 (유량÷건물섭취량)',u:'배',goal:1.4,bad:1.1,step:0.01},
-  {id:'fcr',name:'유사비 (사료비÷유대)',u:'%',goal:55,bad:75,low:true},
-  {id:'calf',name:'송아지 폐사율',u:'%',goal:5,bad:15,low:true,step:0.1},
-  {id:'afc',name:'초산 분만월령',u:'개월',goal:24,bad:30,low:true,step:0.1}]}
+ {k:'A',name:'쿼터·두수',why:'쿼터를 못 채우면 놀리는 권리, 넘기면 낮은 단가 원유가 생깁니다.',items:[
+  {id:'quota',n:'쿼터 달성률',d:'실제 납유량 ÷ 보유 쿼터',u:'%',min:60,max:130,step:1,def:95,band:[95,103],bad:[80,115],fix:'quota'},
+  {id:'lact',n:'착유두수 비율',d:'착유우 ÷ 경산우',u:'%',min:50,max:100,step:1,def:80,goal:85,badv:70,fix:'lact'},
+  {id:'var',n:'달별 납유 편차',d:'가장 많은 달 vs 적은 달',u:'%',min:0,max:50,step:1,def:15,goal:10,badv:30,low:1,fix:'var'}]},
+ {k:'B',name:'번식',why:'번식이 늦어지면 착유 일수와 송아지 수가 같이 줄어듭니다.',items:[
+  {id:'ci',n:'평균 분만간격',d:'',u:'일',min:340,max:540,step:1,def:440,goal:395,badv:480,low:1,fix:'ci'},
+  {id:'open',n:'평균 공태일수',d:'분만 → 수태까지',u:'일',min:50,max:250,step:1,def:150,goal:120,badv:180,low:1,fix:'open'},
+  {id:'conc',n:'첫 수정 수태율',d:'',u:'%',min:10,max:70,step:1,def:35,goal:45,badv:25,fix:'conc'},
+  {id:'spc',n:'수태당 수정횟수',d:'정액 사용 수',u:'회',min:1,max:5,step:.1,def:2.5,goal:2,badv:3.5,low:1,fix:'spc'}]},
+ {k:'C',name:'경영',why:'같은 두수라도 사료비·도태·인력 효율에서 수익 차이가 납니다.',items:[
+  {id:'fcr',n:'유대 대비 사료비 비율',d:'사료비 ÷ 유대',u:'%',min:35,max:90,step:1,def:62,goal:55,badv:75,low:1,fix:'fcr'},
+  {id:'fe',n:'사료효율',d:'유량 ÷ 건물섭취량',u:'배',min:.9,max:1.8,step:.01,def:1.3,goal:1.4,badv:1.1,fix:'fe'},
+  {id:'cull',n:'연간 도태율',d:'',u:'%',min:5,max:55,step:1,def:28,band:[25,33],bad:[15,45],fix:'cull'},
+  {id:'labor',n:'1인당 관리 경산우',d:'',u:'두',min:10,max:90,step:1,def:35,goal:40,badv:20,fix:'labor'}]},
+ {k:'D',name:'유량·유질',why:'유대는 양 × 등급입니다. 등급이 한 칸만 떨어져도 단가가 깎입니다.',items:[
+  {id:'yield',n:'착유우 두당 일 유량',d:'',u:'kg',min:15,max:45,step:.5,def:31,goal:33,badv:25,fix:'yield'},
+  {id:'scc',n:'체세포수',d:'원유 검사 성적',u:'만/ml',min:5,max:100,step:1,def:25,goal:20,badv:50,low:1,fix:'scc'},
+  {id:'bact',n:'세균수',d:'',u:'만/ml',min:.5,max:50,step:.5,def:5,goal:3,badv:25,low:1,fix:'bact'},
+  {id:'mast',n:'월 임상 유방염 발생률',d:'착유우 중',u:'%',min:0,max:15,step:.5,def:3,goal:2,badv:8,low:1,fix:'mast'}]},
+ {k:'E',name:'송아지·육성',why:'송아지는 다음 세대 착유우입니다.',items:[
+  {id:'calf',n:'송아지 폐사율',d:'1년 기준',u:'%',min:0,max:25,step:.5,def:7,goal:5,badv:15,low:1,fix:'calf'},
+  {id:'afc',n:'초산 분만월령',d:'처음 분만하는 나이',u:'개월',min:20,max:34,step:.5,def:25,goal:24,badv:30,low:1,fix:'afc'}]}
 ];
-
-/* 약점 → 할 일 / 축산몰 제품(검색어) / 전문가 */
+/* 약점 → 할 일 / 축산몰 검색어 / 전문 분야 */
 const FIX={
- ci:{a:['발정 관찰 하루 3회 + 기록','분만 후 60일 전후 첫 수정','공태 100일 넘은 소 수의사 검진'],p:['이표펜','보정기'],e:'번식·인공수정·수정란이식'},
- open:{a:['분만 후 40일 자궁 회복 검진','발정 놓친 소 목록 매주 확인','수정 적기(발정 후 12시간) 지키기'],p:['이표펜','보정기'],e:'번식·인공수정·수정란이식'},
- conc:{a:['정액 보관·융해 온도 점검','분만 전후 영양(체형점수) 점검','반복 수정우 별도 관리'],p:['보정기'],e:'번식·인공수정·수정란이식'},
- spc:{a:['수정 시점 기록과 수태 결과 비교','반복 수정우 3회 이상 → 정밀 검진','수정사·정액 종류별 수태율 비교'],p:['보정기'],e:'번식·인공수정·수정란이식'},
- yield:{a:['착유우 사료 설계(TMR) 재점검','물 급여·사조 공간 확인','비유 단계별 그룹 나누기'],p:['사료통','먹이자석'],e:'사양·영양 (TMR·사료)'},
- scc:{a:['착유 전·후 유두 침지(프리딥·포스트딥)','라이너 교체 주기 지키기','고체세포 소 분방 착유·격리'],p:['침지컵','침지 스프레이','라이너','분방착유'],e:'수의사 (유방염·질병)'},
- bact:{a:['착유기 세척 온도·세제 점검','여과지 매 착유 교체','원유 냉각 속도 확인'],p:['여과지','라이너 마개','라이너'],e:'착유기·설비 점검'},
- mast:{a:['유방염 소 기록 → 재발우 판단','착유 순서: 건강우 → 감염우','건유기 치료·관리 점검'],p:['침지컵','분방착유','착유 앞치마'],e:'수의사 (유방염·질병)'},
- fe:{a:['사료 잔량 매일 확인','건물(DM) 기준으로 급여량 재계산','조사료 품질 분석'],p:['사료통','먹이자석'],e:'사양·영양 (TMR·사료)'},
- fcr:{a:['사료 단가·급여량 월별 점검','저능력우 도태 검토','조사료 자급 비율 확인'],p:['사료통'],e:'사양·영양 (TMR·사료)'},
- calf:{a:['초유 4L, 생후 6시간 안에','겨울철 보온(방한복·보온등)','포유 도구 세척·소독'],p:['초유 투입기','포유병','방한복','송아지방','보온등'],e:'수의사 (유방염·질병)'},
- afc:{a:['육성우 체중 월 1회 측정','이유 후 성장 단계별 사료','수정 기준 체중 도달 시 수정'],p:['포유틀','포유병'],e:'사양·영양 (TMR·사료)'},
- var:{a:['분만 달력으로 쏠림 확인','수정 계획을 달별로 분산','건유 시기 조정'],p:['이표펜'],e:'경영·재무 컨설팅'},
- lact:{a:['건유 기간 60일 안팎으로','장기 건유·불임우 정리','분만 일정 고르게 분산'],p:[],e:'경영·재무 컨설팅'},
- quota:{a:['월별 납유량과 쿼터 비교','초과·미달 원인(분만 몰림 등) 확인','쿼터 조정·임대 검토'],p:[],e:'경영·재무 컨설팅'},
- cull:{a:['도태 이유 기록(번식·유방염·다리)','도태 기준 문서로 정하기','후보 육성우 수 맞추기'],p:[],e:'경영·재무 컨설팅'},
- labor:{a:['하루 작업 시간표 기록','반복 작업 자동화 후보 찾기','외부 인력·공동 작업 검토'],p:[],e:'경영·재무 컨설팅'}
-};
+ quota:[['월별 납유량을 쿼터와 나란히 기록','분만 일정을 조정해 납유량 고르게','쿼터 매입·임대 손익 따져보기'],[],'쿼터·납유'],
+ lact:[['장기 건유·불임우 정리','건유 기간 60일 안팎으로','분만 일정 분산'],[],'경영'],
+ var:[['분만이 몰리는 달 확인','수정 계획을 달별로 분산','건유 시기 조정'],['이표펜'],'번식'],
+ ci:[['분만 후 60일 전후 첫 수정','공태 100일 넘은 소 검진','발정 관찰 기록 시작'],['이표펜','보정기'],'번식'],
+ open:[['분만 후 40일 자궁 회복 검진','발정 놓친 소 목록 매주 확인','수정 적기 지키기'],['이표펜'],'번식'],
+ conc:[['정액 보관·융해 온도 점검','분만 전후 체형점수 점검','반복 수정우 별도 관리'],['보정기'],'번식'],
+ spc:[['수정 시점과 수태 결과 비교','3회 이상 반복우 정밀 검진','정액 종류별 수태율 비교'],['보정기'],'번식'],
+ fcr:[['사료 단가·급여량 월별 점검','저능력우 도태 검토','조사료 자급 비율 확인'],['사료통'],'사양'],
+ fe:[['사료 잔량 매일 확인','건물(DM) 기준 급여량 재계산','조사료 성분 분석'],['사료통','먹이자석'],'사양'],
+ cull:[['도태 이유 기록','도태 기준 문서로 정하기','후보 육성우 수 맞추기'],[],'경영'],
+ labor:[['하루 작업 시간표 기록','반복 작업 자동화 후보 찾기','공동 작업·외부 인력 검토'],[],'경영'],
+ yield:[['착유우 TMR 재점검','물 급여·사조 공간 확인','비유 단계별 그룹'],['사료통'],'사양'],
+ scc:[['프리딥·포스트딥 둘 다','고체세포 소 분방 착유','착유 순서: 건강우 → 감염우'],['침지컵','분방착유'],'수의'],
+ bact:[['착유기 세척 온도·세제 점검','여과지 매 착유 교체','원유 냉각 속도 확인'],['여과지','라이너'],'설비'],
+ mast:[['유방염 소 기록 → 재발우 판단','원인균 검사 의뢰','깔짚·축사 위생 점검'],['침지컵','착유 앞치마'],'수의'],
+ calf:[['초유 4L, 생후 6시간 안에','겨울 보온(방한복·보온등)','포유 도구 세척·소독'],['초유 투입기','방한복','보온등'],'수의'],
+ afc:[['육성우 체중 월 1회 측정','성장 단계별 사료','수정 기준 체중 도달 시 수정'],['포유틀'],'사양']};
 
-const STEPS=[{k:'A',name:'기본 정보'},...AREAS.map(a=>({k:a.k,name:a.name})),{k:'★',name:'결과'}];
-let cur=0;
-let data={};
-try{ data=JSON.parse(localStorage.getItem('dx_v1')||'{}'); }catch(e){}
-const save=()=>{ try{ localStorage.setItem('dx_v1',JSON.stringify(data)); }catch(e){} };
+let V={}, ON={};
+try{ const s=JSON.parse(localStorage.getItem('dx_detail_v2')||'{}'); V=s.V||{}; ON=s.ON||{}; }catch(e){}
+const save=()=>{ try{ localStorage.setItem('dx_detail_v2',JSON.stringify({V,ON})); }catch(e){} };
 const $=s=>document.querySelector(s);
-const num=v=>(v===''||v==null||isNaN(+v))?null:+v;
+const ALL=AREAS.flatMap(a=>a.items.map(it=>({...it,area:a})));
+const fmt=(it,v)=>{ const d=(String(it.step).split('.')[1]||'').length; return (+v).toFixed(d); };
 
-function scoreItem(it,v){
-  if(v==null) return null;
-  if(it.band){
-    const [g1,g2]=it.band,[b1,b2]=it.bad;
-    if(v>=g1&&v<=g2) return 100;
-    if(v<g1) return Math.max(0,Math.round(100*(v-b1)/(g1-b1)));
-    return Math.max(0,Math.round(100*(b2-v)/(b2-g2)));
-  }
-  const r=it.low?(it.bad-v)/(it.bad-it.goal):(v-it.bad)/(it.goal-it.bad);
+function scoreOf(it,v){
+  if(it.band){ const [g1,g2]=it.band,[b1,b2]=it.bad;
+    if(v>=g1&&v<=g2) return 100; if(v<g1) return Math.max(0,Math.round(100*(v-b1)/(g1-b1))); return Math.max(0,Math.round(100*(b2-v)/(b2-g2))); }
+  const r=it.low?(it.badv-v)/(it.badv-it.goal):(v-it.badv)/(it.goal-it.badv);
   return Math.max(0,Math.min(100,Math.round(r*100)));
 }
-const tgt=it=>it.band?`목표 ${it.band[0]}~${it.band[1]}${it.u}`:`목표 ${it.low?'≤':'≥'} ${it.goal}${it.u}`;
+const tgtText=it=>it.band?`목표 ${it.band[0]}~${it.band[1]}${it.u}`:`목표 ${it.low?'≤':'≥'} ${it.goal}${it.u}`;
+const cls=s=>s==null?'n':s>=80?'g':s>=50?'m':'b';
+const lbl=s=>s==null?'미입력':s>=80?'양호':s>=50?'보통':'주의';
 const col=s=>s>=80?'var(--good)':s>=50?'var(--mid)':'var(--bad)';
-const grade=s=>s>=80?'양호':s>=50?'보통 · 개선 여지':'주의 · 우선 개선';
+const pct=(it,v)=>(v-it.min)/(it.max-it.min)*100;
 
-function renderSteps(){
-  $('#steps').innerHTML=STEPS.map((s,i)=>`<div class="st ${i===cur?'on':i<cur?'done':''}"><button data-i="${i}"><span class="k">${s.k}</span><span class="n">${s.name}</span></button>${i<STEPS.length-1?'<span class="ar">→</span>':''}</div>`).join('');
-  document.querySelectorAll('.st button').forEach(b=>b.onclick=()=>go(+b.dataset.i));
+function areaScore(a){ const v=a.items.filter(it=>ON[it.id]).map(it=>scoreOf(it,V[it.id])); return v.length?Math.round(v.reduce((x,y)=>x+y,0)/v.length):null; }
+
+function renderCards(){
+  $('#cards').innerHTML=AREAS.map(a=>`<section class="card" id="ar-${a.k}">
+    <div class="ch"><span class="lb">${a.k} · ${a.name}</span><span class="sc" id="as-${a.k}"></span></div>
+    <div class="why">${a.why}</div>
+    ${a.items.map(it=>{ const v=V[it.id]??it.def;
+      const mark=it.band?`<span class="tgtband" style="left:${pct(it,it.band[0])}%;width:${pct(it,it.band[1])-pct(it,it.band[0])}%"></span>`:`<span class="tgt" style="left:calc(${pct(it,it.goal)}% - 1px)"></span>`;
+      return `<div class="it ${ON[it.id]?'':'off'}" id="it-${it.id}">
+        <div class="row"><div class="nm">${it.n}${it.d?`<small>${it.d}</small>`:''}</div>
+          <div class="val"><span class="st" id="st-${it.id}"></span><input type="number" inputmode="decimal" id="nv-${it.id}" min="${it.min}" max="${it.max}" step="${it.step}" value="${fmt(it,v)}"><span class="u">${it.u}</span></div></div>
+        <div class="sl">${mark}<input type="range" id="rg-${it.id}" min="${it.min}" max="${it.max}" step="${it.step}" value="${v}" style="--p:${pct(it,v)}%" aria-label="${it.n}"></div>
+        <div class="ft"><span>${it.min}${it.u}</span><span><b>● ${tgtText(it)}</b></span><span><span class="mx">${it.max}${it.u}</span><button class="clr" data-clr="${it.id}">모름으로 되돌리기</button></span></div>
+      </div>`; }).join('')}
+  </section>`).join('');
+  ALL.forEach(it=>{
+    const rg=$('#rg-'+it.id), nv=$('#nv-'+it.id);
+    const set=(v,fromNum)=>{ v=Math.min(it.max,Math.max(it.min,+v)); if(isNaN(v)) return; V[it.id]=v;
+      const was=ON[it.id]; ON[it.id]=true; rg.value=v; rg.style.setProperty('--p',pct(it,v)+'%'); if(!fromNum) nv.value=fmt(it,v);
+      $('#it-'+it.id).classList.remove('off'); save(); update(); };
+    rg.addEventListener('input',()=>set(rg.value));
+    nv.addEventListener('change',()=>set(nv.value,true));
+  });
+  document.querySelectorAll('[data-clr]').forEach(b=>b.onclick=()=>{ delete ON[b.dataset.clr]; delete V[b.dataset.clr]; save(); renderCards(); });
+  update();
 }
-function field(id,label,t,u,type='number',step){
-  const v=data[id]??'';
-  return `<div class="f"><label for="${id}">${label}</label><div class="t">${t}</div><div class="in"><input id="${id}" type="${type}" ${type==='number'?`inputmode="decimal" step="${step||1}"`:''} value="${v}">${u?`<span class="u">${u}</span>`:''}</div></div>`;
-}
-function renderStage(){
-  const st=$('#stage');
-  if(cur===0){
-    st.innerHTML=`<div class="panel"><h2>A · 기본 정보</h2><p class="why">결과를 목장 규모에 맞게 보여주기 위한 정보입니다.</p>
-      <div class="fields">${field('farm','목장명','선택','','text')}${field('region','지역','예) 충남 당진','','text')}${field('cows','경산우 두수','분만 경험 있는 소','두')}${field('milking','착유우 두수','지금 짜는 소','두')}${field('quotaL','보유 쿼터','하루 기준','L/일')}${field('dailyL','실제 일 납유량','최근 3개월 평균','L/일')}</div>
-      ${nav()}</div>`;
-  }else if(cur<=AREAS.length){
-    const a=AREAS[cur-1];
-    st.innerHTML=`<div class="panel"><h2>${a.k} · ${a.name}</h2><p class="why">${a.why}</p>
-      <div class="fields">${a.items.map(it=>field(it.id,it.name,tgt(it),it.u,'number',it.step)).join('')}</div>${nav()}</div>`;
-  }else{ renderResult(); return; }
-  st.querySelectorAll('input').forEach(i=>i.oninput=()=>{ data[i.id]=i.value; autoFill(); save(); });
-  bindNav();
-}
-function autoFill(){
-  const c=num(data.cows),m=num(data.milking);
-  if(c&&m&&!data._lactTouched) data.lact=Math.round(m/c*100);
-  const qL=num(data.quotaL),dL=num(data.dailyL);
-  if(qL&&dL&&!data._quotaTouched) data.quota=Math.round(dL/qL*100);
-}
-function nav(){ return `<div class="nav"><button class="btn g" id="prev" ${cur===0?'style="visibility:hidden"':''}>← 이전</button><span class="skip">모르는 칸은 비워도 됩니다</span><button class="btn p" id="next">${cur===AREAS.length?'결과 보기 ★':'다음 →'}</button></div>`; }
-function bindNav(){
-  $('#prev').onclick=()=>go(cur-1); $('#next').onclick=()=>go(cur+1);
-  const l=document.getElementById('lact'); if(l) l.addEventListener('input',()=>{data._lactTouched=true;save();});
-  const qq=document.getElementById('quota'); if(qq) qq.addEventListener('input',()=>{data._quotaTouched=true;save();});
-}
-function go(i){ cur=Math.max(0,Math.min(STEPS.length-1,i)); renderSteps(); renderStage(); window.scrollTo({top:0,behavior:'smooth'}); }
 
 function compute(){
-  const areas=AREAS.map(a=>{
-    const items=a.items.map(it=>({it,v:num(data[it.id]),s:scoreItem(it,num(data[it.id]))}));
-    const got=items.filter(x=>x.s!=null);
-    return {a,items,score:got.length?Math.round(got.reduce((t,x)=>t+x.s,0)/got.length):null,n:got.length};
-  });
-  const scored=areas.filter(x=>x.score!=null);
-  const total=scored.length?Math.round(scored.reduce((t,x)=>t+x.score,0)/scored.length):null;
-  const weak=areas.flatMap(x=>x.items.filter(i=>i.s!=null&&i.s<80).map(i=>({...i,area:x.a}))).sort((p,q)=>p.s-q.s);
-  return {areas,total,weak};
+  const got=ALL.filter(it=>ON[it.id]).map(it=>({it,v:V[it.id],s:scoreOf(it,V[it.id])}));
+  const areas=AREAS.map(a=>({a,s:areaScore(a),n:a.items.filter(it=>ON[it.id]).length}));
+  const sc=areas.filter(x=>x.s!=null);
+  const total=sc.length?Math.round(sc.reduce((x,y)=>x+y.s,0)/sc.length):null;
+  return {got,areas,total,weak:got.filter(x=>x.s<80).sort((p,q)=>p.s-q.s)};
 }
-function renderResult(){
-  const r=compute(), st=$('#stage');
-  if(r.total==null){
-    st.innerHTML=`<div class="panel"><h2>아직 입력된 숫자가 없어요</h2><p class="why">B~E 중 아는 항목 몇 개만 넣어도 진단할 수 있습니다.</p><div class="nav"><button class="btn p" onclick="go(1)">B · 번식부터 입력 →</button></div></div>`;
-    return;
-  }
-  const top=r.weak.slice(0,2), rest=r.weak.slice(2,4);
-  const wcard=(w,star)=>{ const f=FIX[w.it.id];
-    return `<div class="wcard ${star?'star':''}">
-      <div class="hd"><b>${star?'<span class="star-t">★ </span>':''}${w.it.name}</b><span style="color:${col(w.s)};font-weight:800">${w.s}점</span></div>
-      <div class="v">${w.area.name} · 지금 ${w.v}${w.it.u} → ${tgt(w.it)}</div>
-      <ol>${f.a.map(x=>`<li>${x}</li>`).join('')}</ol>
-      <div class="lk">${f.p.map(q=>`<a class="pchip" href="../?q=${encodeURIComponent(q)}">🛒 ${q} 비교</a>`).join('')}
-      <button class="echip" data-exp="${f.e}">👤 ${f.e.split(' ')[0]} 전문가 연결</button></div></div>`; };
-  const headline=top.length?`가장 먼저 손볼 곳은 <b>${top.map(w=>w.it.name).join('</b>, <b>')}</b>입니다.`:'입력한 항목은 모두 목표 수준입니다.';
-  st.innerHTML=`<div class="panel">
-    <div class="res-top">
-      <div class="total"><div class="g">${data.farm?data.farm+' · ':''}종합 점수</div><div class="s">${r.total}</div><div class="g">${grade(r.total)}</div></div>
-      <div class="areas">${r.areas.map(x=>`<div class="area"><div class="k">${x.a.k}</div><div class="nm">${x.a.name}</div>
-        ${x.score==null?'<div class="na">입력 없음</div>':`<div class="sc" style="color:${col(x.score)}">${x.score}</div><div class="bar"><i style="width:${x.score}%;background:${col(x.score)}"></i></div><div class="na">${x.n}/${x.a.items.length} 항목</div>`}</div>`).join('')}</div>
-    </div>
-    <p style="margin-top:14px;font-size:16px">${headline}</p>
-  </div>
-  ${top.length?`<div class="sec"><h3>★ 우선 개선 2곳</h3><p>할 일 → 필요한 제품 → 전문가까지 한 번에</p></div>
-  <div class="weak">${top.map(w=>wcard(w,true)).join('')}${rest.map(w=>wcard(w,false)).join('')}</div>`:''}
+function ring(s){ const r=40,c=2*Math.PI*r, p=s==null?0:s/100;
+  return `<svg class="ring" viewBox="0 0 96 96"><circle cx="48" cy="48" r="${r}" fill="none" stroke="#eef0f4" stroke-width="10"/>
+    <circle cx="48" cy="48" r="${r}" fill="none" stroke="${s==null?'#eef0f4':'var(--gold)'}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${c*p} ${c}" transform="rotate(-90 48 48)"/>
+    <text x="48" y="55" text-anchor="middle" font-size="24" font-weight="900" fill="#1c2333">${s??'–'}</text></svg>`; }
 
-  <div class="sec"><h3>다음 단계</h3><p>진단 → 보고서 → 매칭 → 실행 → 다시 진단</p></div>
-  <div class="flow">
-    <div class="fs"><div class="k">A · 진단</div><h4>무료 점수 확인</h4><p>지금 보고 계신 화면</p></div><div class="fa">→</div>
-    <div class="fs star"><div class="k">B · ★ 보고서</div><h4>상세 컨설팅 보고서</h4><p>실제 기록으로 원인 분석</p></div><div class="fa">→</div>
-    <div class="fs star"><div class="k">C · ★ 매칭</div><h4>전문가·제품 연결</h4><p>약점별 맞춤 연결</p></div><div class="fa">→</div>
-    <div class="fs"><div class="k">D · 실행</div><h4>3개월 개선</h4><p>할 일 목록대로 실행</p></div><div class="fa">→</div>
-    <div class="fs back"><div class="k">다시 A로</div><h4>재진단</h4><p>점수 변화로 효과 확인</p></div>
-  </div>
-
-  <div class="sec"><h3>더 정확하게 보고 싶다면</h3></div>
-  <div class="cta">
-    <div class="cbox"><h4>📄 상세 컨설팅 보고서</h4><div class="pr">유료 · 비용은 신청 후 안내</div>
-      <ul><li>검정성적·납유 내역 등 실제 기록 분석</li><li>약점별 원인과 3개월 개선 계획</li><li>현장 경력 18년 낙농 전문가 작성</li></ul>
-      <button class="btn p" id="reqReport">보고서 신청</button></div>
-    <div class="cbox"><h4>🤝 전문가 매칭</h4><div class="pr">번식·수의·사양·설비·경영</div>
-      <ul><li>약점에 맞는 전문가를 골라 연결</li><li>방문 상담·의뢰 일정 조율</li><li>필요 자재는 축산몰에서 가격 비교</li></ul>
-      <button class="btn p" id="reqMatch">전문가 연결 신청</button></div>
-  </div>
-  <div class="nav"><button class="btn g" onclick="go(1)">← 숫자 고치기</button><button class="btn g" id="reset">처음부터 다시</button></div>`;
-  $('#reqReport').onclick=()=>openReq('report');
-  $('#reqMatch').onclick=()=>openReq('match',top[0]&&FIX[top[0].it.id].e);
-  document.querySelectorAll('.echip').forEach(b=>b.onclick=()=>openReq('match',b.dataset.exp));
-  $('#reset').onclick=()=>{ if(confirm('입력한 숫자를 모두 지울까요?')){ data={}; save(); go(0);} };
-}
-function summary(){
+function update(){
   const r=compute();
-  return `종합 ${r.total} | `+r.areas.map(x=>`${x.a.name} ${x.score??'-'}`).join(', ')+
-    ` | 경산우 ${data.cows||'-'} 착유우 ${data.milking||'-'} | 약점: `+r.weak.slice(0,3).map(w=>`${w.it.name} ${w.v}${w.it.u}`).join(', ')+
-    ` | 입력: `+AREAS.flatMap(a=>a.items).filter(it=>num(data[it.id])!=null).map(it=>`${it.name}=${data[it.id]}`).join('; ');
+  ALL.forEach(it=>{ const s=ON[it.id]?scoreOf(it,V[it.id]):null, el=$('#st-'+it.id); el.className='st '+cls(s); el.textContent=s==null?'미입력':`${lbl(s)} ${s}`; });
+  r.areas.forEach(x=>{ const el=$('#as-'+x.a.k); el.textContent=x.s==null?'':`${x.s}점`; el.style.color=x.s==null?'':col(x.s); });
+  $('#jump').innerHTML=r.areas.map((x,i)=>`<div class="jp"><a href="#ar-${x.a.k}" class="${x.n?'on':''}"><span class="k">${x.a.k}</span><span class="n">${x.a.name}</span><span class="c">${x.n}/${x.a.items.length} 입력${x.s!=null?` · ${x.s}점`:''}</span></a>${i<r.areas.length-1?'<i>→</i>':''}</div>`).join('');
+  const top=r.weak.slice(0,2);
+  $('#res').innerHTML=`<div class="rbox">
+      <div class="total">${ring(r.total)}<div class="t"><b>${r.total==null?'아직 입력 전':r.total>=80?'양호':r.total>=50?'보통 · 개선 여지':'주의 · 우선 개선'}</b><small>${r.got.length}/${ALL.length}개 항목 입력</small></div></div>
+      <div class="abars">${r.areas.map(x=>`<div class="ab"><div class="bw"><i style="height:${x.s??0}%;background:${x.s==null?'transparent':col(x.s)}"></i></div><div class="k">${x.a.k}</div><div class="v">${x.s??'–'}</div></div>`).join('')}</div>
+    </div>
+    <div class="rbox"><b style="font-size:15px">★ 우선 손볼 곳</b>
+      ${top.length?top.map(x=>{ const f=FIX[x.it.fix]; return `<div class="wk"><b>${x.it.area.k} · ${x.it.n} <span style="color:${col(x.s)}">${x.s}점</span></b>
+        <div class="s">지금 ${fmt(x.it,x.v)}${x.it.u} → ${tgtText(x.it)}</div><ol>${f[0].map(t=>`<li>${t}</li>`).join('')}</ol>
+        <div class="lk">${f[1].map(q=>`<a class="pchip" href="../?q=${encodeURIComponent(q)}">🛒 ${q}</a>`).join('')}<a class="pchip" style="background:#e9eef8;color:var(--navy)" href="#" data-req="match">👤 ${f[2]} 전문가</a></div></div>`; }).join('')
+      :`<div class="empty">${r.got.length?'입력한 항목은 모두 목표 수준이에요.':'바를 움직이면 약한 곳이 여기에 나타나요.'}</div>`}
+    </div>
+    <div class="rbox">
+      <button class="btn k" id="kk">💬 카카오톡으로 상담 (결과 자동 복사)</button>
+      <button class="btn n" data-req="full">📑 정밀 컨설팅 보고서 신청</button>
+      <button class="btn l" id="cl">📞 전화 상담</button>
+      <p class="small">${typeof CS_HOURS!=='undefined'?CS_HOURS:''} · ${typeof CS_REPLY!=='undefined'?CS_REPLY:''}</p>
+    </div>`;
+  $('#mS').textContent=r.total??'–'; $('#mS').style.color=r.total==null?'':col(r.total);
+  $('#mT').textContent=r.total==null?'바를 움직이면 점수가 나와요':top.length?`★ ${top.map(x=>x.it.n).join(', ')}`:`${r.got.length}개 항목 · 양호`;
+  $('#kk').onclick=kakao; $('#cl').onclick=call;
+  document.querySelectorAll('[data-req]').forEach(b=>b.onclick=e=>{ e.preventDefault(); openReq(b.dataset.req); });
 }
-function openReq(type,expert){
-  $('#fType').value=type==='report'?'상세 보고서':'전문가 매칭';
-  $('#mTitle').textContent=type==='report'?'📄 상세 컨설팅 보고서 신청':'🤝 전문가 연결 신청';
-  $('#mSub').textContent=type==='report'?'진단 결과가 함께 전달됩니다. 비용과 필요한 자료를 연락드려 안내합니다.':'진단 결과를 보고 맞는 전문가를 골라 연락드립니다.';
-  $('#expertWrap').style.display=type==='match'?'':'none';
-  if(expert) $('#fExpert').value=expert;
-  $('#fFarm').value=data.farm||''; $('#fRegion').value=data.region||'';
-  $('#fSummary').value=summary();
-  $('#ok').style.display='none';
-  $('#modal').classList.add('on');
-}
-$('#mClose').onclick=()=>$('#modal').classList.remove('on');
-$('#reqForm').onsubmit=e=>{
-  e.preventDefault();
-  const body=new URLSearchParams(new FormData(e.target)).toString();
-  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body})
-    .then(r=>{ if(!r.ok) throw 0; $('#ok').textContent='접수됐습니다. 영업일 기준 1~2일 안에 연락드릴게요.'; })
-    .catch(()=>{ $('#ok').textContent='전송에 실패했어요. 잠시 후 다시 시도해 주세요.'; })
-    .finally(()=>{ $('#ok').style.display='block'; });
-};
-go(0);
+
+/* 상담 */
+function summary(){ const r=compute(); if(r.total==null) return '정밀진단 입력 없음';
+  return [`[낙농 정밀진단 결과 — 상담 신청]`,`종합 ${r.total}점 · `+r.areas.filter(x=>x.s!=null).map(x=>`${x.a.k} ${x.a.name} ${x.s}점`).join(', '),
+    `개선 필요: ${r.weak.slice(0,3).map(x=>`${x.it.n} ${fmt(x.it,x.v)}${x.it.u}`).join(', ')||'없음'}`,
+    `입력값: ${r.got.map(x=>`${x.it.n} ${fmt(x.it,x.v)}${x.it.u}`).join(' / ')}`,`진단일: ${new Date().toLocaleDateString('ko-KR')}`].join('\n'); }
+async function copyText(t){ try{ await navigator.clipboard.writeText(t); return true; }catch(e){ const a=document.createElement('textarea'); a.value=t; document.body.appendChild(a); a.select(); let ok=false; try{ok=document.execCommand('copy');}catch(_){} a.remove(); return ok; } }
+function toast(m){ const t=$('#ktoast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2400); }
+async function kakao(){ const ok=await copyText(summary());
+  if(!KAKAO_CHANNEL_ID){ toast('카카오톡 채널 연결 준비 중이에요. 상담 신청서로 받을게요.'); setTimeout(()=>openReq('match'),700); return; }
+  toast(ok?'진단 결과가 복사됐어요. 카톡 창에 붙여넣어 주세요.':'카톡 창에서 진단 결과를 말씀해 주세요.');
+  setTimeout(()=>{ location.href=`https://pf.kakao.com/${KAKAO_CHANNEL_ID}/chat`; },900); }
+function call(){ if(!PHONE_NUMBER){ toast('전화 상담 번호 준비 중이에요. 연락처를 남겨주시면 전화드릴게요.'); setTimeout(()=>openReq('match'),700); return; }
+  location.href=`tel:${PHONE_NUMBER.replace(/-/g,'')}`; }
+const REQ={match:['무료 전문가 상담','정밀진단 결과를 보고 맞는 전문가가 연락드립니다.'],full:['정밀 컨설팅 보고서 신청','비용과 필요한 자료(검정성적·납유 명세)를 연락드려 안내합니다.'],pro:['전문가·업체 등록','분야와 활동 지역을 남겨주세요.']};
+function openReq(t){ const c=REQ[t]||REQ.match; $('#fType').value=t; $('#fmT').textContent=c[0]; $('#fmS').textContent=c[1];
+  $('#fSum').value=t==='pro'?'(전문가 등록)':summary(); $('#ok').style.display='none'; $('#modal').classList.add('on'); }
+$('#fmX').onclick=()=>$('#modal').classList.remove('on');
+$('#modal').onclick=e=>{ if(e.target.id==='modal') $('#modal').classList.remove('on'); };
+$('#fm').onsubmit=e=>{ e.preventDefault();
+  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(e.target)).toString()})
+   .then(r=>{ if(!r.ok) throw 0; $('#ok').textContent='접수됐습니다. 영업일 기준 1~2일 안에 연락드릴게요.'; e.target.reset(); })
+   .catch(()=>{ $('#ok').textContent='전송에 실패했어요. 잠시 후 다시 시도해 주세요.'; }).finally(()=>{ $('#ok').style.display='block'; }); };
+$('#mGo').onclick=()=>$('#res').scrollIntoView({behavior:'smooth'});
+const tp=document.getElementById('tfgPro'); if(tp) tp.onclick=e=>{ e.preventDefault(); openReq('pro'); };
+renderCards();
 </script>
 </body>
 </html>

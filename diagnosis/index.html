@@ -311,6 +311,7 @@ header .wrap{display:flex;align-items:center;gap:10px;height:58px}
   </form>
 </div></div>
 
+<script src="config.js"></script>
 <script>
 /* ===== 고민(영역)별 30초 문항: 선택지 점수 100/70/40/10, 모름=제외 ===== */
 const W=[
@@ -533,8 +534,6 @@ $('#fm').onsubmit=e=>{
 };
 const tp=document.getElementById('tfgPro'); if(tp) tp.onclick=e=>{e.preventDefault();openReq('pro');};
 /* ===== 상담·문의 센터 ===== */
-const CS_HOURS = "평일 오전 9시 ~ 오후 6시";   // 운영 시간 (가정 — 실제 시간으로 바꾸세요)
-const CS_REPLY = "보통 1영업일 안에 답변";       // 답변 안내
 const TOPIC_OF={'쿼터·납유 관리':'쿼터','번식·인공수정·수정란이식':'번식','수의사 (유방염·질병)':'유방염','사양·영양 (TMR·사료)':'사료비','송아지·육성우':'송아지','경영·재무':'경영','기자재·사료 업체':'기자재'};
 const FAQS=[
  ['진단은 정말 무료인가요?','네. 30초 간이진단과 결과 보기, 전문가 상담 요청은 모두 무료입니다. 유료는 원하실 때만 신청하는 리포트·보고서입니다.'],
@@ -563,8 +562,6 @@ function consultHTML(withResult){
 document.addEventListener('click',e=>{ const b=e.target.closest('[data-cs]'); if(!b) return;
   const t=b.dataset.cs; if(t==='kakao') kakaoConsult(); else if(t==='call') callConsult(); else openReq('match'); });
 /* ===== 카카오톡·전화 상담 — 설정값: 이 두 줄만 바꾸세요 ===== */
-const KAKAO_CHANNEL_ID = "";   // 카카오톡 채널 관리자센터의 채널 ID (예: "_AbCdE"). 비어 있으면 상담 신청서로 받습니다
-const PHONE_NUMBER     = "";   // 전화 상담 번호 (예: "010-0000-0000")
 
 function buildSummary(){
   const r=compute(), d=new Date().toLocaleDateString('ko-KR');
