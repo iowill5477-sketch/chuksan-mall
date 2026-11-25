@@ -201,7 +201,7 @@ button{cursor:pointer}
 <main class="wrap">
   <div class="intro">
     <h1>바를 밀어 <em>우리 목장 숫자</em>를 맞춰 보세요</h1>
-    <p>아는 항목만 움직이면 됩니다. 움직인 항목만 점수에 들어가고, 숫자를 눌러 직접 입력할 수도 있어요.</p>
+    <p>영역마다 꼭 필요한 1~2개, 모두 9개만 봅니다. 아는 항목만 움직이면 됩니다. 움직인 항목만 점수에 들어가고, 숫자를 눌러 직접 입력할 수도 있어요.</p>
   </div>
   <nav class="jump" id="jump"></nav>
   <div class="grid">
@@ -237,26 +237,18 @@ button{cursor:pointer}
 const AREAS=[
  {k:'A',name:'쿼터·두수',why:'쿼터를 못 채우면 놀리는 권리, 넘기면 낮은 단가 원유가 생깁니다.',items:[
   {id:'quota',n:'쿼터 달성률',d:'실제 납유량 ÷ 보유 쿼터',u:'%',min:60,max:130,step:1,def:95,band:[95,103],bad:[80,115],fix:'quota'},
-  {id:'lact',n:'착유두수 비율',d:'착유우 ÷ 경산우',u:'%',min:50,max:100,step:1,def:80,goal:85,badv:70,fix:'lact'},
-  {id:'var',n:'달별 납유 편차',d:'가장 많은 달 vs 적은 달',u:'%',min:0,max:50,step:1,def:15,goal:10,badv:30,low:1,fix:'var'}]},
+  {id:'lact',n:'착유두수 비율',d:'착유우 ÷ 경산우',u:'%',min:50,max:100,step:1,def:80,goal:85,badv:70,fix:'lact'}]},
  {k:'B',name:'번식',why:'번식이 늦어지면 착유 일수와 송아지 수가 같이 줄어듭니다.',items:[
   {id:'ci',n:'평균 분만간격',d:'',u:'일',min:340,max:540,step:1,def:440,goal:395,badv:480,low:1,fix:'ci'},
-  {id:'open',n:'평균 공태일수',d:'분만 → 수태까지',u:'일',min:50,max:250,step:1,def:150,goal:120,badv:180,low:1,fix:'open'},
-  {id:'conc',n:'첫 수정 수태율',d:'',u:'%',min:10,max:70,step:1,def:35,goal:45,badv:25,fix:'conc'},
-  {id:'spc',n:'수태당 수정횟수',d:'정액 사용 수',u:'회',min:1,max:5,step:.1,def:2.5,goal:2,badv:3.5,low:1,fix:'spc'}]},
+  {id:'conc',n:'첫 수정 수태율',d:'',u:'%',min:10,max:70,step:1,def:35,goal:45,badv:25,fix:'conc'}]},
  {k:'C',name:'경영',why:'같은 두수라도 사료비·도태·인력 효율에서 수익 차이가 납니다.',items:[
   {id:'fcr',n:'유대 대비 사료비 비율',d:'사료비 ÷ 유대',u:'%',min:35,max:90,step:1,def:62,goal:55,badv:75,low:1,fix:'fcr'},
-  {id:'fe',n:'사료효율',d:'유량 ÷ 건물섭취량',u:'배',min:.9,max:1.8,step:.01,def:1.3,goal:1.4,badv:1.1,fix:'fe'},
-  {id:'cull',n:'연간 도태율',d:'',u:'%',min:5,max:55,step:1,def:28,band:[25,33],bad:[15,45],fix:'cull'},
   {id:'labor',n:'1인당 관리 경산우',d:'',u:'두',min:10,max:90,step:1,def:35,goal:40,badv:20,fix:'labor'}]},
  {k:'D',name:'유량·유질',why:'유대는 양 × 등급입니다. 등급이 한 칸만 떨어져도 단가가 깎입니다.',items:[
   {id:'yield',n:'착유우 두당 일 유량',d:'',u:'kg',min:15,max:45,step:.5,def:31,goal:33,badv:25,fix:'yield'},
-  {id:'scc',n:'체세포수',d:'원유 검사 성적',u:'만/ml',min:5,max:100,step:1,def:25,goal:20,badv:50,low:1,fix:'scc'},
-  {id:'bact',n:'세균수',d:'',u:'만/ml',min:.5,max:50,step:.5,def:5,goal:3,badv:25,low:1,fix:'bact'},
-  {id:'mast',n:'월 임상 유방염 발생률',d:'착유우 중',u:'%',min:0,max:15,step:.5,def:3,goal:2,badv:8,low:1,fix:'mast'}]},
+  {id:'scc',n:'체세포수',d:'원유 검사 성적',u:'만/ml',min:5,max:100,step:1,def:25,goal:20,badv:50,low:1,fix:'scc'}]},
  {k:'E',name:'송아지·육성',why:'송아지는 다음 세대 착유우입니다.',items:[
-  {id:'calf',n:'송아지 폐사율',d:'1년 기준',u:'%',min:0,max:25,step:.5,def:7,goal:5,badv:15,low:1,fix:'calf'},
-  {id:'afc',n:'초산 분만월령',d:'처음 분만하는 나이',u:'개월',min:20,max:34,step:.5,def:25,goal:24,badv:30,low:1,fix:'afc'}]}
+  {id:'calf',n:'송아지 폐사율',d:'1년 기준',u:'%',min:0,max:25,step:.5,def:7,goal:5,badv:15,low:1,fix:'calf'}]}
 ];
 /* 약점 → 할 일 / 축산몰 검색어 / 전문 분야 */
 const FIX={
@@ -353,10 +345,16 @@ function update(){
       :`<div class="empty">${r.got.length?'입력한 항목은 모두 목표 수준이에요.':'바를 움직이면 약한 곳이 여기에 나타나요.'}</div>`}
     </div>
     <div class="rbox">
+      <b style="font-size:15px">상담하기</b>
       <button class="btn k" id="kk">💬 카카오톡으로 상담 (결과 자동 복사)</button>
-      <button class="btn n" data-req="full">📑 정밀 컨설팅 보고서 신청</button>
       <button class="btn l" id="cl">📞 전화 상담</button>
       <p class="small">${typeof CS_HOURS!=='undefined'?CS_HOURS:''} · ${typeof CS_REPLY!=='undefined'?CS_REPLY:''}</p>
+    </div>
+    <div class="rbox" style="background:#1e3466;color:#fff;border-color:#1e3466">
+      <b style="font-size:15px;color:#f5d06f">📑 상세 컨설팅 보고서</b>
+      <p class="small" style="color:#d6e0f1">여기서는 핵심 9개만 봅니다. 세균수·공태일수·수정횟수·사료효율·도태율·유방염 발생률 같은 <b style="color:#fff">세부 항목</b>은 검정성적·납유 명세를 받아 보고서에서 분석합니다.</p>
+      <button class="btn" data-req="full" style="background:#f5d06f;color:#1e3466">보고서 따로 신청하기</button>
+    </div>
     </div>`;
   $('#mS').textContent=r.total??'–'; $('#mS').style.color=r.total==null?'':col(r.total);
   $('#mT').textContent=r.total==null?'바를 움직이면 점수가 나와요':top.length?`★ ${top.map(x=>x.it.n).join(', ')}`:`${r.got.length}개 항목 · 양호`;
