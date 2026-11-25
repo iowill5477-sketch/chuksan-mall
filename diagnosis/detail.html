@@ -29,7 +29,7 @@ button{cursor:pointer}
 @keyframes tfg-twinkle{0%,100%{opacity:.15;transform:scale(.7)}50%{opacity:1;transform:scale(1.2)}}
 
 /* 로고: 금빛 소 + 네온 YULDANG */
-.tfg-brand{position:relative;display:flex;align-items:center;gap:14px}
+.tfg-brand{text-decoration:none;cursor:pointer;position:relative;display:flex;align-items:center;gap:14px}
 .tfg-logo{display:flex;flex-direction:column;align-items:center;gap:3px}
 .tfg-logo img{height:48px;filter:drop-shadow(0 0 5px rgba(245,208,111,.55))}
 .tfg-logo span{font-family:"Tilt Neon",sans-serif;font-size:12px;letter-spacing:2.5px;color:#F3E6C4;
@@ -91,6 +91,10 @@ button{cursor:pointer}
 .card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px 22px;margin-bottom:14px;scroll-margin-top:70px}
 .card .ch{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
 .card .ch .lb{font-size:13px;font-weight:800;color:#59627a;letter-spacing:.3px}
+.card .ch .ar-r{display:flex;align-items:center;gap:8px}
+.rst{background:#fff;border:1px solid var(--line);border-radius:8px;padding:4px 9px;font-size:12px;font-weight:700;color:#59627a}
+.rst:hover{border-color:var(--gold);color:#8a6d10}
+.rst.all{margin-left:10px;padding:6px 11px;font-size:13px}
 .card .ch .sc{font-size:13px;font-weight:800}
 .card .why{font-size:13px;color:var(--sub);margin-bottom:6px}
 .it{padding:12px 0 8px;border-top:1px dashed var(--line)}
@@ -177,6 +181,11 @@ button{cursor:pointer}
 
 @media(max-width:900px){.grid{grid-template-columns:1fr}.res{position:static}.mbar{display:flex}}
 @media(max-width:520px){.wrap{padding:14px 14px 110px}.card{padding:16px}.intro h1{font-size:22px}.it .nm{font-size:15px}.subbar .r a.d{display:none}}
+.tabbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:45;background:#fff;border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+.tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;font-weight:700;color:var(--sub);padding:4px 0}
+.tabbar a .i{font-size:20px;line-height:1.1}
+.tabbar a.on{color:var(--navy)}
+@media(max-width:700px){.tabbar{display:flex}.mbar{bottom:58px}.wrap{padding-bottom:180px}.rst.all{padding:5px 8px;font-size:12px}.subbar .ttl span{display:none}}
 </style>
 </head>
 <body>
@@ -186,15 +195,15 @@ button{cursor:pointer}
   <span class="tfg-star" style="top:16px;left:66%;animation-delay:1.4s"></span>
   <span class="tfg-star sm" style="top:52px;left:50%;animation-delay:.3s"></span>
   <span class="tfg-star sm" style="top:8px;left:80%;animation-delay:1.9s"></span>
-  <div class="tfg-brand">
+  <a class="tfg-brand" href="./" aria-label="Thanks for Giving 메인으로">
     <div class="tfg-logo"><img src="logo-yuldang-cow-gold.png" alt="율당 금빛 소 로고"><span>YULDANG</span></div>
     <h1 class="tfg-title">Thanks for Giving</h1>
-  </div>
+  </a>
   <button class="tfg-menu-btn" aria-label="메뉴" onclick="document.querySelector('.tfg-nav').classList.toggle('open')">☰</button>
   <nav class="tfg-nav"><a href="./">간이 진단</a><a href="detail.html">정밀진단</a><a href="#" id="tfgPro">전문가 등록</a><a href="../">축산몰</a></nav>
 </header>
 <div class="subbar"><div class="in">
-  <div class="ttl">🎚️ 정밀진단<span>바를 밀어서</span></div>
+  <div class="ttl">🎚️ 정밀진단<span>바를 밀어서</span></div><button class="rst all" id="rstAll" title="모든 바를 처음 상태로">↺ 전체 초기화</button>
   <div class="r"><a class="d" href="./">30초 진단</a><a class="m" href="../">🛒 축산몰</a></div>
 </div></div>
 
@@ -213,6 +222,12 @@ button{cursor:pointer}
 
 <div class="mbar" id="mbar"><div class="s" id="mS">–</div><div class="t" id="mT">바를 움직이면 점수가 나와요</div><button id="mGo">결과 보기 ↓</button></div>
 <div class="ktoast" id="ktoast"></div>
+<nav class="tabbar" aria-label="하단 메뉴">
+  <a href="./"><span class="i">🩺</span>간이진단</a>
+  <a href="detail.html" class="on"><span class="i">🎚️</span>정밀진단</a>
+  <a href="#" id="tabCs"><span class="i">💬</span>상담</a>
+  <a href="../"><span class="i">🛒</span>축산몰</a>
+</nav>
 
 <div class="modal" id="modal"><div class="mbox">
   <h3 id="fmT">상담 신청</h3><p class="s" id="fmS"></p>
@@ -224,6 +239,7 @@ button{cursor:pointer}
     <label>성함<span style="color:var(--bad)">*</span></label><input name="name" required autocomplete="name">
     <label>연락처<span style="color:var(--bad)">*</span></label><input name="phone" type="tel" required placeholder="010-" inputmode="tel" autocomplete="tel">
     <label>목장명·지역<small>선택</small></label><input name="farm" placeholder="예) ○○목장, 충남 당진">
+    <label>원하는 리포트</label><div style="display:flex;gap:8px"><label style="margin:0;display:flex;gap:6px;align-items:center;font-weight:600;border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;flex:1"><input type="radio" name="report" value="간이 진단 리포트 9,900원" style="width:auto"> 간이 9,900원</label><label style="margin:0;display:flex;gap:6px;align-items:center;font-weight:600;border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;flex:1"><input type="radio" name="report" value="정밀 진단 리포트 199,000원" checked style="width:auto"> 정밀 199,000원</label></div>
     <label>하고 싶은 말<small>선택</small></label><textarea name="memo" rows="3"></textarea>
     <label class="agree"><input type="checkbox" required> 연락을 위해 성함·연락처·진단 결과를 수집하는 데 동의합니다. (목적 달성 후 파기)</label>
     <div class="row"><button type="button" id="fmX" style="background:#eef0f4;color:#555">닫기</button><button style="background:var(--navy);color:#fff">보내기</button></div>
@@ -293,7 +309,7 @@ function areaScore(a){ const v=a.items.filter(it=>ON[it.id]).map(it=>scoreOf(it,
 
 function renderCards(){
   $('#cards').innerHTML=AREAS.map(a=>`<section class="card" id="ar-${a.k}">
-    <div class="ch"><span class="lb">${a.k} · ${a.name}</span><span class="sc" id="as-${a.k}"></span></div>
+    <div class="ch"><span class="lb">${a.k} · ${a.name}</span><span class="ar-r"><span class="sc" id="as-${a.k}"></span><button class="rst" data-rst="${a.k}" title="${a.name} 바를 처음 상태로">↺ 초기화</button></span></div>
     <div class="why">${a.why}</div>
     ${a.items.map(it=>{ const v=V[it.id]??it.def;
       const mark=it.band?`<span class="tgtband" style="left:${pct(it,it.band[0])}%;width:${pct(it,it.band[1])-pct(it,it.band[0])}%"></span>`:`<span class="tgt" style="left:calc(${pct(it,it.goal)}% - 1px)"></span>`;
@@ -312,6 +328,7 @@ function renderCards(){
     rg.addEventListener('input',()=>set(rg.value));
     nv.addEventListener('change',()=>set(nv.value,true));
   });
+  document.querySelectorAll('[data-rst]').forEach(b=>b.onclick=()=>{ const a=AREAS.find(x=>x.k===b.dataset.rst); a.items.forEach(it=>{ delete ON[it.id]; delete V[it.id]; }); save(); renderCards(); toast(`${a.k} · ${a.name}을(를) 처음 상태로 되돌렸어요`); });
   document.querySelectorAll('[data-clr]').forEach(b=>b.onclick=()=>{ delete ON[b.dataset.clr]; delete V[b.dataset.clr]; save(); renderCards(); });
   update();
 }
@@ -353,6 +370,7 @@ function update(){
     <div class="rbox" style="background:#1e3466;color:#fff;border-color:#1e3466">
       <b style="font-size:15px;color:#f5d06f">📑 상세 컨설팅 보고서</b>
       <p class="small" style="color:#d6e0f1">여기서는 핵심 9개만 봅니다. 세균수·공태일수·수정횟수·사료효율·도태율·유방염 발생률 같은 <b style="color:#fff">세부 항목</b>은 검정성적·납유 명세를 받아 보고서에서 분석합니다.</p>
+      <div style="display:flex;gap:8px;margin-top:10px"><div style="flex:1;background:rgba(255,255,255,.1);border-radius:10px;padding:9px"><small style="color:#d6e0f1;font-size:12px">간이 진단 리포트</small><div style="font-size:17px;font-weight:900;color:#fff">9,900원</div></div><div style="flex:1;background:rgba(245,208,111,.18);border-radius:10px;padding:9px"><small style="color:#f5d06f;font-size:12px">정밀 진단 리포트</small><div style="font-size:17px;font-weight:900;color:#f5d06f">199,000원</div></div></div>
       <button class="btn" data-req="full" style="background:#f5d06f;color:#1e3466">보고서 따로 신청하기</button>
     </div>
     </div>`;
@@ -375,7 +393,7 @@ async function kakao(){ const ok=await copyText(summary());
   setTimeout(()=>{ location.href=`https://pf.kakao.com/${KAKAO_CHANNEL_ID}/chat`; },900); }
 function call(){ if(!PHONE_NUMBER){ toast('전화 상담 번호 준비 중이에요. 연락처를 남겨주시면 전화드릴게요.'); setTimeout(()=>openReq('match'),700); return; }
   location.href=`tel:${PHONE_NUMBER.replace(/-/g,'')}`; }
-const REQ={match:['무료 전문가 상담','정밀진단 결과를 보고 맞는 전문가가 연락드립니다.'],full:['정밀 컨설팅 보고서 신청','비용과 필요한 자료(검정성적·납유 명세)를 연락드려 안내합니다.'],pro:['전문가·업체 등록','분야와 활동 지역을 남겨주세요.']};
+const REQ={match:['무료 전문가 상담','정밀진단 결과를 보고 맞는 전문가가 연락드립니다.'],full:['리포트 신청','간이 진단 리포트는 9,900원, 정밀 진단 리포트는 199,000원입니다. 원하시는 리포트를 남겨주시면 결제 방법과 필요한 자료(검정성적·납유 명세)를 안내합니다.'],pro:['전문가·업체 등록','분야와 활동 지역을 남겨주세요.']};
 function openReq(t){ const c=REQ[t]||REQ.match; $('#fType').value=t; $('#fmT').textContent=c[0]; $('#fmS').textContent=c[1];
   $('#fSum').value=t==='pro'?'(전문가 등록)':summary(); $('#ok').style.display='none'; $('#modal').classList.add('on'); }
 $('#fmX').onclick=()=>$('#modal').classList.remove('on');
@@ -384,6 +402,8 @@ $('#fm').onsubmit=e=>{ e.preventDefault();
   fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(e.target)).toString()})
    .then(r=>{ if(!r.ok) throw 0; $('#ok').textContent='접수됐습니다. 영업일 기준 1~2일 안에 연락드릴게요.'; e.target.reset(); })
    .catch(()=>{ $('#ok').textContent='전송에 실패했어요. 잠시 후 다시 시도해 주세요.'; }).finally(()=>{ $('#ok').style.display='block'; }); };
+$('#rstAll').onclick=()=>{ if(!Object.keys(ON).length){ toast('아직 움직인 바가 없어요'); return; } if(confirm('모든 바를 처음 상태로 되돌릴까요?')){ V={}; ON={}; save(); renderCards(); toast('전체를 처음 상태로 되돌렸어요'); } };
+document.getElementById('tabCs').onclick=e=>{ e.preventDefault(); kakao(); };
 $('#mGo').onclick=()=>$('#res').scrollIntoView({behavior:'smooth'});
 const tp=document.getElementById('tfgPro'); if(tp) tp.onclick=e=>{ e.preventDefault(); openReq('pro'); };
 renderCards();
