@@ -209,6 +209,23 @@ footer{margin-top:50px;padding:26px 0;border-top:1px solid var(--line);color:var
 .trust b{color:var(--brand);font-weight:800}
 .lead .realflag{display:none}
 .vmore{display:none}
+/* 가격 변동 */
+.tr{display:inline-block;font-size:11.5px;font-weight:800;padding:1px 6px;border-radius:6px;margin-left:4px;vertical-align:middle}
+.tr.dn{background:#e8f0fd;color:#1e5fc8}
+.tr.up{background:#fdecea;color:#c62828}
+.low30{display:inline-block;font-size:11px;font-weight:800;padding:1px 6px;border-radius:6px;background:#1e5fc8;color:#fff;margin-left:4px;vertical-align:middle}
+.was{display:block;font-size:11.5px;color:var(--sub);text-decoration:none}
+.was s{color:var(--sub)}
+.movers{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-top:18px}
+.movers h3{font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px}
+.movers h3 small{font-size:12px;color:var(--sub);font-weight:600}
+.mv-list{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.mv{border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.mv:hover{border-color:var(--brand)}
+.mv b{font-size:14px}
+.mv .s{font-size:12px;color:var(--sub)}
+.mv .pr{font-size:15px;font-weight:800}
+.mv-empty{font-size:13px;color:var(--sub);margin-top:6px}
 .ncmp{display:none}
 .lo{display:inline-block;font-size:11px;font-weight:800;color:#c0392b;margin-right:4px}
 .speed{display:inline-block;margin-left:6px;font-size:12px;color:var(--brand);font-weight:700}
@@ -333,6 +350,13 @@ footer{margin-top:50px;padding:26px 0;border-top:1px solid var(--line);color:var
   .pcard .srcs{display:none}
   .pcard .cta{padding:7px;font-size:12.5px}
   .tag{font-size:10px;padding:1px 5px}
+  .movers{padding:12px;margin-top:14px}
+  .mv-list{grid-template-columns:1fr}
+  .mv{flex-direction:row;align-items:center;gap:8px;flex-wrap:wrap}
+  .mv .s{flex-basis:100%;order:3}
+  .movers h3{flex-wrap:wrap;font-size:15px}
+  .movers h3 small{flex-basis:100%}
+  .mv:nth-child(n+4){display:none}
   .vcard.extra{display:none}
   #vendorRow.all .vcard.extra{display:grid}
   .vmore{display:block;width:100%;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:12px;font-size:14px;font-weight:700;color:var(--brand)}
@@ -378,6 +402,7 @@ footer{margin-top:50px;padding:26px 0;border-top:1px solid var(--line);color:var
       <div class="hint" id="hint">제품 이름 일부만 입력해도 자동완성됩니다. 몰마다 다른 이름(침질컵·라이나 등)도 같이 찾아요.</div>
       <div class="chips" id="chips"></div>
     </div>
+    <div class="movers" id="movers" style="display:none"></div>
   </div>
 </section>
 
@@ -1011,7 +1036,7 @@ function renderHot(){
     <div class="hcard" data-id="${p.id}">
       <div class="img">${ICON[p.icon]}</div>
       <h4>${p.name}</h4>
-      <div class="range"><span class="lo">최저</span><b>${won(minP(p))}</b></div>
+      <div class="range"><span class="lo">최저</span><b>${won(minP(p))}</b>${ptrend(p)}</div>
       <div class="ncmp">판매처 ${vendorsOf(p).length}곳 비교</div>
       <div class="srcs"><span>업체 ${vendorsOf(p).length}곳</span><span>옵션 ${p.offers.length}개</span></div>
     </div>`).join('');
@@ -1065,7 +1090,7 @@ function renderResults(){
       <div class="body">
         <div class="tags">${p.sp.map(s=>`<span class="tag ${s}">${SPECIES[s].name}</span>`).join('')}${p.hot?'<span class="tag hotb">★핵심</span>':''}</div>
         <h4>${p.name}</h4>
-        <div class="range">${lo==null?'<b>가격 문의</b>':`<span class="lo">최저</span><b>${won(lo)}</b><span class="hi">${hi>lo?' ~ '+won(hi):''}</span>`}</div>
+        <div class="range">${lo==null?'<b>가격 문의</b>':`<span class="lo">최저</span><b>${won(lo)}</b>${ptrend(p)}<span class="hi">${hi>lo?' ~ '+won(hi):''}</span>`}</div>
         <div class="ncmp">판매처 ${vs.length}곳 비교</div>
         <div class="srcs">${vs.slice(0,3).map(v=>`<span>${VENDORS[v].name}</span>`).join('')}${vs.length>3?`<span>+${vs.length-3}</span>`:''}</div>
         <div class="cta">업체별 비교하기 →</div>
@@ -1159,7 +1184,7 @@ function renderCompare(){
     let h='<thead><tr><th class="rowh">업체</th>'+offers.map(o=>`<th class="${col(o)}"><span class="stype ${o.type}">${TYPE_LABEL[o.type]}</span><br><span class="seller">${o.seller}</span>${o===best?'<br><span class="badge">★ 추천</span>':''}</th>`).join('')+'</tr></thead><tbody>';
     h+='<tr><th class="rowh">★ 선택</th>'+offers.map((o,i)=>`<td class="${col(o)}">${o.price==null?'<small>문의 후 구매</small>':`<button class="selbtn ${isPicked(p,o)?'on':''}" data-pi="${i}">${isPicked(p,o)?'✓ 선택됨':'선택'}</button>`}</td>`).join('')+'</tr>';
     h+='<tr><th class="rowh">제품명</th>'+offers.map(o=>`<td class="${col(o)}" style="font-weight:600">${o.label}</td>`).join('')+'</tr>';
-    h+='<tr><th class="rowh">판매가</th>'+offers.map(o=>`<td class="${col(o)}"><span class="price">${won(o.price)}</span>${o.price!=null&&o.price===lowest?'<br><span class="badge">최저가</span>':''}</td>`).join('')+'</tr>';
+    h+='<tr><th class="rowh">판매가</th>'+offers.map(o=>`<td class="${col(o)}"><span class="price">${won(o.price)}</span>${otrend(p,o)}${o.price!=null&&o.price===lowest?'<br><span class="badge">최저가</span>':''}</td>`).join('')+'</tr>';
     h+='<tr><th class="rowh">규격·구성</th>'+offers.map(o=>`<td class="${col(o)}">${o.spec}</td>`).join('')+'</tr>';
     h+='<tr><th class="rowh">원산지</th>'+offers.map(o=>`<td class="${col(o)}">${o.origin}</td>`).join('')+'</tr>';
     h+='<tr><th class="rowh">비고</th>'+offers.map(o=>`<td class="${col(o)}"><small>${o.note||'-'}</small></td>`).join('')+'</tr>';
@@ -1171,7 +1196,7 @@ function renderCompare(){
     $('#mcards').innerHTML=offers.map((o,i)=>`<div class="mc ${col(o)}">
       <div class="top"><span class="stype ${o.type}">${TYPE_LABEL[o.type]}</span><span class="seller">${o.seller}</span>${o===best?'<span class="badge">★ 추천</span>':''}${o.price!=null&&o.price===lowest&&o!==best?'<span class="badge">최저가</span>':''}</div>
       <div class="lbl">${o.label}</div>
-      <div class="pr">${won(o.price)}</div>
+      <div class="pr">${won(o.price)}${otrend(p,o)}</div>
       <div class="meta">규격 ${o.spec} · 원산지 ${o.origin}${o.note?' · '+o.note:''} · 배송비 판매처 확인</div>
       <div class="acts">${o.price==null?'':`<button class="selbtn ${isPicked(p,o)?'on':''}" data-mpi="${i}">${isPicked(p,o)?'✓ 선택됨':'선택'}</button>`}<a class="buy" href="${o.url}" target="_blank" rel="noopener" data-mbuy="1">${o.price==null?'문의하러 가기':'판매처로 이동'}</a></div>
     </div>`).join('');
@@ -1216,6 +1241,59 @@ function renderPickbar(){
 /* 시작 */
 renderLead(); renderAll(); renderPickbar();
 
+
+/* ===================== 가격 기록 (매주 갱신 → 변동·30일 최저) ===================== */
+var HIST=null;
+const hkey=(p,o)=>p.id+'|'+o.v+'|'+o.label;
+function otrendData(p,o){
+  if(!HIST||o.price==null) return null;
+  const k=hkey(p,o), prev=HIST.prev?HIST.prev[k]:undefined;
+  const w=HIST.win.map(d=>d[k]).filter(x=>x!=null);
+  const low30 = w.length>=2 && o.price<=Math.min(...w) && o.price<Math.max(...w);
+  const pct = prev&&prev!==o.price ? Math.round((o.price-prev)/prev*100) : 0;
+  return {prev,pct,low30};
+}
+function otrend(p,o){
+  const t=otrendData(p,o); if(!t) return '';
+  let h='';
+  if(t.pct) h+=`<span class="tr ${t.pct<0?'dn':'up'}">${t.pct<0?'▼':'▲'}${Math.abs(t.pct)}%</span>`;
+  if(t.low30) h+=`<span class="low30">30일 최저</span>`;
+  if(t.pct) h+=`<span class="was">지난주 <s>${won(t.prev)}</s></span>`;
+  return h;
+}
+function pminAt(p,snap){ const v=p.offers.map(o=>snap[hkey(p,o)]).filter(x=>x!=null); return v.length?Math.min(...v):null; }
+function ptrendPct(p){
+  if(!HIST||!HIST.prev) return 0;
+  const now=minP(p), was=pminAt(p,HIST.prev);
+  return now!=null&&was&&now!==was ? Math.round((now-was)/was*100) : 0;
+}
+function ptrend(p){ const t=ptrendPct(p); return t?`<span class="tr ${t<0?'dn':'up'}">${t<0?'▼':'▲'}${Math.abs(t)}%</span>`:''; }
+function renderMovers(){
+  const el=document.getElementById('movers'); if(!el) return;
+  if(!HIST){ el.style.display='none'; return; }
+  el.style.display='';
+  if(!HIST.prev){
+    el.innerHTML=`<h3>📈 이번 주 가격 변동</h3><p class="mv-empty">가격 기록을 ${HIST.first}부터 쌓고 있어요. 다음 월요일 갱신부터 오른 가격·내린 가격과 <b>30일 최저가</b>가 표시됩니다.</p>`;
+    return;
+  }
+  const rows=[];
+  PRODUCTS.forEach(p=>p.offers.forEach(o=>{ const t=otrendData(p,o); if(t&&t.pct) rows.push({p,o,t}); }));
+  rows.sort((a,b)=>a.t.pct-b.t.pct);
+  const down=rows.filter(r=>r.t.pct<0).length, up=rows.length-down;
+  el.innerHTML=`<h3>📈 이번 주 가격 변동 <small>${HIST.prevDate} → ${HIST.lastDate} · 내림 ${down} · 오름 ${up}</small></h3>`+
+    (rows.length?`<div class="mv-list">${rows.slice(0,6).map(r=>`<div class="mv" data-id="${r.p.id}"><b>${r.p.name}</b><span class="pr">${won(r.o.price)}<span class="tr ${r.t.pct<0?'dn':'up'}">${r.t.pct<0?'▼':'▲'}${Math.abs(r.t.pct)}%</span></span><span class="s">${r.o.seller} · 지난주 ${won(r.t.prev)}</span></div>`).join('')}</div>`
+    :`<p class="mv-empty">지난주와 비교해 바뀐 가격이 없어요.</p>`);
+  el.querySelectorAll('.mv').forEach(m=>m.onclick=()=>openCompare(m.dataset.id));
+}
+fetch('history.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(h=>{
+  if(!h) return;
+  const dates=Object.keys(h).sort(); if(!dates.length) return;
+  const last=dates[dates.length-1], ms=d=>new Date(d+'T00:00:00').getTime();
+  const winDates=dates.filter(d=>ms(last)-ms(d)<=30*864e5);
+  HIST={first:dates[0],lastDate:last,prevDate:dates.length>1?dates[dates.length-2]:null,
+        prev:dates.length>1?h[dates[dates.length-2]]:null, win:winDates.map(d=>h[d])};
+  renderAll(); renderMovers();
+}).catch(()=>{});
 
 /* 빠르고·정확하게: 신뢰 스트립 + 모바일 메뉴 */
 (function(){
