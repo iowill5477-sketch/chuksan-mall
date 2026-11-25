@@ -272,7 +272,9 @@ footer{margin-top:50px;padding:26px 0;border-top:1px solid var(--line);color:var
   .mhead .img svg{width:44px;height:44px}
   .mhead h3{font-size:17px}
   .mhead p{font-size:12.5px}
-  .mbody{padding:14px 16px 90px}
+  .mbody{padding:14px 16px 120px}
+  body{padding-bottom:80px}
+  body.haspick{padding-bottom:150px}
   .mfilter{flex-wrap:nowrap;overflow-x:auto}
   .mfilter .pill,.mfilter .lbl{flex:none;white-space:nowrap}
   .pick{flex-wrap:wrap;padding:12px 14px}
@@ -553,7 +555,7 @@ const SM53 = 'https://so-mory.com/product/list.html?cate_no=53';
 const PP = 'https://pignporkmall.com/list.php?brand_name=&category=7';
 
 /* o(업체, 제품명/옵션, 가격, 규격·구성, 원산지, 비고, url) */
-function o(v,label,price,spec,origin,note,url){ return {v,seller:VENDORS[v].name,type:VENDORS[v].type,label,price,spec:spec||'-',origin:origin||'-',note:note||'',url:url||VENDORS[v].url}; }
+function o(v,label,price,spec,origin,note,url){ return {v,seller:VENDORS[v].name,type:VENDORS[v].type,label,price,spec:spec||'-',origin:(!origin||origin==='-')?'미표기':origin,note:note||'',url:url||VENDORS[v].url}; }
 
 /* ---------- 제품 ---------- */
 const PRODUCTS = [
@@ -562,7 +564,7 @@ const PRODUCTS = [
   desc:'송아지 젖병을 걸어 고정하는 거치대',
   tags:['포유틀','포유투','포유기 거치대','젖병 거치대','포유통 거치대','송아지','포유','대용유'],
   related:['송아지 포유병','포유 꼭지','밀크바 포유기'],
-  offers:[o('hs','포유기 거치대',41000,'거치대 단품','-','일부 페이지 39,000원 표기',HS(7440)),
+  offers:[o('hs','포유기 거치대',41000,'거치대 단품','-','파이프 50·60mm 선택',HS(7440)),
           o('hs','엄마 포유기+거치대 세트',42000,'포유기+거치대','-','영세율',HS(7707)),
           o('hj','송아지 젖병 거치대',41000,'간편 포유기(스테인레스)','국산','화물배송'),
           o('sm','포유통 거치대',42000,'거치대','국내','',SM49)]},
@@ -934,8 +936,8 @@ ICON.tool = `<svg viewBox="0 0 64 64"><rect x="28" y="8" width="8" height="34" r
 
 /* ===================== 축종 ===================== */
 const SPECIES = {
-  hanwoo: {name:'한우', icon:'cow',      top:['feeder','eartag','restrainer']},
   dairy:  {name:'낙농', icon:'dairycow', top:['dipcup','liner','bottle']},
+  hanwoo: {name:'한우', icon:'cow',      top:['feeder','eartag','restrainer']},
   pig:    {name:'양돈', icon:'pig',      top:['heatlamp','pignipple','heatmat']},
   poultry:{name:'양계', icon:'hen',      top:['chickfeeder','chickwater','chicknipple']}
 };
@@ -1037,7 +1039,7 @@ function renderHot(){
       <div class="img">${ICON[p.icon]}</div>
       <h4>${p.name}</h4>
       <div class="range"><span class="lo">최저</span><b>${won(minP(p))}</b>${ptrend(p)}</div>
-      <div class="ncmp">판매처 ${vendorsOf(p).length}곳 비교</div>
+      <div class="ncmp">판매처 ${vendorsOf(p).length}곳${vendorsOf(p).length>1?' 비교':''}</div>
       <div class="srcs"><span>업체 ${vendorsOf(p).length}곳</span><span>옵션 ${p.offers.length}개</span></div>
     </div>`).join('');
   document.querySelectorAll('.hcard').forEach(el=>el.onclick=()=>openCompare(el.dataset.id));
@@ -1091,9 +1093,9 @@ function renderResults(){
         <div class="tags">${p.sp.map(s=>`<span class="tag ${s}">${SPECIES[s].name}</span>`).join('')}${p.hot?'<span class="tag hotb">★핵심</span>':''}</div>
         <h4>${p.name}</h4>
         <div class="range">${lo==null?'<b>가격 문의</b>':`<span class="lo">최저</span><b>${won(lo)}</b>${ptrend(p)}<span class="hi">${hi>lo?' ~ '+won(hi):''}</span>`}</div>
-        <div class="ncmp">판매처 ${vs.length}곳 비교</div>
+        <div class="ncmp">판매처 ${vs.length}곳${vs.length>1?' 비교':''}</div>
         <div class="srcs">${vs.slice(0,3).map(v=>`<span>${VENDORS[v].name}</span>`).join('')}${vs.length>3?`<span>+${vs.length-3}</span>`:''}</div>
-        <div class="cta">업체별 비교하기 →</div>
+        <div class="cta">${vs.length>1?'업체별 비교하기 →':'판매처 보기 →'}</div>
       </div></div>`;
   }).join('');
   document.querySelectorAll('.pcard').forEach(el=>el.onclick=()=>openCompare(el.dataset.id));
@@ -1135,8 +1137,8 @@ document.addEventListener('click',e=>{ if(!e.target.closest('.sbar')) $('#sugges
 
 /* ===================== 비교 모달 ===================== */
 function renderStepper(cur){
-  const steps=[['A','검색','제품 찾기'],['B','비교','업체별 가격·규격'],['C','선택','내 선택에 담기'],['D','구매 이동','판매처에서 결제'],['A2','다음 자재','함께 쓸 자재 검색']];
-  const order=['A','B','C','D','A2'], ci=order.indexOf(cur);
+  const steps=[['A','찾기','축종·업체·검색'],['B','모으기','같은 제품 묶기'],['C','비교','업체별 가격·규격'],['D','선택','내 선택에 담기'],['E','구매','판매처로 이동'],['A2','다음 자재','함께 쓸 자재']];
+  const order=['A','B','C','D','E','A2'], ci=order.indexOf(cur);
   $('#stepper').innerHTML=steps.map(([k,t,d],i)=>`<div class="st ${i<ci?'done':''} ${i===ci?'now':''}"><b>${k==='A2'?'다시 A':k} · ${t}</b>${d}</div>`).join('<span class="ar">→</span>');
 }
 function openCompare(id){
@@ -1158,7 +1160,7 @@ function renderCompare(){
   $('#mImg').innerHTML=ICON[p.icon];
   $('#mTitle').innerHTML=`${p.name} <span class="realflag">✔ ${CHECKED} 가격</span>`;
   $('#mDesc').textContent=`${p.desc} · ${p.sp.map(s=>SPECIES[s].name).join('·')} · 업체 ${vendorsOf(p).length}곳 · 옵션 ${p.offers.length}개`;
-  renderStepper(picks.some(x=>x.pid===p.id)?'C':'B');
+  renderStepper(picks.some(x=>x.pid===p.id)?'D':'C');
 
   let offers=p.offers.filter(o=>modalState.f==='all'||o.type===modalState.f);
   offers.sort((a,b)=>(a.price??Infinity)-(b.price??Infinity));
@@ -1175,16 +1177,22 @@ function renderCompare(){
     $('#ctable').innerHTML=''; $('#mcards').innerHTML='';
   } else {
     $('#pick').innerHTML = best ? `<div class="star">★</div>
-      <div><b>추천 · ${best.seller} — ${best.label} ${won(best.price)}</b><p>${why} · 규격: ${best.spec} · 원산지: ${best.origin}${best.note?' · '+best.note:''}</p></div>
-      <a href="#" id="pickBest">${isPicked(p,best)?'✓ 선택됨':'C · 이걸로 선택'}</a>`
+      <div><b>추천 · ${best.seller} — ${best.label} ${won(best.price)}</b><p><span id="pickWhy">${why}</span> · 규격: ${best.spec} · 원산지: ${best.origin}${best.note?' · '+best.note:''}</p></div>
+      <a href="#" id="pickBest">${isPicked(p,best)?'✓ 선택됨':'D · 이걸로 선택'}</a>`
       : `<div class="star">–</div><div><b>조건에 맞는 가격 공개 제품이 없어요</b><p>‘가격 문의’ 업체는 사이트에서 직접 확인하세요.</p></div>`;
     if(best) $('#pickBest').onclick=e=>{ e.preventDefault(); if(!isPicked(p,best)) togglePick(p,best); };
     const lowest=pool.length?Math.min(...offers.filter(o=>o.price!=null).map(o=>o.price)):null;
+    const tie=offers.filter(o=>o.price!=null&&o.price===lowest);
+    const lowBadge=tie.length>1?'공동 최저가':'최저가';
+    if(best&&tie.length>1&&best.price===lowest){
+      const ts=new Set(tie.map(o=>o.spec));
+      $('#pickWhy').textContent=`같은 가격 ${tie.length}곳 중 첫 번째`+(ts.size>1?' · 규격이 서로 달라요, 아래에서 꼭 비교하세요':'');
+    }
     const col=o=>o===best?'best':'';
-    let h='<thead><tr><th class="rowh">업체</th>'+offers.map(o=>`<th class="${col(o)}"><span class="stype ${o.type}">${TYPE_LABEL[o.type]}</span><br><span class="seller">${o.seller}</span>${o===best?'<br><span class="badge">★ 추천</span>':''}</th>`).join('')+'</tr></thead><tbody>';
+    let h='<thead><tr><th class="rowh">업체</th>'+offers.map(o=>`<th class="${col(o)}"><span class="stype ${o.type}">${TYPE_LABEL[o.type]}</span><br><span class="seller">${o.seller}</span>${o===best?'<br><span class="badge">★ 추천</span>'+(tie.length>1&&o.price===lowest?' <span class="badge">공동 최저가</span>':''):''}</th>`).join('')+'</tr></thead><tbody>';
     h+='<tr><th class="rowh">★ 선택</th>'+offers.map((o,i)=>`<td class="${col(o)}">${o.price==null?'<small>문의 후 구매</small>':`<button class="selbtn ${isPicked(p,o)?'on':''}" data-pi="${i}">${isPicked(p,o)?'✓ 선택됨':'선택'}</button>`}</td>`).join('')+'</tr>';
     h+='<tr><th class="rowh">제품명</th>'+offers.map(o=>`<td class="${col(o)}" style="font-weight:600">${o.label}</td>`).join('')+'</tr>';
-    h+='<tr><th class="rowh">판매가</th>'+offers.map(o=>`<td class="${col(o)}"><span class="price">${won(o.price)}</span>${otrend(p,o)}${o.price!=null&&o.price===lowest?'<br><span class="badge">최저가</span>':''}</td>`).join('')+'</tr>';
+    h+='<tr><th class="rowh">판매가</th>'+offers.map(o=>`<td class="${col(o)}"><span class="price">${won(o.price)}</span>${otrend(p,o)}${o.price!=null&&o.price===lowest?'<br><span class="badge">'+lowBadge+'</span>':''}</td>`).join('')+'</tr>';
     h+='<tr><th class="rowh">규격·구성</th>'+offers.map(o=>`<td class="${col(o)}">${o.spec}</td>`).join('')+'</tr>';
     h+='<tr><th class="rowh">원산지</th>'+offers.map(o=>`<td class="${col(o)}">${o.origin}</td>`).join('')+'</tr>';
     h+='<tr><th class="rowh">비고</th>'+offers.map(o=>`<td class="${col(o)}"><small>${o.note||'-'}</small></td>`).join('')+'</tr>';
@@ -1192,16 +1200,16 @@ function renderCompare(){
     h+='<tr><th class="rowh">구매</th>'+offers.map(o=>`<td class="${col(o)}"><a class="buy" href="${o.url}" target="_blank" rel="noopener" data-buy="1">${o.price==null?'문의하러 가기':'판매처로 이동'}</a></td>`).join('')+'</tr>';
     $('#ctable').innerHTML=h+'</tbody>';
     $('#ctable').querySelectorAll('[data-pi]').forEach(b=>b.onclick=()=>togglePick(p,offers[+b.dataset.pi]));
-    $('#ctable').querySelectorAll('[data-buy]').forEach(a=>a.addEventListener('click',()=>renderStepper('D')));
+    $('#ctable').querySelectorAll('[data-buy]').forEach(a=>a.addEventListener('click',()=>renderStepper('E')));
     $('#mcards').innerHTML=offers.map((o,i)=>`<div class="mc ${col(o)}">
-      <div class="top"><span class="stype ${o.type}">${TYPE_LABEL[o.type]}</span><span class="seller">${o.seller}</span>${o===best?'<span class="badge">★ 추천</span>':''}${o.price!=null&&o.price===lowest&&o!==best?'<span class="badge">최저가</span>':''}</div>
+      <div class="top"><span class="stype ${o.type}">${TYPE_LABEL[o.type]}</span><span class="seller">${o.seller}</span>${o===best?'<span class="badge">★ 추천</span>'+(tie.length>1&&o.price===lowest?'<span class="badge">공동 최저가</span>':''):''}${o.price!=null&&o.price===lowest&&o!==best?'<span class="badge">'+lowBadge+'</span>':''}</div>
       <div class="lbl">${o.label}</div>
       <div class="pr">${won(o.price)}${otrend(p,o)}</div>
       <div class="meta">규격 ${o.spec} · 원산지 ${o.origin}${o.note?' · '+o.note:''} · 배송비 판매처 확인</div>
       <div class="acts">${o.price==null?'':`<button class="selbtn ${isPicked(p,o)?'on':''}" data-mpi="${i}">${isPicked(p,o)?'✓ 선택됨':'선택'}</button>`}<a class="buy" href="${o.url}" target="_blank" rel="noopener" data-mbuy="1">${o.price==null?'문의하러 가기':'판매처로 이동'}</a></div>
     </div>`).join('');
     $('#mcards').querySelectorAll('[data-mpi]').forEach(b=>b.onclick=()=>togglePick(p,offers[+b.dataset.mpi]));
-    $('#mcards').querySelectorAll('[data-mbuy]').forEach(a=>a.addEventListener('click',()=>renderStepper('D')));
+    $('#mcards').querySelectorAll('[data-mbuy]').forEach(a=>a.addEventListener('click',()=>renderStepper('E')));
   }
   const q=encodeURIComponent(p.name.replace(/ \(.+\)/,''));
   $('#extLinks').innerHTML=[
@@ -1234,7 +1242,7 @@ function renderPickbar(){
    +(rel?`<button class="next" id="nextA">다시 A · ‘${rel}’ →</button>`:'')+`</div>`;
   bar.classList.add('on'); document.body.classList.add('haspick');
   bar.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{ picks=picks.filter(x=>x.key!==b.dataset.del); savePicks(); renderPickbar(); if($('#modal').classList.contains('on')) renderCompare(); });
-  bar.querySelectorAll('[data-go]').forEach(a=>a.addEventListener('click',()=>{ if($('#modal').classList.contains('on')) renderStepper('D'); }));
+  bar.querySelectorAll('[data-go]').forEach(a=>a.addEventListener('click',()=>{ if($('#modal').classList.contains('on')) renderStepper('E'); }));
   const n=$('#nextA'); if(n) n.onclick=()=>{ const t=PRODUCTS.find(p=>p.name===rel); closeModal(); if(t) openCompare(t.id); };
 }
 
