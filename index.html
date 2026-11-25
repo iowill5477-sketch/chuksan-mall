@@ -208,6 +208,9 @@ footer{margin-top:50px;padding:26px 0;border-top:1px solid var(--line);color:var
 .trust div{flex:none;display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:30px;padding:6px 12px;font-size:13px;font-weight:600;color:var(--sub);white-space:nowrap}
 .trust b{color:var(--brand);font-weight:800}
 .lead .realflag{display:none}
+.vmore{display:none}
+.ncmp{display:none}
+.lo{display:inline-block;font-size:11px;font-weight:800;color:#c0392b;margin-right:4px}
 .speed{display:inline-block;margin-left:6px;font-size:12px;color:var(--brand);font-weight:700}
 /* 모바일 메뉴 */
 .menubtn{display:none;margin-left:auto;border:0;background:var(--brand2);color:var(--brand);width:42px;height:42px;border-radius:10px;font-size:20px;font-weight:800}
@@ -287,10 +290,13 @@ footer{margin-top:50px;padding:26px 0;border-top:1px solid var(--line);color:var
 
   /* 축종: 한 줄 4칸 탭, 화면 위에 고정 */
   .species{grid-template-columns:repeat(4,1fr);gap:6px;position:sticky;top:56px;z-index:15;background:var(--bg);padding:6px 0}
-  .sp{padding:10px 4px;border-radius:12px;text-align:center}
+  .sp{padding:8px 4px 7px;border-radius:12px;text-align:center}
   .sp:hover{transform:none;box-shadow:none}
   .sp .hd{justify-content:center}
-  .sp .hd svg,.sp .cnt,.sp .prods{display:none}
+  .sp .cnt,.sp .prods{display:none}
+  .sp .hd{flex-direction:column;gap:2px}
+  .sp .hd svg{width:34px;height:34px}
+  .sp.on .hd svg{background:#fff;border-radius:50%}
   .sp h3{font-size:15px}
   .sp.on{outline:none;background:currentColor}
   .sp.on h3{color:#fff}
@@ -327,6 +333,13 @@ footer{margin-top:50px;padding:26px 0;border-top:1px solid var(--line);color:var
   .pcard .srcs{display:none}
   .pcard .cta{padding:7px;font-size:12.5px}
   .tag{font-size:10px;padding:1px 5px}
+  .vcard.extra{display:none}
+  #vendorRow.all .vcard.extra{display:grid}
+  .vmore{display:block;width:100%;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:12px;font-size:14px;font-weight:700;color:var(--brand)}
+  .ncmp{display:block;font-size:11.5px;color:var(--brand);font-weight:700}
+  .pcard .range .hi{display:none}
+  .pcard .tags{display:none}
+  .pcard .cta{display:none}
   .toolbar .info{font-size:12.5px}
 }
 </style>
@@ -972,14 +985,16 @@ function renderVendors(){
     }).filter(x=>x.prods.length)
     .sort((a,b)=>(a.v.type===b.v.type?0:a.v.type==='mall'?-1:1) || b.opts-a.opts);
   $('#vTitle').textContent = (sp?SPECIES[sp].name+' ':'')+'기자재 업체 '+list.length+'곳';
-  $('#vendorRow').innerHTML = list.map(({k,v,prods,opts,noPrice})=>`
-    <div class="vcard ${state.vendor===k?'on':''}" data-v="${k}">
+  $('#vendorRow').classList.toggle('all',!!state.vAll);
+  $('#vendorRow').innerHTML = list.map(({k,v,prods,opts,noPrice},i)=>`
+    <div class="vcard ${state.vendor===k?'on':''} ${i>=3?'extra':''}" data-v="${k}">
       <span class="stype ${v.type}">${TYPE_LABEL[v.type]}</span>
       <h4>${v.name}</h4>
       <p>${v.desc}</p>
       <div class="vstat">제품 <b>${prods.length}</b>종 · 옵션 <b>${opts}</b>개${noPrice?' · <span style="color:#8a5a00">가격 문의</span>':''}</div>
       <div class="vbtns"><button class="vsel">${state.vendor===k?'✓ 이 업체만 보는 중':'이 업체 제품만'}</button><a href="${v.url}" target="_blank" rel="noopener">사이트 →</a></div>
-    </div>`).join('');
+    </div>`).join('') + (list.length>3?`<button class="vmore" id="vMore">${state.vAll?'접기 ▲':`업체 ${list.length-3}곳 더 보기 ▼`}</button>`:'');
+  const vm=document.getElementById('vMore'); if(vm) vm.onclick=()=>{ state.vAll=!state.vAll; renderVendors(); };
   document.querySelectorAll('.vcard .vsel').forEach(b=>b.onclick=e=>{
     const k = e.target.closest('.vcard').dataset.v;
     state.vendor = state.vendor===k?null:k; renderAll();
@@ -996,7 +1011,8 @@ function renderHot(){
     <div class="hcard" data-id="${p.id}">
       <div class="img">${ICON[p.icon]}</div>
       <h4>${p.name}</h4>
-      <div class="range"><b>${won(minP(p))}</b>부터</div>
+      <div class="range"><span class="lo">최저</span><b>${won(minP(p))}</b></div>
+      <div class="ncmp">판매처 ${vendorsOf(p).length}곳 비교</div>
       <div class="srcs"><span>업체 ${vendorsOf(p).length}곳</span><span>옵션 ${p.offers.length}개</span></div>
     </div>`).join('');
   document.querySelectorAll('.hcard').forEach(el=>el.onclick=()=>openCompare(el.dataset.id));
@@ -1049,7 +1065,8 @@ function renderResults(){
       <div class="body">
         <div class="tags">${p.sp.map(s=>`<span class="tag ${s}">${SPECIES[s].name}</span>`).join('')}${p.hot?'<span class="tag hotb">★핵심</span>':''}</div>
         <h4>${p.name}</h4>
-        <div class="range">${lo==null?'<b>가격 문의</b>':`<b>${won(lo)}</b>${hi>lo?' ~ '+won(hi):''}`}</div>
+        <div class="range">${lo==null?'<b>가격 문의</b>':`<span class="lo">최저</span><b>${won(lo)}</b><span class="hi">${hi>lo?' ~ '+won(hi):''}</span>`}</div>
+        <div class="ncmp">판매처 ${vs.length}곳 비교</div>
         <div class="srcs">${vs.slice(0,3).map(v=>`<span>${VENDORS[v].name}</span>`).join('')}${vs.length>3?`<span>+${vs.length-3}</span>`:''}</div>
         <div class="cta">업체별 비교하기 →</div>
       </div></div>`;
