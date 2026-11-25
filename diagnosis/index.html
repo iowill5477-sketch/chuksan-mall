@@ -206,6 +206,15 @@ header .wrap{display:flex;align-items:center;gap:10px;height:58px}
 /* 움직임 줄이기 설정을 켠 사용자는 애니메이션 끔 */
 @media (prefers-reduced-motion:reduce){.tfg-star,.tfg-title,.tfg-logo span{animation:none}}
 
+/* 카카오톡·전화 상담 */
+.consult{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;max-width:560px}
+.consult h4{font-size:17px}
+.consult .sub{color:var(--sub);font-size:14px;margin:4px 0 14px}
+.kbtn{display:block;width:100%;border:0;border-radius:12px;padding:15px;font-size:17px;font-weight:800;background:#FEE500;color:#191919}
+.cbtn{display:block;width:100%;border-radius:12px;padding:14px;font-size:16px;font-weight:700;background:#fff;color:var(--brand);border:1.5px solid var(--brand);margin-top:10px}
+.kfab{position:fixed;right:16px;bottom:18px;z-index:40;background:#FEE500;color:#191919;border:0;border-radius:30px;padding:12px 16px;font-size:15px;font-weight:800;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.ktoast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:#222;color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:60;max-width:90vw;text-align:center}
+.ktoast.show{opacity:1}
 </style>
 </head>
 <body>
@@ -236,6 +245,9 @@ header .wrap{display:flex;align-items:center;gap:10px;height:58px}
     ※ 답변은 이 기기에만 저장되고, 신청서를 보낼 때만 함께 전달됩니다.
   </p>
 </main>
+
+<button class="kfab" id="kfab">💬 카톡 문의</button>
+<div class="ktoast" id="ktoast"></div>
 
 <!-- 신청 모달 (Netlify Forms) -->
 <div class="modal" id="modal"><div class="mbox">
@@ -432,6 +444,12 @@ function vResult(){
     </div>
   </div>
 
+  <div class="sec"><h3>상세 컨설팅 보고서가 필요하신가요?</h3><p>진단 결과가 자동으로 복사돼요. 카톡 대화창에 붙여넣기만 하시면 됩니다</p></div>
+  <div class="consult">
+    <button class="kbtn" id="kakaoBtn">💬 카카오톡으로 상담 신청</button>
+    <button class="cbtn" id="callBtn">📞 전화 상담</button>
+  </div>
+
   <div class="sec"><h3>E · 더 정확하게</h3><p>무료 상담 → 간이 리포트 → 정밀 보고서 → 다시 진단</p></div>
   <div class="ladder">${PRICE.map((x,i)=>`<div class="lv ${x.star?'star':''}"><div class="k">${x.k}</div><h4>${x.h}</h4><div class="pr">${x.p}${x.p!=='0원'?'<small>가정</small>':''}</div>
       <ul>${x.l.map(t=>`<li>${t}</li>`).join('')}</ul><button class="btn ${x.star?'a':'p'} s" data-req="${x.t}">${x.b}</button></div><div class="la">→</div>`).join('')}
@@ -441,6 +459,8 @@ function vResult(){
   const mo=$('#more'); if(mo) mo.onclick=()=>{ S.step='home'; render(); };
   document.querySelectorAll('[data-exp]').forEach(b=>b.onclick=()=>openReq('match',b.dataset.exp));
   document.querySelectorAll('[data-req]').forEach(b=>b.onclick=()=>openReq(b.dataset.req,exps[0]));
+  $('#kakaoBtn').onclick=()=>kakaoConsult(true);
+  $('#callBtn').onclick=callConsult;
   $('#home2').onclick=()=>{ S.step='home'; render(); };
   $('#reset').onclick=()=>{ if(confirm('답변을 모두 지울까요?')){ S.ans={}; save(); S.step='home'; render(); } };
 }
@@ -477,6 +497,36 @@ $('#fm').onsubmit=e=>{
    .finally(()=>{ $('#ok').style.display='block'; });
 };
 const tp=document.getElementById('tfgPro'); if(tp) tp.onclick=e=>{e.preventDefault();openReq('pro');};
+/* ===== 카카오톡·전화 상담 — 설정값: 이 두 줄만 바꾸세요 ===== */
+const KAKAO_CHANNEL_ID = "";   // 카카오톡 채널 관리자센터의 채널 ID (예: "_AbCdE"). 비어 있으면 상담 신청서로 받습니다
+const PHONE_NUMBER     = "";   // 전화 상담 번호 (예: "010-0000-0000")
+
+function buildSummary(){
+  const r=compute(), d=new Date().toLocaleDateString('ko-KR');
+  if(r.total==null) return ['[Thanks for Giving 상담 문의]','진단 전입니다. 상담 원합니다.',`문의일: ${d}`].join('\n');
+  return ['[낙농 간이진단 결과 — 상담 신청]',
+    `종합점수: ${r.total}점 (${grade(r.total)})`,
+    `영역별: ${r.areas.map(x=>`${x.w.name} ${x.s}점`).join(', ')}`,
+    `개선 필요: ${r.weak.slice(0,3).map(x=>`${SHORT[x.q.id]}(${x.a})`).join(', ')||'없음'}`,
+    `진단일: ${d}`,'','상세 컨설팅 보고서 상담 원합니다.'].join('\n');
+}
+async function copyText(text){
+  try{ await navigator.clipboard.writeText(text); return true; }
+  catch(e){ const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select();
+    let ok=false; try{ ok=document.execCommand('copy'); }catch(_){} ta.remove(); return ok; }
+}
+function ktoast(msg){ const t=$('#ktoast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2400); }
+async function kakaoConsult(withResult){
+  const ok=await copyText(buildSummary());
+  if(!KAKAO_CHANNEL_ID){ ktoast('카카오톡 채널 연결 준비 중이에요. 상담 신청서로 받을게요.'); setTimeout(()=>openReq('match'),700); return; }
+  ktoast(ok?'진단 결과가 복사됐어요. 카톡 창에 붙여넣어 주세요.':'카톡 창에서 진단 결과를 말씀해 주세요.');
+  setTimeout(()=>{ window.location.href=`https://pf.kakao.com/${KAKAO_CHANNEL_ID}/chat`; },900);
+}
+function callConsult(){
+  if(!PHONE_NUMBER){ ktoast('전화 상담 번호 준비 중이에요. 연락처를 남겨주시면 전화드릴게요.'); setTimeout(()=>openReq('match'),700); return; }
+  window.location.href=`tel:${PHONE_NUMBER.replace(/-/g,'')}`;
+}
+$('#kfab').onclick=()=>kakaoConsult(false);
 $('#home').onclick=()=>{ S.step='home'; render(); };
 render();
 </script>
