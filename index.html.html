@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>축산몰 통합검색 · 한 번에 찾고, 한 번에 비교</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>
+:root{
+  --ink:#1f2a24; --sub:#5d6b63; --line:#e4e2da; --bg:#faf8f3; --card:#ffffff;
+  --brand:#2f5d46; --brand2:#e9f0ea; --accent:#c8862b;
+  --hanwoo:#8a4b2f; --hanwoo-bg:#f6ece6;
+  --dairy:#2d5f8a;  --dairy-bg:#e8f0f7;
+  --pig:#b5566b;    --pig-bg:#f8eaee;
+  --poultry:#b08a1e;--poultry-bg:#f8f2df;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Pretendard,-apple-system,"Malgun Gothic",sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+
+/* header */
+header{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+header .wrap{display:flex;align-items:center;gap:20px;height:64px}
+.logo{font-weight:800;font-size:20px;color:var(--brand);display:flex;align-items:center;gap:8px}
+.logo span{font-size:12px;font-weight:600;color:var(--sub);background:var(--brand2);padding:3px 8px;border-radius:20px}
+nav{margin-left:auto;display:flex;gap:4px}
+nav a{padding:8px 14px;border-radius:8px;font-size:14px;color:var(--sub);font-weight:600}
+nav a:hover{background:var(--brand2);color:var(--brand)}
+
+/* hero */
+.hero{background:linear-gradient(180deg,#eef3ec 0%,var(--bg) 100%);padding:44px 0 28px}
+.hero h1{font-size:34px;font-weight:800;letter-spacing:-0.5px}
+.hero h1 em{font-style:normal;color:var(--brand)}
+.hero p.lead{color:var(--sub);margin:8px 0 22px;font-size:16px}
+
+/* search */
+.search-box{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 6px 24px rgba(47,93,70,.07)}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tab{border:1px solid var(--line);background:#fff;padding:8px 14px;border-radius:30px;font-size:14px;font-weight:600;color:var(--sub)}
+.tab.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.tab b{font-weight:800;margin-right:4px}
+.sbar{display:flex;gap:8px;position:relative}
+.sbar input{flex:1;font-size:17px;padding:15px 18px;border:2px solid var(--brand);border-radius:12px;outline:none;font-family:inherit}
+.sbar button{background:var(--brand);color:#fff;border:0;border-radius:12px;padding:0 28px;font-size:16px;font-weight:700}
+.suggest{position:absolute;top:58px;left:0;right:110px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.08);display:none;z-index:10;overflow:hidden}
+.suggest div{padding:10px 16px;font-size:15px;cursor:pointer;display:flex;justify-content:space-between}
+.suggest div:hover{background:var(--brand2)}
+.suggest small{color:var(--sub)}
+.hint{font-size:13px;color:var(--sub);margin-top:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{background:var(--brand2);color:var(--brand);border:0;padding:6px 12px;border-radius:20px;font-size:13px;font-weight:600}
+.chip:hover{background:var(--brand);color:#fff}
+.chip.hot::before{content:"★ ";color:var(--accent)}
+
+/* species row (horizontal) */
+.sec-title{display:flex;align-items:baseline;gap:10px;margin:34px 0 14px}
+.sec-title h2{font-size:22px;font-weight:800}
+.sec-title p{color:var(--sub);font-size:14px}
+.species{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.sp{border-radius:18px;padding:18px;border:1px solid var(--line);background:var(--card);cursor:pointer;transition:.15s;position:relative;overflow:hidden}
+.sp:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,0,0,.08)}
+.sp.on{outline:3px solid currentColor}
+.sp .hd{display:flex;align-items:center;gap:10px}
+.sp .hd svg{width:56px;height:56px;flex:none}
+.sp h3{font-size:20px;font-weight:800}
+.sp .cnt{font-size:12px;color:var(--sub)}
+.sp .prods{display:flex;gap:8px;margin-top:14px}
+.sp .prod{flex:1;background:#fff;border-radius:12px;padding:8px 4px 6px;text-align:center;font-size:11.5px;font-weight:600;color:var(--ink);border:1px solid rgba(0,0,0,.05)}
+.sp .prod svg{width:44px;height:44px;display:block;margin:0 auto 2px}
+.sp.hanwoo{color:var(--hanwoo);background:var(--hanwoo-bg)}
+.sp.dairy{color:var(--dairy);background:var(--dairy-bg)}
+.sp.pig{color:var(--pig);background:var(--pig-bg)}
+.sp.poultry{color:var(--poultry);background:var(--poultry-bg)}
+.sp h3,.sp .cnt{color:inherit}
+
+/* how it works – horizontal flow */
+.flow{display:flex;align-items:stretch;gap:0;margin-top:6px}
+.fstep{flex:1;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.fstep .k{font-size:12px;font-weight:800;color:var(--brand)}
+.fstep h4{font-size:15px;margin:2px 0 4px}
+.fstep p{font-size:12.5px;color:var(--sub)}
+.fstep.key{border:2px solid var(--accent)}
+.fstep.key .k::after{content:" ★핵심";color:var(--accent)}
+.farrow{display:flex;align-items:center;padding:0 6px;color:var(--sub);font-size:20px}
+
+/* results */
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.toolbar .info{font-size:14px;color:var(--sub)}
+.toolbar .info b{color:var(--ink)}
+.toolbar select{margin-left:auto;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-family:inherit}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.pcard{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:pointer;transition:.15s;display:flex;flex-direction:column}
+.pcard:hover{box-shadow:0 10px 26px rgba(0,0,0,.08);transform:translateY(-2px)}
+.pcard .img{background:#f3f1ea;height:150px;display:flex;align-items:center;justify-content:center}
+.pcard .img svg{width:110px;height:110px}
+.pcard .body{padding:14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.tags{display:flex;gap:4px;flex-wrap:wrap}
+.tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px}
+.tag.hanwoo{background:var(--hanwoo-bg);color:var(--hanwoo)}
+.tag.dairy{background:var(--dairy-bg);color:var(--dairy)}
+.tag.pig{background:var(--pig-bg);color:var(--pig)}
+.tag.poultry{background:var(--poultry-bg);color:var(--poultry)}
+.pcard h4{font-size:16px;font-weight:700}
+.pcard .range{font-size:13px;color:var(--sub)}
+.pcard .range b{font-size:18px;color:var(--ink)}
+.srcs{display:flex;gap:4px;font-size:11px;color:var(--sub)}
+.srcs span{border:1px solid var(--line);padding:1px 6px;border-radius:5px}
+.pcard .cta{margin-top:auto;background:var(--brand2);color:var(--brand);font-weight:700;text-align:center;padding:9px;border-radius:10px;font-size:14px}
+.empty{background:var(--card);border:1px dashed var(--line);border-radius:14px;padding:30px;text-align:center;color:var(--sub)}
+
+/* compare modal */
+.modal{position:fixed;inset:0;background:rgba(20,30,25,.55);display:none;z-index:50;overflow:auto;padding:30px 16px}
+.modal.on{display:block}
+.mbox{background:var(--bg);max-width:1180px;margin:0 auto;border-radius:20px;overflow:hidden}
+.mhead{background:var(--card);padding:20px 24px;display:flex;gap:18px;align-items:center;border-bottom:1px solid var(--line)}
+.mhead .img{width:90px;height:90px;background:#f3f1ea;border-radius:14px;display:flex;align-items:center;justify-content:center;flex:none}
+.mhead .img svg{width:72px;height:72px}
+.mhead h3{font-size:22px;font-weight:800}
+.mhead p{color:var(--sub);font-size:14px}
+.mclose{margin-left:auto;border:0;background:var(--brand2);width:40px;height:40px;border-radius:50%;font-size:20px;color:var(--brand);flex:none}
+.mbody{padding:20px 24px 26px}
+.mfilter{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.mfilter .lbl{font-size:13px;font-weight:700;color:var(--sub);margin-right:4px}
+.pill{border:1px solid var(--line);background:#fff;padding:6px 12px;border-radius:20px;font-size:13px;font-weight:600;color:var(--sub)}
+.pill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pick{background:#fff;border:2px solid var(--accent);border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.pick .star{font-size:26px;color:var(--accent)}
+.pick b{font-size:16px}
+.pick p{font-size:13px;color:var(--sub)}
+.pick a{margin-left:auto;background:var(--accent);color:#fff;font-weight:700;padding:10px 16px;border-radius:10px;font-size:14px;white-space:nowrap}
+.ctable-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:14px}
+table.ct{border-collapse:collapse;width:100%;min-width:760px}
+.ct th,.ct td{padding:11px 12px;border-bottom:1px solid var(--line);font-size:13.5px;text-align:center;vertical-align:middle}
+.ct th.rowh{text-align:left;background:#fbfaf6;color:var(--sub);font-weight:700;width:120px;position:sticky;left:0}
+.ct thead th{background:#fbfaf6;padding:14px 10px}
+.ct .seller{font-weight:800;font-size:14px}
+.stype{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:6px;margin-bottom:4px}
+.stype.mall{background:var(--brand2);color:var(--brand)}
+.stype.online{background:#eaf0fb;color:#2d5f8a}
+.stype.used{background:#f6eee0;color:#9a6a1c}
+.price{font-size:17px;font-weight:800}
+.best{background:#fff8ec}
+.badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:800;padding:2px 7px;border-radius:6px;margin-top:4px}
+.buy{display:inline-block;background:var(--brand);color:#fff;padding:7px 12px;border-radius:8px;font-weight:700;font-size:13px}
+.ext{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px}
+.ext h5{font-size:14px;margin-bottom:8px}
+.ext .row{display:flex;gap:8px;flex-wrap:wrap}
+.ext a{border:1px solid var(--line);padding:8px 12px;border-radius:10px;font-size:13px;font-weight:600}
+.ext a:hover{border-color:var(--brand);color:var(--brand)}
+.note{font-size:12px;color:var(--sub);margin-top:12px}
+.demo-flag{display:inline-block;background:#fff1d6;color:#8a5a00;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;margin-left:6px;vertical-align:middle}
+
+.realflag{display:inline-block;background:var(--brand);color:#fff;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px}
+/* 소비자 흐름 스텝 (가로) */
+.stepper{display:flex;align-items:center;gap:6px;margin-bottom:16px;overflow-x:auto}
+.stepper .st{flex:1;min-width:120px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:12.5px;color:var(--sub)}
+.stepper .st b{display:block;font-size:13.5px;color:var(--ink)}
+.stepper .st.done{background:var(--brand2);border-color:var(--brand2)}
+.stepper .st.done b::before{content:"✓ ";color:var(--brand)}
+.stepper .st.now{border:2px solid var(--accent);background:#fffaf0}
+.stepper .st.now b::after{content:" ★지금";color:var(--accent);font-size:11px}
+.stepper .ar{color:var(--sub)}
+.selbtn{display:inline-block;border:2px solid var(--accent);background:#fff;color:var(--accent);padding:6px 12px;border-radius:8px;font-weight:800;font-size:13px}
+.selbtn.on{background:var(--accent);color:#fff}
+.onote{display:block;font-size:11px;color:#8a5a00;margin-top:4px}
+.mnote{background:#fff8ec;border:1px solid #f0dcb4;border-radius:10px;padding:10px 14px;font-size:12.5px;color:#7a5200;margin-bottom:14px}
+/* 내 선택 바 */
+.pickbar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--ink);color:#fff;display:none}
+.pickbar.on{display:block}
+.pickbar .in{max-width:1240px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:12px;overflow-x:auto}
+.pickbar .ttl{font-weight:800;white-space:nowrap}
+.pickbar .item{background:rgba(255,255,255,.1);border-radius:10px;padding:6px 10px;font-size:12.5px;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.pickbar .item a{background:var(--accent);color:#fff;padding:4px 8px;border-radius:6px;font-weight:700}
+.pickbar .item button{background:none;border:0;color:#ccc;font-size:15px}
+.pickbar .sum{margin-left:auto;white-space:nowrap;font-size:13px}
+.pickbar .sum b{font-size:17px}
+.pickbar .next{background:#fff;color:var(--ink);border:0;border-radius:8px;padding:8px 12px;font-weight:800;white-space:nowrap}
+body.haspick{padding-bottom:70px}
+
+/* v2: 업체·핵심제품 가로 스크롤 */
+.hscroll{display:flex;gap:12px;overflow-x:auto;padding:2px 2px 10px;scroll-snap-type:x mandatory}
+.hscroll::-webkit-scrollbar{height:8px}.hscroll::-webkit-scrollbar-thumb{background:#d6d2c4;border-radius:8px}
+.vcard{flex:0 0 250px;scroll-snap-align:start;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.vcard.on{outline:3px solid var(--accent)}
+.vcard h4{font-size:17px;font-weight:800}
+.vcard p{font-size:12.5px;color:var(--sub);min-height:36px}
+.vstat{font-size:12.5px;color:var(--sub)}.vstat b{color:var(--ink)}
+.vbtns{display:flex;gap:6px;margin-top:auto}
+.vbtns .vsel{flex:1;border:0;background:var(--brand);color:#fff;border-radius:8px;padding:8px;font-weight:700;font-size:13px}
+.vcard.on .vsel{background:var(--accent)}
+.vbtns a{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;font-weight:600}
+.hcard{flex:0 0 190px;scroll-snap-align:start;background:var(--card);border:2px solid var(--accent);border-radius:16px;padding:12px;cursor:pointer;transition:.15s}
+.hcard:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.08)}
+.hcard .img{background:#f3f1ea;border-radius:12px;height:96px;display:flex;align-items:center;justify-content:center}
+.hcard .img svg{width:72px;height:72px}
+.hcard h4{font-size:15px;margin:8px 0 2px}
+.hcard .range{font-size:12.5px;color:var(--sub)}.hcard .range b{font-size:16px;color:var(--ink)}
+.hcard .srcs{margin-top:6px}
+.tag.hotb{background:#fff1d6;color:#8a5a00}
+.lead b{color:var(--ink)}
+footer{margin-top:50px;padding:26px 0;border-top:1px solid var(--line);color:var(--sub);font-size:13px}
+
+@media(max-width:960px){
+  .species,.grid{grid-template-columns:repeat(2,1fr)}
+  .flow{overflow-x:auto}
+  .fstep{min-width:170px}
+  nav{display:none}
+}
+@media(max-width:560px){
+  .species,.grid{grid-template-columns:1fr}
+  .hero h1{font-size:26px}
+  .suggest{right:0}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo">🐄 축산몰 통합검색 <span>한우·낙농·양돈·양계</span></div>
+    <nav>
+      <a href="#species">축종별</a>
+      <a href="#vendors">업체별</a>
+      <a href="#results">제품 비교</a>
+      <a href="#how">이용 방법</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <h1>축산 자재, <em>한 번에 찾고 한 번에 비교</em>하세요</h1>
+    <p class="lead" id="leadStat"></p>
+    <div class="search-box">
+      <div class="tabs" id="tabs">
+        <button class="tab on" data-mode="name"><b>1</b>제품명으로 찾기</button>
+        <button class="tab" data-mode="desc"><b>2</b>설명으로 찾기</button>
+        <button class="tab" data-mode="related"><b>3</b>연관검색어로 찾기</button>
+      </div>
+      <div class="sbar">
+        <input id="q" autocomplete="off" placeholder="예) 포유틀, 침지컵, 이표, 보온등">
+        <button id="go">검색</button>
+        <div class="suggest" id="suggest"></div>
+      </div>
+      <div class="hint" id="hint">제품 이름 일부만 입력해도 자동완성됩니다. 몰마다 다른 이름(침질컵·라이나 등)도 같이 찾아요.</div>
+      <div class="chips" id="chips"></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <!-- 축종 (가로) -->
+  <div class="sec-title" id="species"><h2>축종 선택</h2><p>누르면 그 축종의 업체·핵심 제품만 보여요</p></div>
+  <div class="species" id="speciesRow"></div>
+
+  <!-- 업체 (가로 스크롤) -->
+  <div class="sec-title" id="vendors"><h2 id="vTitle">기자재 업체</h2><p>업체를 누르면 그 업체 제품만 비교 목록에 남아요</p></div>
+  <div class="hscroll" id="vendorRow"></div>
+
+  <!-- 핵심 제품 (가로 스크롤) -->
+  <div class="sec-title"><h2 id="hotTitle">★ 핵심 제품</h2><p>많이 찾는 제품 · 누르면 바로 업체별 비교</p></div>
+  <div class="hscroll" id="hotRow"></div>
+
+  <!-- 전체 결과 -->
+  <div class="sec-title" id="results"><h2 id="resTitle">전체 제품</h2><p>제품을 누르면 업체별 가격·규격을 한 번에 비교</p></div>
+  <div class="toolbar">
+    <div class="info" id="resInfo"></div>
+    <span id="vFilterChip"></span>
+    <select id="sort">
+      <option value="rel">관련도 순</option>
+      <option value="low">최저가 순</option>
+      <option value="offers">판매처 많은 순</option>
+      <option value="name">이름 순</option>
+    </select>
+  </div>
+  <div class="grid" id="grid"></div>
+
+  <!-- 이용 방법 – 가로 흐름 -->
+  <div class="sec-title" id="how"><h2>이렇게 고르세요</h2><p>A → B → C → D → E → 다시 A</p></div>
+  <div class="flow">
+    <div class="fstep"><div class="k">A · 찾기</div><h4>축종·업체·검색</h4><p>3가지 검색 방식</p></div>
+    <div class="farrow">→</div>
+    <div class="fstep"><div class="k">B · 모으기</div><h4>같은 제품 묶기</h4><p>축산몰·오픈마켓 통합</p></div>
+    <div class="farrow">→</div>
+    <div class="fstep key"><div class="k">C · 비교</div><h4>업체별 가격·규격</h4><p>규격 다르면 경고</p></div>
+    <div class="farrow">→</div>
+    <div class="fstep"><div class="k">D · 선택</div><h4>내 선택에 담기</h4><p>제품당 1곳</p></div>
+    <div class="farrow">→</div>
+    <div class="fstep"><div class="k">E · 구매</div><h4>판매처로 이동</h4><p>결제는 판매처에서</p></div>
+    <div class="farrow">→</div>
+    <div class="fstep"><div class="k">다시 A로</div><h4>함께 쓸 자재</h4><p>연관 제품 이어 검색</p></div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    축산몰 통합검색 · 가격은 <b id="ftDate"></b> 각 판매처 공개 페이지 기준입니다. 가격·재고·배송비는 바뀔 수 있으니 결제 전 판매처에서 꼭 확인하세요.
+    “가격 문의”는 판매처가 가격을 공개하지 않은 제품입니다.
+  </div>
+</footer>
+
+<!-- 비교 모달 -->
+<div class="modal" id="modal">
+  <div class="mbox">
+    <div class="mhead">
+      <div class="img" id="mImg"></div>
+      <div><h3 id="mTitle"></h3><p id="mDesc"></p></div>
+      <button class="mclose" id="mClose">×</button>
+    </div>
+    <div class="mbody">
+      <div class="stepper" id="stepper"></div>
+      <div class="mfilter">
+        <span class="lbl">판매처</span>
+        <button class="pill on" data-f="all">전체</button>
+        <button class="pill" data-f="mall">축산 전문몰</button>
+        <button class="pill" data-f="online">오픈마켓</button>
+        <span class="lbl" style="margin-left:14px">추천 기준</span>
+        <button class="pill on" data-r="low">최저가</button>
+        <button class="pill" data-r="mall">전문몰 중 최저</button>
+        <button class="pill" data-r="kr">국산 중 최저</button>
+      </div>
+      <div id="mWarn"></div>
+      <div class="pick" id="pick"></div>
+      <div class="ctable-wrap"><table class="ct" id="ctable"></table></div>
+      <div class="ext">
+        <h5>🔎 다른 곳에서도 이 제품 실시간 검색 (네이버·쿠팡·중고 포함)</h5>
+        <div class="row" id="extLinks"></div>
+      </div>
+      <p class="note" id="mNote"></p>
+    </div>
+  </div>
+</div>
+
+<div class="pickbar" id="pickbar"></div>
+
+<script>
+const ICON = {
+  cow:`<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#fff" opacity=".7"/><ellipse cx="32" cy="36" rx="16" ry="14" fill="#8a4b2f"/><ellipse cx="32" cy="44" rx="10" ry="7" fill="#e9c9b6"/><circle cx="28" cy="44" r="1.6" fill="#6b3a24"/><circle cx="36" cy="44" r="1.6" fill="#6b3a24"/><circle cx="26" cy="32" r="2" fill="#fff"/><circle cx="38" cy="32" r="2" fill="#fff"/><path d="M17 26c-5-2-7-6-6-9 4 1 7 3 9 6zM47 26c5-2 7-6 6-9-4 1-7 3-9 6z" fill="#e6d2a3"/><path d="M16 30l-6 2 6 3zM48 30l6 2-6 3z" fill="#8a4b2f"/></svg>`,
+  dairycow:`<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#fff" opacity=".7"/><ellipse cx="32" cy="36" rx="16" ry="14" fill="#fff" stroke="#2d5f8a" stroke-width="2"/><path d="M22 28c4-4 8-2 8 2s-6 6-9 3z" fill="#1f2a24"/><path d="M40 26c3 1 5 5 2 7s-5-2-4-4z" fill="#1f2a24"/><ellipse cx="32" cy="44" rx="10" ry="7" fill="#f4c6cf"/><circle cx="28" cy="44" r="1.6" fill="#b5566b"/><circle cx="36" cy="44" r="1.6" fill="#b5566b"/><circle cx="26" cy="34" r="2" fill="#1f2a24"/><circle cx="38" cy="34" r="2" fill="#1f2a24"/><path d="M16 30l-6 2 6 3zM48 30l6 2-6 3z" fill="#2d5f8a"/></svg>`,
+  pig:`<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#fff" opacity=".7"/><circle cx="32" cy="34" r="17" fill="#f2b6c3"/><path d="M18 22l-3-9 10 5zM46 22l3-9-10 5z" fill="#e597a8"/><ellipse cx="32" cy="40" rx="8" ry="6" fill="#e597a8"/><circle cx="29" cy="40" r="1.8" fill="#b5566b"/><circle cx="35" cy="40" r="1.8" fill="#b5566b"/><circle cx="25" cy="30" r="2" fill="#1f2a24"/><circle cx="39" cy="30" r="2" fill="#1f2a24"/></svg>`,
+  hen:`<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#fff" opacity=".7"/><ellipse cx="33" cy="40" rx="16" ry="12" fill="#fff" stroke="#b08a1e" stroke-width="2"/><circle cx="24" cy="26" r="9" fill="#fff" stroke="#b08a1e" stroke-width="2"/><path d="M20 17c1-4 4-4 4 0 1-4 5-3 4 1 2-2 4 0 2 3z" fill="#d9483b"/><path d="M14 27l-5 2 5 2z" fill="#e6a41e"/><circle cx="22" cy="25" r="1.6" fill="#1f2a24"/><path d="M18 32c1 3 3 3 4 0z" fill="#d9483b"/><path d="M38 38c4-2 8 0 9 4" stroke="#e6d2a3" stroke-width="2" fill="none"/></svg>`,
+  feeder:`<svg viewBox="0 0 64 64"><rect x="8" y="14" width="48" height="6" rx="2" fill="#6b7a72"/><rect x="10" y="20" width="4" height="34" fill="#6b7a72"/><rect x="50" y="20" width="4" height="34" fill="#6b7a72"/><rect x="20" y="20" width="3" height="22" fill="#9aa8a0"/><rect x="30" y="20" width="3" height="22" fill="#9aa8a0"/><rect x="40" y="20" width="3" height="22" fill="#9aa8a0"/><circle cx="21.5" cy="44" r="5" fill="none" stroke="#2f5d46" stroke-width="2.5"/><circle cx="41.5" cy="44" r="5" fill="none" stroke="#2f5d46" stroke-width="2.5"/><path d="M17 48h9l-1 7h-7zM37 48h9l-1 7h-7z" fill="#cfe0d4"/></svg>`,
+  bottle:`<svg viewBox="0 0 64 64"><rect x="22" y="18" width="20" height="38" rx="5" fill="#eef4fb" stroke="#2d5f8a" stroke-width="2"/><rect x="22" y="34" width="20" height="22" rx="4" fill="#fff"/><path d="M26 18v-4h12v4z" fill="#2d5f8a"/><path d="M29 14c0-6 2-9 3-9s3 3 3 9z" fill="#c8862b"/><path d="M26 26h6M26 31h6M26 36h6" stroke="#2d5f8a" stroke-width="1.5"/></svg>`,
+  watercup:`<svg viewBox="0 0 64 64"><path d="M10 26h44l-5 24H15z" fill="#e8f0f7" stroke="#2d5f8a" stroke-width="2"/><path d="M14 34h36l-2 10H16z" fill="#7fb0d6"/><rect x="28" y="12" width="8" height="14" fill="#6b7a72"/><path d="M36 18h12" stroke="#6b7a72" stroke-width="4"/><path d="M30 30c0 3 4 3 4 0" stroke="#fff" stroke-width="2" fill="none"/></svg>`,
+  vest:`<svg viewBox="0 0 64 64"><path d="M10 20c8-6 36-6 44 0l-4 30H14z" fill="#c8862b"/><path d="M14 26h36M13 34h38M14 42h36" stroke="#a96d1d" stroke-width="2"/><rect x="28" y="16" width="8" height="36" fill="#2f5d46" opacity=".6"/></svg>`,
+  liner:`<svg viewBox="0 0 64 64"><rect x="10" y="10" width="10" height="40" rx="5" fill="#1f2a24"/><rect x="27" y="10" width="10" height="40" rx="5" fill="#1f2a24"/><rect x="44" y="10" width="10" height="40" rx="5" fill="#1f2a24"/><circle cx="15" cy="12" r="3" fill="#9aa8a0"/><circle cx="32" cy="12" r="3" fill="#9aa8a0"/><circle cx="49" cy="12" r="3" fill="#9aa8a0"/><rect x="12" y="50" width="6" height="6" fill="#6b7a72"/><rect x="29" y="50" width="6" height="6" fill="#6b7a72"/><rect x="46" y="50" width="6" height="6" fill="#6b7a72"/></svg>`,
+  milkcan:`<svg viewBox="0 0 64 64"><path d="M22 10h20v6l6 8v30H16V24l6-8z" fill="#dfe7ee" stroke="#2d5f8a" stroke-width="2"/><rect x="22" y="6" width="20" height="5" rx="2" fill="#2d5f8a"/><rect x="16" y="32" width="32" height="10" fill="#2d5f8a"/><text x="32" y="40" font-size="8" text-anchor="middle" fill="#fff" font-weight="700">MILK</text></svg>`,
+  dipcup:`<svg viewBox="0 0 64 64"><path d="M18 30h28l-4 24H22z" fill="#f6e3a8" stroke="#b08a1e" stroke-width="2"/><rect x="18" y="22" width="28" height="8" rx="2" fill="#fff" stroke="#b08a1e" stroke-width="2"/><rect x="29" y="8" width="6" height="14" fill="#b08a1e"/><path d="M22 40h20" stroke="#e0b73e" stroke-width="3"/></svg>`,
+  chute:`<svg viewBox="0 0 64 64"><rect x="6" y="12" width="5" height="44" fill="#6b7a72"/><rect x="53" y="12" width="5" height="44" fill="#6b7a72"/><path d="M6 18h52M6 30h52M6 42h52" stroke="#8a4b2f" stroke-width="4"/><path d="M28 12v32M36 12v32" stroke="#9aa8a0" stroke-width="3"/></svg>`,
+  pigfeeder:`<svg viewBox="0 0 64 64"><path d="M20 8h24v26l8 10H12l8-10z" fill="#f2d4db" stroke="#b5566b" stroke-width="2"/><rect x="8" y="44" width="48" height="10" rx="3" fill="#b5566b"/><circle cx="32" cy="20" r="4" fill="#c8862b"/><path d="M16 48h32" stroke="#e8b0bd" stroke-width="2"/></svg>`,
+  nipple:`<svg viewBox="0 0 64 64"><rect x="4" y="12" width="56" height="7" rx="3" fill="#9aa8a0"/><rect x="14" y="19" width="5" height="12" fill="#6b7a72"/><rect x="30" y="19" width="5" height="12" fill="#6b7a72"/><rect x="46" y="19" width="5" height="12" fill="#6b7a72"/><path d="M16.5 31v6M32.5 31v6M48.5 31v6" stroke="#2d5f8a" stroke-width="2"/><circle cx="16.5" cy="40" r="2" fill="#7fb0d6"/><circle cx="32.5" cy="40" r="2" fill="#7fb0d6"/><circle cx="48.5" cy="40" r="2" fill="#7fb0d6"/></svg>`,
+  heatlamp:`<svg viewBox="0 0 64 64"><path d="M32 4v10" stroke="#6b7a72" stroke-width="2"/><path d="M16 26c0-10 32-10 32 0z" fill="#b5566b"/><circle cx="32" cy="28" r="7" fill="#ffb15c"/><path d="M20 38l-4 8M32 40v10M44 38l4 8" stroke="#ff8a3d" stroke-width="2.5" stroke-linecap="round"/></svg>`,
+  chickfeeder:`<svg viewBox="0 0 64 64"><path d="M24 8h16v28H24z" fill="#f8f2df" stroke="#b08a1e" stroke-width="2"/><path d="M10 40h44l-4 14H14z" fill="#e6a41e"/><circle cx="20" cy="46" r="2" fill="#a07510"/><circle cx="28" cy="48" r="2" fill="#a07510"/><circle cx="36" cy="46" r="2" fill="#a07510"/><circle cx="44" cy="48" r="2" fill="#a07510"/><path d="M28 36h8v4h-8z" fill="#b08a1e"/></svg>`,
+  eggtray:`<svg viewBox="0 0 64 64"><rect x="6" y="30" width="52" height="20" rx="3" fill="#e8dcc0"/><ellipse cx="16" cy="28" rx="6" ry="8" fill="#f6e7c9" stroke="#c9a96b" stroke-width="1.5"/><ellipse cx="32" cy="28" rx="6" ry="8" fill="#fff" stroke="#c9a96b" stroke-width="1.5"/><ellipse cx="48" cy="28" rx="6" ry="8" fill="#f6e7c9" stroke="#c9a96b" stroke-width="1.5"/></svg>`,
+  hutch:`<svg viewBox="0 0 64 64"><path d="M6 50V28c0-14 52-14 52 0v22z" fill="#fff" stroke="#2f5d46" stroke-width="2"/><path d="M20 50V34c0-6 24-6 24 0v16z" fill="#2f5d46" opacity=".75"/><path d="M48 50V38h12" stroke="#9aa8a0" stroke-width="2" fill="none"/></svg>`
+};
+/* =====================================================================
+   데이터 — 2026-11-25 각 판매처 공개 페이지에서 확인한 가격
+   price:null = 가격 문의(전화/견적)
+   ===================================================================== */
+const CHECKED = '2026-11-25';
+
+/* ---------- 업체(판매처) ---------- */
+const VENDORS = {
+  hs:{name:'황소농기계', type:'mall', sp:['hanwoo','dairy'], url:'https://hwangso114.co.kr/product/list.html?cate_no=25',
+      desc:'소·염소 사양/분만/보온 기자재 종합몰', tel:''},
+  sm:{name:'소몰이닷컴', type:'mall', sp:['dairy','hanwoo'], url:'https://so-mory.com/category/%EB%82%99%EB%86%8D-%EC%B6%95%EC%82%B0-%EA%B8%B0%EC%9E%90%EC%9E%AC/24/',
+      desc:'낙농 착유기 부품·착유용품·송아지 용품, 중고장터 운영'},
+  si:{name:'신일축산', type:'mall', sp:['dairy','hanwoo'], url:'https://ok-shinil.co.kr/category/%EC%B0%A9%EC%9C%A0%EA%B8%B0-%EB%B0%8F-%EC%B0%A9%EC%9C%A0%EC%9A%A9%ED%92%88/25/',
+      desc:'이동식 착유기·밀크바 포유기·이표·목책기', tel:'02-438-0300'},
+  hj:{name:'한중에스에스', type:'mall', sp:['hanwoo','dairy'], url:'https://hjss.org/product/%EC%86%A1%EC%95%84%EC%A7%80-%EC%A0%96%EB%B3%91-%EA%B1%B0%EC%B9%98%EB%8C%80/432/',
+      desc:'국산 스테인레스 축산 기자재'},
+  dl:{name:'드라발(DeLaval)', type:'mall', sp:['dairy'], url:'https://www.delaval.com/ko/',
+      desc:'착유 시스템·유방 위생 (견적 문의)'},
+  pp:{name:'피그앤포크몰', type:'mall', sp:['pig'], url:'https://pignporkmall.com/list.php?brand_name=&category=7',
+      desc:'양돈 기자재 입점몰 — 인터히트·리치피그·금보·연합축산·웰돈 등 (가격 문의)'},
+  bt:{name:'바로텍', type:'mall', sp:['pig'], url:'https://barotech21.com/down/catalogue_20260415.pdf',
+      desc:'양돈 기자재 전문 (워터컵·니플·급이기 카탈로그)'},
+  gg:{name:'늘푸른농원', type:'mall', sp:['poultry'], url:'http://www.goldgreenfarm.com/m/product.html?branduid=1116718',
+      desc:'닭 물통·모이통·부화기·보온전구·난좌'},
+  st:{name:'11번가', type:'online', sp:['hanwoo','dairy','pig','poultry'], url:'https://www.11st.co.kr', desc:'오픈마켓'},
+  gm:{name:'G마켓', type:'online', sp:['hanwoo','dairy','pig','poultry'], url:'https://www.gmarket.co.kr', desc:'오픈마켓'},
+  oc:{name:'옥션', type:'online', sp:['pig','poultry'], url:'https://www.auction.co.kr', desc:'오픈마켓'},
+  kc:{name:'KCJSHOP', type:'online', sp:['poultry'], url:'https://kcjshop.com', desc:'소동물·가금 용품'}
+};
+const HS = n=>`https://m.hwangso114.com/product/detail.html?product_no=${n}&cate_no=25`;
+const HS72 = n=>`https://www.hwangso114.com/product/detail.html?product_no=${n}&cate_no=72`;
+const SI = n=>`https://ok-shinil.co.kr/product/detail.html?product_no=${n}`;
+const SM49 = 'https://so-mory.com/category/%EC%B0%A9%EC%9C%A0%EC%9A%A9%ED%92%88/49/';
+const SM24 = 'https://so-mory.com/category/%EB%82%99%EB%86%8D-%EC%B6%95%EC%82%B0-%EA%B8%B0%EC%9E%90%EC%9E%AC/24/';
+const SM53 = 'https://so-mory.com/product/list.html?cate_no=53';
+const PP = 'https://pignporkmall.com/list.php?brand_name=&category=7';
+
+/* o(업체, 제품명/옵션, 가격, 규격·구성, 원산지, 비고, url) */
+function o(v,label,price,spec,origin,note,url){ return {v,seller:VENDORS[v].name,type:VENDORS[v].type,label,price,spec:spec||'-',origin:origin||'-',note:note||'',url:url||VENDORS[v].url}; }
+
+/* ---------- 제품 ---------- */
+const PRODUCTS = [
+ /* ===== 송아지 (한우·낙농 공용) ===== */
+ {id:'feeder',name:'송아지 포유틀',icon:'feeder',sp:['hanwoo','dairy'],hot:true,
+  desc:'송아지 젖병을 걸어 고정하는 거치대',
+  tags:['포유틀','포유투','포유기 거치대','젖병 거치대','포유통 거치대','송아지','포유','대용유'],
+  related:['송아지 포유병','포유 꼭지','밀크바 포유기'],
+  offers:[o('hs','포유기 거치대',41000,'거치대 단품','-','일부 페이지 39,000원 표기',HS(7440)),
+          o('hs','엄마 포유기+거치대 세트',42000,'포유기+거치대','-','영세율',HS(7707)),
+          o('hj','송아지 젖병 거치대',41000,'간편 포유기(스테인레스)','국산','화물배송'),
+          o('sm','포유통 거치대',42000,'거치대','국내','',SM49)]},
+ {id:'bottle',name:'송아지 포유병 (젖병)',icon:'bottle',sp:['hanwoo','dairy'],hot:true,
+  desc:'송아지 인공포유용 젖병·포유통',
+  tags:['포유병','포유기','젖병','송아지 젖병','포유통','숨구멍','대용유','초유'],
+  related:['포유 꼭지','송아지 포유틀'],
+  offers:[o('hs','포유기A (한우용)',7000,'한우용','국산','영세율',HS(4842)),
+          o('hs','포유기B (흰색)',8000,'-','국산','영세율',HS(4630)),
+          o('hs','포유기C (파란색)',9000,'-','국산','영세율',HS(6996)),
+          o('hs','포유기D (녹색)',14000,'-','국산','영세율',HS(6997)),
+          o('hs','복숭아 젖병',20000,'-','-','영세율',HS(6650)),
+          o('sm','캡 숨구멍 포유통 (한우 800ml)',8550,'800ml','국내','',SM49),
+          o('sm','캡 숨구멍 포유병 세트',9550,'2L·3L (젖소·한우)','국내','',SM49),
+          o('sm','기능성 숨구멍 포유병 세트',10550,'2L·3L (젖소·한우)','국내','',SM49)]},
+ {id:'teat',name:'포유 꼭지 (젖꼭지)',icon:'bottle',sp:['hanwoo','dairy'],
+  desc:'포유병·밀크바용 교체 꼭지',
+  tags:['꼭지','젖꼭지','포유꼭지','니플','실리콘','메릭스'],
+  related:['송아지 포유병','밀크바 포유기'],
+  offers:[o('sm','캡 포유꼭지 (한우용)',2750,'1개','국내','',SM49),
+          o('sm','포유꼭지 (젖소·한우)',3300,'1개','국내','',SM49),
+          o('sm','DFI 캡 실리콘 포유꼭지',4400,'1개','국내','',SM49),
+          o('sm','DFI 기능성 포유꼭지',6600,'1개','국내','10개 주문 시 포유통 증정',SM49),
+          o('si','밀크바 포유기 전용 꼭지',7000,'3종','-','',SI(1103)),
+          o('si','밀크바 포유꼭지 (초유용)',7500,'1개','-','',SI(1053)),
+          o('gm','메릭스 고급 젖꼭지 2L 포유기용',29900,'2개입','미국','G마켓',
+            'https://www.gmarket.co.kr/n/search?keyword=%EC%B6%95%EC%82%B0%EA%B8%B0%EC%9E%90%EC%9E%AC')]},
+ {id:'milkbar',name:'밀크바·포유바켓',icon:'milkcan',sp:['hanwoo','dairy'],
+  desc:'여러 마리 동시 포유용 바켓·다구 포유통',
+  tags:['밀크바','포유바켓','바켓','다구','포유통','그룹 포유','여러 마리'],
+  related:['포유 꼭지','송아지 포유틀'],
+  offers:[o('sm','밀크바 포유바켓',25000,'-','중국','',SM49),
+          o('sm','포유바켓 (녹색·회색)',26000,'-','국내','',SM49),
+          o('si','밀크바 포유기 1두용',35000,'1두용','-','',SI(980)),
+          o('si','밀크바 포유기 5두용 (칸막이)',350000,'5두용','-','품절',SI(1041)),
+          o('st','다구 젖통 38L 6구',387610,'6구·38L','-','11번가','http://www.11st.co.kr/products/4680800644'),
+          o('st','다구 젖통 38L 8구',419800,'8구·38L','-','11번가','http://www.11st.co.kr/products/4680800644')]},
+ {id:'jacket',name:'송아지 방한복',icon:'vest',sp:['hanwoo','dairy'],hot:true,
+  desc:'겨울철 송아지 체온 유지 조끼·자켓',
+  tags:['방한복','방한','조끼','자켓','덕석','보온복','넥워머','겨울','추위'],
+  related:['송아지방','보온등'],
+  offers:[o('hs','방한복 HS-SBN1',17000,'넥워머 증정','국산','정가 20,000원',HS72(5378)),
+          o('hs','방한복 HS-SBN2 (사이즈조절)',20000,'넥워머 증정','국산','',HS72(7458)),
+          o('hs','방한복 (조끼형)',28500,'조끼','-','',HS72(4945)),
+          o('sm','송아지 방한복',25000,'-','국내','',SM53),
+          o('sm','송아지 자켓(신)',27000,'-','국내','',SM53),
+          o('si','송아지 자켓 (젖소용)',27000,'덕석','-','',SI(984))]},
+ {id:'hutch',name:'송아지방 (인큐베이터)',icon:'hutch',sp:['hanwoo','dairy'],
+  desc:'신생 송아지 보온·격리 사육방',
+  tags:['송아지방','허치','인큐베이터','분리방','격리','보온'],
+  related:['송아지 방한복','보온등'],
+  offers:[o('hs','송아지 분리방 HS-IN2000',220000,'-','-','',HS(7333)),
+          o('hs','송아지방 HS-IN4000',450000,'-','국산','',HS72(4745)),
+          o('hs','인큐베이터 송아지 분리방',781000,'-','-','',HS(7657)),
+          o('sm','아그리플라스틱 송아지방',830000,'1-2두용·히터 포함','국내','',SM49),
+          o('si','아그리프라스틱 송아지방',null,'1-2두용','-','전화주문',SI(978))]},
+ {id:'resp',name:'송아지 호흡기',icon:'tool',sp:['hanwoo','dairy'],
+  desc:'신생 송아지 인공호흡 보조기',
+  tags:['호흡기','인공호흡기','신생','소생'],
+  related:['분만줄','분만도르래'],
+  offers:[o('hs','송아지 호흡기 (국산)',46000,'-','국산','정가 54,000원',HS(6176)),
+          o('sm','인공호흡기',45000,'-','국내','',SM49)]},
+
+ /* ===== 분만 ===== */
+ {id:'calvrope',name:'분만줄',icon:'rope',sp:['hanwoo','dairy'],
+  desc:'송아지 견인용 분만줄',
+  tags:['분만줄','산과줄','분만','난산','견인'],
+  related:['분만도르래','송아지 호흡기'],
+  offers:[o('hs','분만줄 5m',4000,'5m','-','',HS(5576)),
+          o('hs','분만줄K (국산)',9000,'-','국산','특가(정가 12,000)',HS(6550)),
+          o('hs','분만줄A (독일)',18000,'-','독일','',HS(6521)),
+          o('sm','분만줄',4400,'-','국내','',SM53),
+          o('sm','분만줄 (국내산)',11000,'-','국내','',SM53),
+          o('sm','분만줄 (독일산)',18000,'-','독일','',SM53),
+          o('si','국산 송아지 분만줄',5000,'6m','국산','',SI(1015))]},
+ {id:'pulley',name:'분만도르래',icon:'rope',sp:['hanwoo','dairy'],
+  desc:'난산 시 송아지 견인 보조 도르래',
+  tags:['도르래','도르레','분만도르래','난산','분만'],
+  related:['분만줄','카우리프트'],
+  offers:[o('hs','분만도르래 2단·3단',79000,'2·3단','-','',HS(5008)),
+          o('hs','분만도르래 3단·4단',88000,'3·4단','-','정가 94,300',HS(4881)),
+          o('sm','분만도르레 3벌식·4벌식',88000,'3·4벌식','국내','',SM49),
+          o('si','국산 3단/4단 분만도르레',90000,'3·4단','국산','',SI(1014))]},
+ {id:'cowlift',name:'카우리프트',icon:'tool',sp:['hanwoo','dairy'],
+  desc:'쓰러진 소 일으키는 기구',
+  tags:['카우리프트','기립','쓰러진 소','난산'],
+  related:['분만후 다리고정벨트'],
+  offers:[o('hs','카우리프트',300000,'-','-','',HS(7713)),
+          o('sm','카우리프트',300000,'-','네덜란드','',SM49)]},
+ {id:'legbelt',name:'분만후 다리고정벨트',icon:'rope',sp:['hanwoo','dairy'],
+  desc:'분만 후 다리 벌어짐 방지 벨트',
+  tags:['다리고정','발목벨트','벨트','분만 후','개각'],
+  related:['카우리프트'],
+  offers:[o('hs','다리고정벨트K (국산)',17000,'-','국산','',HS(7477)),
+          o('hs','다리고정벨트 길이조절형',22000,'-','-','',HS(7708)),
+          o('hs','다리고정벨트 (네덜란드)',22000,'-','네덜란드','',HS(7155)),
+          o('sm','소발목벨트',22000,'-','네덜란드','',SM49),
+          o('sm','소발목벨트 (고급형)',33000,'-','네덜란드','',SM49)]},
+
+ /* ===== 개체 관리 ===== */
+ {id:'eartag',name:'이표 (귀표)',icon:'tag',sp:['hanwoo','dairy'],hot:true,
+  desc:'개체 식별용 이표 세트',
+  tags:['이표','귀표','이텍','개체식별','번호표'],
+  related:['이표장착기','이표펜'],
+  offers:[o('hs','이표 [대형]',60000,'50개입','-','',HS(5410)),
+          o('hs','이표 [특대 중형]',65000,'50개입','-','',HS(6371)),
+          o('hs','이표 [특대 대형]',70000,'50개입','-','',HS(5411)),
+          o('sm','이표 (소)',53000,'50개','국내','',SM53),
+          o('sm','이표 (중)',54000,'50개','국내','',SM53),
+          o('sm','이표 (대)',66000,'50개','국내','',SM53),
+          o('si','이표 신일 특대형 Super Maxi',39000,'30개입','-','개당 가격 비교 시 주의',SI(972))]},
+ {id:'tagger',name:'이표장착기',icon:'tag',sp:['hanwoo','dairy'],
+  desc:'이표 부착 집게',
+  tags:['이표장착기','장착기','이표','귀표'],
+  related:['이표 (귀표)','이표펜'],
+  offers:[o('hs','이표장착기 BSE-3',37000,'-','-','영세율',HS(4590)),
+          o('hs','이표장착기 (알프렉스)',49000,'-','프랑스','영세율',HS(4889)),
+          o('sm','이표장착기',10000,'-','중국','',SM49),
+          o('sm','안전 이표장착기',36000,'-','중국','',SM49),
+          o('si','알프렉스 이표장착기',49000,'-','-','',SI(1033))]},
+ {id:'tagpen',name:'이표펜 (마커)',icon:'tag',sp:['hanwoo','dairy','pig'],
+  desc:'이표 번호 기입용 마커',
+  tags:['이표펜','마커','마킹','펜'],
+  related:['이표 (귀표)'],
+  offers:[o('hs','이표 택 마커 펜',11000,'-','-','',HS(7160)),
+          o('hs','이표 택-펜A',18500,'-','-','',HS(4832)),
+          o('sm','이표펜',11000,'-','중국','',SM53),
+          o('si','독일 이표펜',11000,'-','독일','소비자가 13,000',SI(974)),
+          o('si','알프렉스 USA 이표펜 2in1',18000,'-','미국','',SI(922))]},
+ {id:'restrainer',name:'보정기 (간이·양발)',icon:'chute',sp:['hanwoo','dairy'],hot:true,
+  desc:'처치·발굽 관리 시 소 고정 기구',
+  tags:['보정기','보정틀','간이보정기','양발보정기','고정','발굽'],
+  related:['발굽 관리','비압기'],
+  offers:[o('hs','간이보정기 (국산)',34000,'간이','국산','',HS(4840)),
+          o('hs','간이보정기 (수입)',39000,'간이','수입','',HS(5400)),
+          o('hs','양발보정기',106000,'양발','-','',HS(4839)),
+          o('sm','간이보정기',29000,'간이','국내','',SM49),
+          o('sm','양발보정기(신)',105000,'양발','중국','',SM49),
+          o('sm','양발보정기',117000,'양발','국내','',SM49),
+          o('sm','송아지 양발보정기 (5~7개월)',70000,'송아지용','국내','',SM49)]},
+ {id:'noseclamp',name:'비압기 (코집게)',icon:'tool',sp:['hanwoo','dairy'],
+  desc:'소 코를 잡아 고정하는 기구',
+  tags:['비압기','코집게','코뚜레','고정'],
+  related:['보정기 (간이·양발)'],
+  offers:[o('hs','비압기 (일반형)',22000,'-','-','',HS(5406)),
+          o('hs','비압기 (체인)',24000,'체인','-','',HS(4882)),
+          o('sm','비압기',22000,'-','중국','',SM49),
+          o('sm','비압기',30000,'-','네덜란드','',SM49)]},
+ {id:'dehorn',name:'제각 와이어·제각기',icon:'tool',sp:['hanwoo','dairy'],
+  desc:'뿔 제거용 와이어·전기/가스 제각기',
+  tags:['제각','제각기','제각와이어','뿔','뿔 제거'],
+  related:['보정기 (간이·양발)'],
+  offers:[o('hs','제각와이어 12m',36000,'12m','-','',HS(5335)),
+          o('hs','제각와이어 10m (덴마크)',48000,'10m','덴마크','',HS(5330)),
+          o('sm','제각와이어',33000,'-','독일','',SM49),
+          o('sm','가스제각기',240000,'가스식','미국','',SM49),
+          o('hs','전기 소뿔 제각기',374000,'전기식','-','',HS(4950)),
+          o('hs','충전식 소뿔 제각기',420000,'충전식','-','',HS(6649))]},
+ {id:'castrate',name:'무혈거세기',icon:'tool',sp:['hanwoo'],
+  desc:'대가축 무혈 거세기',
+  tags:['거세','무혈거세기','거세링','거세기'],
+  related:['거세링'],
+  offers:[o('sm','무혈거세기',88000,'-','파키스탄','',SM49),
+          o('hs','무혈거세기 (대가축용) 19인치',275000,'19인치','-','',HS(4967))]},
+ {id:'drench',name:'투약기',icon:'tool',sp:['hanwoo','dairy'],
+  desc:'경구 투약·포유 보조기',
+  tags:['투약기','경구','약물','카테터','초유 투입'],
+  related:['초유 투입기'],
+  offers:[o('hs','투약기 HS-DG100',33000,'-','-','',HS(4885)),
+          o('hs','송아지 경구 포유·투약기 HS-DR200',51000,'-','-','',HS(6442)),
+          o('sm','투약기',40000,'-','뉴질랜드','',SM49),
+          o('sm','약물 투약기',44000,'300ml','중국','',SM49)]},
+ {id:'colostrum',name:'초유 투입기 (카테터)',icon:'bottle',sp:['hanwoo','dairy'],
+  desc:'허약 송아지 초유 강제 급여',
+  tags:['초유','투입기','카테터','강제 급여'],
+  related:['투약기','송아지 포유병'],
+  offers:[o('hs','초유 투입기 유니트 단독',33000,'-','-','',HS(7197)),
+          o('hs','초유 투입기 + 포유통 3L',42000,'3L','대한민국','',HS(7244))]},
+ {id:'magnet',name:'소 먹이자석',icon:'tool',sp:['hanwoo','dairy'],
+  desc:'창상성 위염 예방 자석',
+  tags:['자석','먹이자석','위염'],
+  related:['투약기'],
+  offers:[o('hs','소먹이자석',6000,'-','-','',HS(5879)),
+          o('sm','먹이자석',8000,'-','미국','',SM49)]},
+ {id:'feedtub',name:'소 사료통',icon:'feeder',sp:['hanwoo','dairy'],
+  desc:'걸이형·바닥형 사료통',
+  tags:['사료통','먹이통','급이','걸이형'],
+  related:['송아지방 (인큐베이터)'],
+  offers:[o('hs','황소사료통 8L',16000,'8L','국산','',HS(7135)),
+          o('hs','황소사료통 12L (걸이형)',19000,'12L','국산','',HS(7136)),
+          o('hs','사료통 15L AF-G15L',40000,'15L','-','',HS(5916)),
+          o('hs','사료통 25L 소프트형',50000,'25L','-','',HS(5914)),
+          o('hs','사료통 42L',98000,'42L','-','',HS(5936))]},
+
+ /* ===== 낙농 착유 ===== */
+ {id:'dipcup',name:'유두 침지컵',icon:'dipcup',sp:['dairy'],hot:true,
+  desc:'착유 전후 유두 소독용 컵',
+  tags:['침지컵','침질컵','딥컵','유두','소독','유방염','포스트딥','프리딥'],
+  related:['침지 스프레이','착유 라이너'],
+  offers:[o('sm','침질컵',4400,'-','중국','',SM53),
+          o('sm','침질컵',6600,'-','국내','',SM53),
+          o('si','침지컵',11000,'약물불순환형/순환형','-','',SI(964)),
+          o('dl','드라발 침지컵 (역류방지 등)',null,'일반·역류방지','-','견적 문의',
+            'https://www.delaval.com/ko/cagyu-pilsu/yubang-wisaeng/dib-keob-mic-yudu-seupeurei/deurabal-cimjikeob/')]},
+ {id:'dipspray',name:'침지 스프레이',icon:'dipcup',sp:['dairy'],
+  desc:'유두 소독약 분무기',
+  tags:['스프레이','침지','침질스프레이','유두 소독'],
+  related:['유두 침지컵'],
+  offers:[o('sm','침질스프레이',16000,'-','영국','',SM53),
+          o('sm','침질스프레이',17000,'-','영국','',SM53)]},
+ {id:'liner',name:'착유 라이너',icon:'liner',sp:['dairy'],hot:true,
+  desc:'유두컵 고무·실리콘 라이너 (교체 소모품)',
+  tags:['라이너','라이나','착유','유두컵','티트컵','실리콘'],
+  related:['라이너 마개','착유 여과지'],
+  offers:[o('gm','고무 착유 라이너 (티트컵 라이너)',25520,'4개','-','G마켓 · 호환 확인 필요','https://item.gmarket.co.kr/Item?goodsCode=4266245419'),
+          o('st','착유기 라이너 블랙',38580,'-','-','11번가 · 호환 확인 필요','https://www.11st.co.kr/products/pa/6490365222'),
+          o('sm','인터펄스 1800001 이동식착유기 라이나',48500,'4개 1조','영국','',SM24),
+          o('sm','인터펄스 1800011 바켓착유기 라이나',48500,'4개 1조','이탈리아','',SM24),
+          o('sm','DFI 실리콘 한꼭지 라이나 (TT컵 포함)',66000,'1꼭지','국내','',SM24),
+          o('sm','DFI 숨구멍 실리콘 라이나',110000,'4개 1조','국내','',SM24)]},
+ {id:'linercap',name:'라이너 마개',icon:'liner',sp:['dairy'],
+  desc:'세척·대기 시 라이너 막음 마개',
+  tags:['라이너마개','라이나마개','마개'],
+  related:['착유 라이너'],
+  offers:[o('hs','라이너마개 (플라스틱)',3600,'-','-','',HS(6703)),
+          o('hs','라이너마개 (고무)',4200,'-','-','',HS(6704)),
+          o('sm','라이나마개',3300,'-','중국','',SM53),
+          o('sm','라이나마개 (플라스틱)',3600,'-','중국','',SM53),
+          o('sm','라이나마개 (고무)',4400,'-','국내','',SM53)]},
+ {id:'filter',name:'착유 여과지·필터',icon:'milkcan',sp:['dairy'],
+  desc:'원유 여과지·밀크호스 필터',
+  tags:['여과지','필터','여과포','휠타','유방염휠타','밀크호스필터'],
+  related:['착유 라이너'],
+  offers:[o('sm','여과포',14000,'-','국내','',SM53),
+          o('si','앰빅 밀크호스필터',35000,'-','-','',SI(1095)),
+          o('sm','유방염휠타 (16mm)',40000,'16mm','영국','',SM53),
+          o('sm','우유 여과지',50000,'250매','이탈리아','',SM53),
+          o('si','착유여과지 610×51',56000,'610×51','-','',SI(957)),
+          o('si','착유여과지 610×57',62000,'610×57','-','',SI(958)),
+          o('si','착유여과지 610×75',68000,'610×75','-','',SI(959))]},
+ {id:'quarter',name:'분방착유기통 (쿼터밀커)',icon:'milkcan',sp:['dairy'],
+  desc:'유방염 분방 별도 착유통',
+  tags:['분방','쿼터밀커','분방착유','유방염'],
+  related:['바켓 착유기'],
+  offers:[o('si','신일 분방착유기통',60000,'-','-','',SI(951)),
+          o('sm','쿼터밀커 포유통',70000,'5L','국내','',SM24),
+          o('si','코번 분방착유기통',280000,'-','미국','',SI(950))]},
+ {id:'bucket',name:'바켓 착유기',icon:'milkcan',sp:['dairy'],
+  desc:'바켓식·이동식 착유기',
+  tags:['바켓','바켓착유기','이동식착유기','착유기'],
+  related:['착유 라이너','분방착유기통 (쿼터밀커)'],
+  offers:[o('si','투명바켓츠 24L',198000,'24L (통)','-','',SI(955)),
+          o('si','투명바켓츠 30L',209000,'30L (통)','-','',SI(956)),
+          o('si','바켓츠착유기',660000,'세트','-','',SI(945)),
+          o('sm','DFI 실리콘 투명 바켓 착유기 세트',880000,'30L 세트','국내','',SM24),
+          o('sm','DFI 실리콘 스텐 바켓 착유기 세트',990000,'30L 세트','국내','',SM24),
+          o('si','이동식착유기 1두용 (젖소용)',1750000,'1두용','-','',SI(944))]},
+ {id:'apron',name:'착유 앞치마·토시',icon:'vest',sp:['dairy'],
+  desc:'착유 작업복',
+  tags:['앞치마','토시','착유복','장갑','팔토시'],
+  related:['유두 침지컵'],
+  offers:[o('sm','라텍스 착유 장갑 (소)',7700,'-','중국','',SM53),
+          o('sm','팔토시',15000,'25켤레','중국','',SM53),
+          o('sm','앞치마',15000,'-','국내','',SM53),
+          o('hs','농축산업용 앞치마바지',25000,'-','-','',HS(7717)),
+          o('si','착유앞치마',27500,'-','-','',SI(965)),
+          o('sm','착유토시',33000,'-','폴란드','',SM53)]},
+
+ /* ===== 보온 (양돈·양계·소 공용) ===== */
+ {id:'heatlamp',name:'축사 보온등',icon:'heatlamp',sp:['pig','poultry','hanwoo','dairy'],hot:true,
+  desc:'자돈·병아리·송아지 보온용 램프/히터',
+  tags:['보온등','보온갓','보온 갓등','적외선','열전구','히터','램프','난방','자돈','병아리'],
+  related:['가축 보온 전기매트','송아지 방한복'],
+  offers:[o('gg','보온등',10000,'-','-','배송비 지역별','http://www.goldgreenfarm.com/m/product.html?branduid=1116718'),
+          o('st','체인 보온갓등 (소)',21900,'갓 (전구 별도 6,500원)','-','11번가','http://www.11st.co.kr/products/1370100583'),
+          o('st','체인 보온갓등 (대)',24900,'갓 (전구 별도)','-','11번가','http://www.11st.co.kr/products/1370100583'),
+          o('oc','보온갓등 양계 양돈 축사',24000,'-','-','옥션','https://www.auction.co.kr/n/search?keyword=%EB%B3%B4%EC%98%A8%EB%93%B1'),
+          o('hs','보온등 열전구 WA-250',37000,'250W','국산','',HS72(4724)),
+          o('hs','보온등 소형 HS-WA-300N',41000,'소형','국산','',HS72(6166)),
+          o('hs','보온등 대형 HS-WA-600',56000,'대형','국산','',HS72(4711)),
+          o('hs','적외선 보온등 2구',60000,'2구','국산','',HS72(6402)),
+          o('hs','적외선 보온등 3구',70000,'3구','국산','',HS72(6403)),
+          o('hs','보온등 특대형 HS-WA-900',73000,'특대','국산','',HS72(4714)),
+          o('pp','인터히트 스마트보온갓 LP300i / 웰돈 따숨 보온등',null,'-','-','가격 문의 (입점업체)',PP)]},
+ {id:'heatmat',name:'가축 보온 전기매트',icon:'heatlamp',sp:['pig','hanwoo','dairy'],
+  desc:'바닥 보온용 전기매트',
+  tags:['보온매트','전기매트','바닥 보온','자돈'],
+  related:['축사 보온등'],
+  offers:[o('hs','보온 전기매트 2자×3자',77000,'2×3자','국산','',HS72(4754)),
+          o('hs','보온 전기매트 3자×3자',91000,'3×3자','국산','',HS72(4755)),
+          o('hs','보온 전기매트 3자×4자',115000,'3×4자','국산','',HS72(4757)),
+          o('hs','보온 전기매트 3자×5자',137000,'3×5자','국산','',HS72(4758)),
+          o('pp','리치피그 보온매트',null,'-','-','가격 문의 (입점업체)',PP)]},
+
+ /* ===== 양돈 ===== */
+ {id:'pignipple',name:'돼지 니플 급수기',icon:'nipple',sp:['pig'],hot:true,
+  desc:'돈사 배관 연결 니플',
+  tags:['니플','급수','급수기','음수','물빨개','돼지'],
+  related:['양돈 워터컵'],
+  offers:[o('gm','급수 니플 (돼지·토끼·소)',750,'1개','중국','G마켓','http://item.gmarket.co.kr/Item?goodscode=878585114'),
+          o('pp','연합축산 니플 / 금보 각종 니플',null,'-','-','가격 문의 (입점업체)',PP),
+          o('bt','바로텍 아쿠아볼 니플 (스웨덴)',null,'-','-','카탈로그 · 견적 문의')]},
+ {id:'pigwatercup',name:'양돈 워터컵',icon:'watercup',sp:['pig'],
+  desc:'절수형 돼지 음수컵',
+  tags:['워터컵','음수컵','절수','돼지','자돈'],
+  related:['돼지 니플 급수기'],
+  offers:[o('pp','금보 스텐 절약형 워터컵',null,'-','-','가격 문의 (입점업체)',PP),
+          o('pp','연합축산 옹달샘 워터컵',null,'-','-','가격 문의 (입점업체)',PP),
+          o('pp','리치피그 포유자돈 워터컵&니플',null,'-','-','가격 문의 (입점업체)',PP),
+          o('bt','바로텍 워터컵',null,'-','-','카탈로그 · 견적 문의')]},
+ {id:'pigtool',name:'단미기·돈형기 등 양돈 관리기',icon:'pigfeeder',sp:['pig'],
+  desc:'단미·체형 측정·이송 기자재',
+  tags:['단미기','돈형기','몰이채','거세틀','슬러리볼','운반수레'],
+  related:['이표펜 (마커)'],
+  offers:[o('pp','리치피그 가스단미기 / 전기단미기',null,'-','-','가격 문의',PP),
+          o('pp','바로텍 MEIER 이동식 돈형기',null,'-','-','가격 문의',PP),
+          o('pp','리치피그 거세틀 / 돼지몰이채',null,'-','-','가격 문의',PP)]},
+
+ /* ===== 양계 ===== */
+ {id:'chickfeeder',name:'병아리·닭 자동 모이통',icon:'chickfeeder',sp:['poultry'],hot:true,
+  desc:'원통형 반자동 급이기',
+  tags:['모이통','급이기','사료통','병아리','닭','자동 모이통'],
+  related:['닭 반자동 물통','닭 니플(닙플)'],
+  offers:[o('st','병아리 자동모이통 1.5kg',2880,'1.5kg','-','11번가 그린팜','http://www.11st.co.kr/products/1185514969'),
+          o('st','병아리 자동모이통 3kg',4380,'3kg','-','11번가 그린팜','http://www.11st.co.kr/products/1185514969'),
+          o('st','닭 자동모이통 6kg',6380,'6kg','-','11번가 그린팜','http://www.11st.co.kr/products/1185514969'),
+          o('st','닭 자동모이통 9kg',7880,'9kg','-','11번가 그린팜','http://www.11st.co.kr/products/1185514969'),
+          o('oc','닭모이통 자동모이통',9000,'-','-','옥션','https://www.auction.co.kr/n/search?keyword=%EB%B3%91%EC%95%84%EB%A6%AC%EC%82%AC%EB%A3%8C'),
+          o('st','양계장 자동 급여기 피더',49400,'자동 공급','-','11번가','https://www.11st.co.kr/products/9079669398')]},
+ {id:'chickwater',name:'닭 반자동 물통',icon:'watercup',sp:['poultry'],hot:true,
+  desc:'병아리~성계용 원통 급수기',
+  tags:['물통','급수기','반자동','병아리','닭','음수'],
+  related:['닭 니플(닙플)','병아리·닭 자동 모이통'],
+  offers:[o('kc','KCJ 닭 물통 1.5L',2250,'1.5L','-','','https://kcjshop.com/product/kcj-%EB%8B%AD-%EB%AC%BC%ED%86%B5-%EC%9E%90%EB%8F%99-%EA%B8%89%EC%88%98%EA%B8%B0-%EB%B3%91%EC%95%84%EB%A6%AC-%EC%83%88-%EB%AA%A8%EC%9D%B4%ED%86%B5-15l/258/'),
+          o('st','반자동 물통 1L',2880,'1L','-','11번가 그린팜','http://www.11st.co.kr/products/1185514969'),
+          o('st','반자동 물통 3L',3880,'3L','-','11번가 그린팜','http://www.11st.co.kr/products/1185514969'),
+          o('st','반자동 물통 6L',5880,'6L','-','11번가 그린팜','http://www.11st.co.kr/products/1185514969'),
+          o('st','반자동 물통 10L',8580,'10L','-','11번가 그린팜','http://www.11st.co.kr/products/1185514969'),
+          o('st','반자동 물통 14L',9880,'14L','-','11번가 그린팜','http://www.11st.co.kr/products/1185514969')]},
+ {id:'chicknipple',name:'닭 니플 (닙플)',icon:'nipple',sp:['poultry'],
+  desc:'닭·병아리 급수 니플',
+  tags:['닙플','니플','급수','수평컵','병아리','닭'],
+  related:['닭 반자동 물통','니플 급수통 (열선)'],
+  offers:[o('gm','수평컵 자동 급수기 니플',720,'1개','-','G마켓','https://www.gmarket.co.kr/n/search?keyword=%EB%B3%91%EC%95%84%EB%A6%AC%ED%8C%90%EB%A7%A4'),
+          o('st','나사형 닙플',1000,'1개','-','11번가','http://www.11st.co.kr/products/1406326591'),
+          o('st','노란 닙플',1800,'1개','-','11번가','http://www.11st.co.kr/products/1406326591'),
+          o('st','원형 닙플',2600,'1개','-','11번가','http://www.11st.co.kr/products/1406326591'),
+          o('gm','급수닙플 (페트병용 등)',2600,'1개','-','G마켓','http://item.gmarket.co.kr/Item?goodscode=641185773')]},
+ {id:'chicktank',name:'니플 급수통 (겨울 열선)',icon:'watercup',sp:['poultry'],
+  desc:'동파 방지 열선 포함 대형 니플 급수통',
+  tags:['열선','동파','겨울','니플급수기','급수통','60리터'],
+  related:['닭 니플 (닙플)'],
+  offers:[o('st','닭물통 니플급수기 3호 60L+열선2M',85320,'60L·열선','-','11번가 (10% 할인가)','https://search.11st.co.kr/MW/search?searchKeyword=%EA%B2%A8%EC%9A%B8%EB%8B%AD%EA%B8%89%EC%88%98%EA%B8%B0&tabId=TOTAL_SEARCH'),
+          o('st','닭물통 니플급수기 3호 60L+열선2M',104730,'60L·열선','-','11번가 (다른 판매자)','https://search.11st.co.kr/MW/search?searchKeyword=%EA%B2%A8%EC%9A%B8%EB%8B%AD%EA%B8%89%EC%88%98%EA%B8%B0&tabId=TOTAL_SEARCH')]},
+ {id:'eggtray',name:'계란 난좌·택배박스',icon:'eggtray',sp:['poultry'],
+  desc:'계란 판·택배용 박스',
+  tags:['난좌','계란판','계란','달걀','택배박스','포장'],
+  related:['병아리·닭 자동 모이통'],
+  offers:[o('gg','계란포장재 (계란판/난좌)',null,'-','-','목록 확인 필요','http://www.goldgreenfarm.com/m/product_list.html?type=M&xcode=025&mcode=001&viewtype=gallery'),
+          o('gg','택배용 계란 박스',null,'-','-','목록 확인 필요','http://www.goldgreenfarm.com/m/product_list.html?type=M&xcode=025&mcode=002&viewtype=gallery')]}
+];
+
+</script>
+<script>
+/* ===================== 아이콘 추가 ===================== */
+ICON.tag = `<svg viewBox="0 0 64 64"><path d="M14 10h24l16 16-24 28L8 32z" fill="#f6d36b" stroke="#b08a1e" stroke-width="2"/><circle cx="24" cy="22" r="4" fill="#fff" stroke="#b08a1e" stroke-width="2"/><text x="30" y="40" font-size="10" font-weight="800" fill="#7a5a10">123</text></svg>`;
+ICON.rope = `<svg viewBox="0 0 64 64"><path d="M10 50c10-30 34-30 44-6" fill="none" stroke="#8a4b2f" stroke-width="5" stroke-linecap="round"/><path d="M10 50c10-30 34-30 44-6" fill="none" stroke="#e6c79a" stroke-width="2" stroke-dasharray="3 4"/><circle cx="54" cy="44" r="6" fill="none" stroke="#6b7a72" stroke-width="3"/><circle cx="10" cy="50" r="6" fill="none" stroke="#6b7a72" stroke-width="3"/></svg>`;
+ICON.tool = `<svg viewBox="0 0 64 64"><rect x="28" y="8" width="8" height="34" rx="3" fill="#9aa8a0"/><rect x="22" y="40" width="20" height="16" rx="4" fill="#2f5d46"/><path d="M24 8h16v6H24z" fill="#6b7a72"/></svg>`;
+
+/* ===================== 축종 ===================== */
+const SPECIES = {
+  hanwoo: {name:'한우', icon:'cow',      top:['feeder','eartag','restrainer']},
+  dairy:  {name:'낙농', icon:'dairycow', top:['dipcup','liner','bottle']},
+  pig:    {name:'양돈', icon:'pig',      top:['heatlamp','pignipple','heatmat']},
+  poultry:{name:'양계', icon:'hen',      top:['chickfeeder','chickwater','chicknipple']}
+};
+const TYPE_LABEL = {mall:'축산 전문몰', online:'오픈마켓', used:'중고'};
+
+/* 설명 검색 사전 */
+const DESC_MAP = [
+  {k:['젖','우유','먹이는','포유','대용유','초유'], t:['포유','젖병','꼭지','초유']},
+  {k:['물','마시','음수','급수','얼','동파'], t:['급수','니플','물통','워터컵','열선']},
+  {k:['춥','추위','겨울','보온','따뜻','체온'], t:['보온','방한','송아지방','열선']},
+  {k:['짜','착유','유두','밀크'], t:['착유','침지','라이너','바켓']},
+  {k:['소독','유방염','위생'], t:['침지','분방','필터']},
+  {k:['묶','고정','잡','발굽','치료'], t:['보정','비압기']},
+  {k:['번호','식별','귀'], t:['이표']},
+  {k:['새끼 낳','분만','난산','출산'], t:['분만','도르래','호흡기']},
+  {k:['뿔'], t:['제각']},
+  {k:['약','투약'], t:['투약','초유']},
+  {k:['사료','밥','모이'], t:['사료통','모이통','급이']},
+  {k:['계란','달걀','알'], t:['난좌']},
+  {k:['병아리','닭'], t:['병아리','닭']},
+  {k:['새끼 돼지','자돈','돼지'], t:['자돈','돼지','양돈']}
+];
+const HOT_WORDS = ['포유틀','침지컵','착유 라이너','이표','보온등','닭 물통'];
+
+/* ===================== 상태 ===================== */
+let state = {mode:'name', species:null, vendor:null, query:'', results:PRODUCTS};
+let modalState = {pid:null, f:'all', r:'low'};
+const $ = s=>document.querySelector(s);
+const won = n=> n==null ? '가격 문의' : n.toLocaleString('ko-KR')+'원';
+const priced = p=> p.offers.filter(x=>x.price!=null);
+const minP = p=> priced(p).length ? Math.min(...priced(p).map(x=>x.price)) : null;
+const maxP = p=> priced(p).length ? Math.max(...priced(p).map(x=>x.price)) : null;
+const vendorsOf = p=> [...new Set(p.offers.map(x=>x.v))];
+let picks = [];
+try{ picks = JSON.parse(localStorage.getItem('chuksan_picks_v2')||'[]'); }catch(e){ picks=[]; }
+function savePicks(){ try{ localStorage.setItem('chuksan_picks_v2',JSON.stringify(picks)); }catch(e){} }
+
+/* ===================== 상단 통계 ===================== */
+function renderLead(){
+  const offers = PRODUCTS.reduce((s,p)=>s+p.offers.length,0);
+  $('#leadStat').innerHTML = `축산 전문몰·오픈마켓 <b>${Object.keys(VENDORS).length}곳</b>의 <b>${PRODUCTS.length}개 제품 · ${offers}개 판매 옵션</b>을 한 화면에서 비교 <span class="realflag">✔ ${CHECKED} 실제 가격</span>`;
+  $('#ftDate').textContent = CHECKED;
+}
+
+/* ===================== 축종 ===================== */
+function renderSpecies(){
+  $('#speciesRow').innerHTML = Object.entries(SPECIES).map(([k,v])=>{
+    const n = PRODUCTS.filter(p=>p.sp.includes(k)).length;
+    const vn = Object.values(VENDORS).filter(x=>x.sp.includes(k)).length;
+    return `<div class="sp ${k} ${state.species===k?'on':''}" data-sp="${k}">
+      <div class="hd">${ICON[v.icon]}<div><h3>${v.name}</h3><div class="cnt">업체 ${vn}곳 · 제품 ${n}종</div></div></div>
+      <div class="prods">${v.top.map(id=>{const p=PRODUCTS.find(x=>x.id===id);return `<div class="prod">${ICON[p.icon]}${p.name.replace(/ \(.+\)/,'')}</div>`;}).join('')}</div>
+    </div>`;
+  }).join('');
+  document.querySelectorAll('.sp').forEach(el=>el.onclick=()=>{
+    state.species = state.species===el.dataset.sp ? null : el.dataset.sp;
+    state.vendor = null;
+    renderAll();
+    document.getElementById('vendors').scrollIntoView({behavior:'smooth'});
+  });
+}
+
+/* ===================== 업체 (가로 스크롤) ===================== */
+function renderVendors(){
+  const sp = state.species;
+  const list = Object.entries(VENDORS).filter(([k,v])=>!sp || v.sp.includes(sp))
+    .map(([k,v])=>{
+      const prods = PRODUCTS.filter(p=>(!sp||p.sp.includes(sp)) && p.offers.some(x=>x.v===k));
+      const opts = prods.reduce((s,p)=>s+p.offers.filter(x=>x.v===k).length,0);
+      const noPrice = prods.length && prods.every(p=>p.offers.filter(x=>x.v===k).every(x=>x.price==null));
+      return {k,v,prods,opts,noPrice};
+    }).filter(x=>x.prods.length)
+    .sort((a,b)=>(a.v.type===b.v.type?0:a.v.type==='mall'?-1:1) || b.opts-a.opts);
+  $('#vTitle').textContent = (sp?SPECIES[sp].name+' ':'')+'기자재 업체 '+list.length+'곳';
+  $('#vendorRow').innerHTML = list.map(({k,v,prods,opts,noPrice})=>`
+    <div class="vcard ${state.vendor===k?'on':''}" data-v="${k}">
+      <span class="stype ${v.type}">${TYPE_LABEL[v.type]}</span>
+      <h4>${v.name}</h4>
+      <p>${v.desc}</p>
+      <div class="vstat">제품 <b>${prods.length}</b>종 · 옵션 <b>${opts}</b>개${noPrice?' · <span style="color:#8a5a00">가격 문의</span>':''}</div>
+      <div class="vbtns"><button class="vsel">${state.vendor===k?'✓ 이 업체만 보는 중':'이 업체 제품만'}</button><a href="${v.url}" target="_blank" rel="noopener">사이트 →</a></div>
+    </div>`).join('');
+  document.querySelectorAll('.vcard .vsel').forEach(b=>b.onclick=e=>{
+    const k = e.target.closest('.vcard').dataset.v;
+    state.vendor = state.vendor===k?null:k; renderAll();
+    document.getElementById('results').scrollIntoView({behavior:'smooth'});
+  });
+}
+
+/* ===================== 핵심 제품 (가로 스크롤) ===================== */
+function renderHot(){
+  const sp = state.species;
+  const list = PRODUCTS.filter(p=>p.hot && (!sp||p.sp.includes(sp)));
+  $('#hotTitle').textContent = '★ '+(sp?SPECIES[sp].name+' ':'')+'핵심 제품';
+  $('#hotRow').innerHTML = list.map(p=>`
+    <div class="hcard" data-id="${p.id}">
+      <div class="img">${ICON[p.icon]}</div>
+      <h4>${p.name}</h4>
+      <div class="range"><b>${won(minP(p))}</b>부터</div>
+      <div class="srcs"><span>업체 ${vendorsOf(p).length}곳</span><span>옵션 ${p.offers.length}개</span></div>
+    </div>`).join('');
+  document.querySelectorAll('.hcard').forEach(el=>el.onclick=()=>openCompare(el.dataset.id));
+}
+
+/* ===================== 검색 ===================== */
+function score(p,q,mode){
+  if(!q) return 1;
+  const ql=q.toLowerCase();
+  const hay=(p.name+' '+p.tags.join(' ')+' '+p.desc+' '+p.offers.map(o=>o.label).join(' ')).toLowerCase();
+  if(mode==='desc'){
+    let terms=q.split(/\s+/).filter(t=>t.length>=2);
+    DESC_MAP.forEach(m=>{ if(m.k.some(k=>q.includes(k))) terms=terms.concat(m.t); });
+    return terms.reduce((s,t)=>s+(hay.includes(t.toLowerCase())?1:0),0);
+  }
+  if(mode==='related'){ const rel=(p.related.join(' ')+' '+p.name).toLowerCase(); return (hay.includes(ql)?2:0)+(rel.includes(ql)?1:0); }
+  return hay.includes(ql) ? (p.name.includes(q)?3:1) : 0;
+}
+function runSearch(){
+  const q=state.query.trim();
+  let list=PRODUCTS.map(p=>({p,s:score(p,q,state.mode)})).filter(x=>x.s>0);
+  if(state.mode==='related'&&q){
+    list.map(x=>x.p).forEach(b=>b.related.forEach(r=>PRODUCTS.forEach(p=>{ if(p.name===r && !list.find(x=>x.p===p)) list.push({p,s:0.5}); })));
+  }
+  if(state.species) list=list.filter(x=>x.p.sp.includes(state.species));
+  if(state.vendor) list=list.filter(x=>x.p.offers.some(o=>o.v===state.vendor));
+  list.sort((a,b)=>b.s-a.s);
+  if(q && state.mode==='desc' && list.length){ const top=list[0].s; list=list.filter(x=>x.s>=Math.max(1,top*0.5)); }
+  state.results=list.map(x=>x.p);
+  renderResults(); renderChips();
+}
+function renderResults(){
+  const sort=$('#sort').value; let r=[...state.results];
+  const mp=p=>minP(p)??Infinity;
+  if(sort==='low'||(sort==='rel'&&!state.query)) r.sort((a,b)=>mp(a)-mp(b));
+  if(sort==='offers') r.sort((a,b)=>b.offers.length-a.offers.length);
+  if(sort==='name') r.sort((a,b)=>a.name.localeCompare(b.name));
+  const spName=state.species?SPECIES[state.species].name+' ':'';
+  $('#resTitle').textContent = state.query?`‘${state.query}’ 검색 결과`:spName+'전체 제품';
+  $('#resInfo').innerHTML=`<b>${r.length}</b>개 제품 · 판매 옵션 <b>${r.reduce((s,p)=>s+p.offers.length,0)}</b>개`;
+  $('#vFilterChip').innerHTML = state.vendor?`<button class="chip" id="clearV">업체: ${VENDORS[state.vendor].name} ×</button>`:'';
+  if(state.vendor) $('#clearV').onclick=()=>{state.vendor=null;renderAll();};
+  if(!r.length){ $('#grid').innerHTML=`<div class="empty" style="grid-column:1/-1">결과가 없어요. <b>설명으로 찾기</b>에서 “송아지 우유 먹이는 거”처럼 입력해 보세요.</div>`; return; }
+  $('#grid').innerHTML=r.map(p=>{
+    const lo=minP(p),hi=maxP(p), vs=vendorsOf(p);
+    return `<div class="pcard" data-id="${p.id}">
+      <div class="img">${ICON[p.icon]}</div>
+      <div class="body">
+        <div class="tags">${p.sp.map(s=>`<span class="tag ${s}">${SPECIES[s].name}</span>`).join('')}${p.hot?'<span class="tag hotb">★핵심</span>':''}</div>
+        <h4>${p.name}</h4>
+        <div class="range">${lo==null?'<b>가격 문의</b>':`<b>${won(lo)}</b>${hi>lo?' ~ '+won(hi):''}`}</div>
+        <div class="srcs">${vs.slice(0,3).map(v=>`<span>${VENDORS[v].name}</span>`).join('')}${vs.length>3?`<span>+${vs.length-3}</span>`:''}</div>
+        <div class="cta">업체별 비교하기 →</div>
+      </div></div>`;
+  }).join('');
+  document.querySelectorAll('.pcard').forEach(el=>el.onclick=()=>openCompare(el.dataset.id));
+}
+function renderChips(){
+  let words=HOT_WORDS;
+  if(state.query&&state.results.length) words=[...new Set(state.results.slice(0,3).flatMap(p=>p.related))].slice(0,8);
+  $('#chips').innerHTML=`<span class="hint" style="margin:0 6px 0 0">${state.query?'연관검색어':'인기 검색'}</span>`+words.map(w=>`<button class="chip ${HOT_WORDS.includes(w)?'hot':''}">${w}</button>`).join('');
+  document.querySelectorAll('#chips .chip').forEach(c=>c.onclick=()=>{ $('#q').value=c.textContent; state.query=c.textContent; runSearch(); document.getElementById('results').scrollIntoView({behavior:'smooth'}); });
+}
+function renderAll(){ renderSpecies(); renderVendors(); renderHot(); runSearch(); }
+
+/* 자동완성 */
+function suggest(){
+  const q=$('#q').value.trim(), box=$('#suggest');
+  if(!q||state.mode==='desc'){ box.style.display='none'; return; }
+  const hits=PRODUCTS.filter(p=>(p.name+p.tags.join('')+p.offers.map(o=>o.label).join('')).includes(q)).slice(0,7);
+  if(!hits.length){ box.style.display='none'; return; }
+  box.innerHTML=hits.map(p=>`<div data-n="${p.name}">${p.name}<small>${p.sp.map(s=>SPECIES[s].name).join('·')} · 업체 ${vendorsOf(p).length}곳</small></div>`).join('');
+  box.style.display='block';
+  box.querySelectorAll('div').forEach(d=>d.onclick=()=>{ $('#q').value=d.dataset.n; state.query=d.dataset.n; box.style.display='none'; runSearch(); });
+}
+const TAB_TEXT={
+  name:{ph:'예) 포유틀, 침지컵, 이표, 보온등',hint:'제품 이름 일부만 입력해도 자동완성됩니다. 몰마다 다른 이름(침질컵·라이나 등)도 같이 찾아요.'},
+  desc:{ph:'예) 송아지 우유 먹이는 거 / 겨울에 닭 물 안 얼게',hint:'“이런 게 있어?” 하듯 문장으로 설명하면 맞는 제품을 찾아줍니다.'},
+  related:{ph:'예) 침지컵 → 스프레이·라이너까지',hint:'검색한 제품과 함께 쓰는 연관 제품까지 묶어서 보여줍니다.'}
+};
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on')); t.classList.add('on');
+  state.mode=t.dataset.mode; $('#q').placeholder=TAB_TEXT[state.mode].ph; $('#hint').textContent=TAB_TEXT[state.mode].hint;
+  if(state.query) runSearch();
+});
+const doSearch=()=>{ state.query=$('#q').value; $('#suggest').style.display='none'; runSearch(); document.getElementById('results').scrollIntoView({behavior:'smooth'}); };
+$('#q').addEventListener('input',suggest);
+$('#q').addEventListener('keydown',e=>{ if(e.key==='Enter') doSearch(); });
+$('#go').onclick=doSearch;
+$('#sort').onchange=renderResults;
+document.addEventListener('click',e=>{ if(!e.target.closest('.sbar')) $('#suggest').style.display='none'; });
+
+/* ===================== 비교 모달 ===================== */
+function renderStepper(cur){
+  const steps=[['A','검색','제품 찾기'],['B','비교','업체별 가격·규격'],['C','선택','내 선택에 담기'],['D','구매 이동','판매처에서 결제'],['A2','다음 자재','함께 쓸 자재 검색']];
+  const order=['A','B','C','D','A2'], ci=order.indexOf(cur);
+  $('#stepper').innerHTML=steps.map(([k,t,d],i)=>`<div class="st ${i<ci?'done':''} ${i===ci?'now':''}"><b>${k==='A2'?'다시 A':k} · ${t}</b>${d}</div>`).join('<span class="ar">→</span>');
+}
+function openCompare(id){
+  modalState={pid:id,f:'all',r:'low'};
+  document.querySelectorAll('[data-f]').forEach(b=>b.classList.toggle('on',b.dataset.f==='all'));
+  document.querySelectorAll('[data-r]').forEach(b=>b.classList.toggle('on',b.dataset.r==='low'));
+  renderCompare(); $('#modal').classList.add('on'); document.body.style.overflow='hidden';
+}
+const keyOf=(p,o)=>p.id+'|'+o.v+'|'+o.label;
+const isPicked=(p,o)=>picks.some(x=>x.key===keyOf(p,o));
+function togglePick(p,o){
+  const key=keyOf(p,o), i=picks.findIndex(x=>x.key===key);
+  if(i>=0) picks.splice(i,1);
+  else { picks=picks.filter(x=>x.pid!==p.id); picks.push({key,pid:p.id,name:p.name,label:o.label,seller:o.seller,price:o.price,url:o.url}); }
+  savePicks(); renderCompare(); renderPickbar();
+}
+function renderCompare(){
+  const p=PRODUCTS.find(x=>x.id===modalState.pid);
+  $('#mImg').innerHTML=ICON[p.icon];
+  $('#mTitle').innerHTML=`${p.name} <span class="realflag">✔ ${CHECKED} 가격</span>`;
+  $('#mDesc').textContent=`${p.desc} · ${p.sp.map(s=>SPECIES[s].name).join('·')} · 업체 ${vendorsOf(p).length}곳 · 옵션 ${p.offers.length}개`;
+  renderStepper(picks.some(x=>x.pid===p.id)?'C':'B');
+
+  let offers=p.offers.filter(o=>modalState.f==='all'||o.type===modalState.f);
+  offers.sort((a,b)=>(a.price??Infinity)-(b.price??Infinity));
+  let pool=offers.filter(o=>o.price!=null), why='판매가 최저';
+  if(modalState.r==='mall'){ pool=pool.filter(o=>o.type==='mall'); why='축산 전문몰 중 최저'; }
+  if(modalState.r==='kr'){ pool=pool.filter(o=>/국산|국내|대한민국/.test(o.origin)); why='국산 표기 제품 중 최저'; }
+  const best=pool[0];
+
+  const specSet=new Set(offers.map(o=>o.spec).filter(s=>s!=='-'));
+  $('#mWarn').innerHTML = specSet.size>1 ? `<div class="mnote">⚠ 규격·구성이 서로 다른 옵션이 섞여 있어요 (${[...specSet].slice(0,4).join(' / ')}${specSet.size>4?' …':''}). <b>규격 행</b>을 같이 보고 고르세요.</div>`:'';
+
+  if(!offers.length){
+    $('#pick').innerHTML=`<div class="star">–</div><div><b>이 조건의 판매처가 없어요</b><p>다른 필터를 선택하거나 아래 실시간 검색을 이용하세요.</p></div>`;
+    $('#ctable').innerHTML='';
+  } else {
+    $('#pick').innerHTML = best ? `<div class="star">★</div>
+      <div><b>추천 · ${best.seller} — ${best.label} ${won(best.price)}</b><p>${why} · 규격: ${best.spec} · 원산지: ${best.origin}${best.note?' · '+best.note:''}</p></div>
+      <a href="#" id="pickBest">${isPicked(p,best)?'✓ 선택됨':'C · 이걸로 선택'}</a>`
+      : `<div class="star">–</div><div><b>조건에 맞는 가격 공개 제품이 없어요</b><p>‘가격 문의’ 업체는 사이트에서 직접 확인하세요.</p></div>`;
+    if(best) $('#pickBest').onclick=e=>{ e.preventDefault(); if(!isPicked(p,best)) togglePick(p,best); };
+    const lowest=pool.length?Math.min(...offers.filter(o=>o.price!=null).map(o=>o.price)):null;
+    const col=o=>o===best?'best':'';
+    let h='<thead><tr><th class="rowh">업체</th>'+offers.map(o=>`<th class="${col(o)}"><span class="stype ${o.type}">${TYPE_LABEL[o.type]}</span><br><span class="seller">${o.seller}</span>${o===best?'<br><span class="badge">★ 추천</span>':''}</th>`).join('')+'</tr></thead><tbody>';
+    h+='<tr><th class="rowh">★ 선택</th>'+offers.map((o,i)=>`<td class="${col(o)}">${o.price==null?'<small>문의 후 구매</small>':`<button class="selbtn ${isPicked(p,o)?'on':''}" data-pi="${i}">${isPicked(p,o)?'✓ 선택됨':'선택'}</button>`}</td>`).join('')+'</tr>';
+    h+='<tr><th class="rowh">제품명</th>'+offers.map(o=>`<td class="${col(o)}" style="font-weight:600">${o.label}</td>`).join('')+'</tr>';
+    h+='<tr><th class="rowh">판매가</th>'+offers.map(o=>`<td class="${col(o)}"><span class="price">${won(o.price)}</span>${o.price!=null&&o.price===lowest?'<br><span class="badge">최저가</span>':''}</td>`).join('')+'</tr>';
+    h+='<tr><th class="rowh">규격·구성</th>'+offers.map(o=>`<td class="${col(o)}">${o.spec}</td>`).join('')+'</tr>';
+    h+='<tr><th class="rowh">원산지</th>'+offers.map(o=>`<td class="${col(o)}">${o.origin}</td>`).join('')+'</tr>';
+    h+='<tr><th class="rowh">비고</th>'+offers.map(o=>`<td class="${col(o)}"><small>${o.note||'-'}</small></td>`).join('')+'</tr>';
+    h+='<tr><th class="rowh">배송비</th>'+offers.map(o=>`<td class="${col(o)}"><small style="color:#8a5a00">판매처 확인</small></td>`).join('')+'</tr>';
+    h+='<tr><th class="rowh">구매</th>'+offers.map(o=>`<td class="${col(o)}"><a class="buy" href="${o.url}" target="_blank" rel="noopener" data-buy="1">${o.price==null?'문의하러 가기':'판매처로 이동'}</a></td>`).join('')+'</tr>';
+    $('#ctable').innerHTML=h+'</tbody>';
+    $('#ctable').querySelectorAll('[data-pi]').forEach(b=>b.onclick=()=>togglePick(p,offers[+b.dataset.pi]));
+    $('#ctable').querySelectorAll('[data-buy]').forEach(a=>a.addEventListener('click',()=>renderStepper('D')));
+  }
+  const q=encodeURIComponent(p.name.replace(/ \(.+\)/,''));
+  $('#extLinks').innerHTML=[
+    ['네이버쇼핑','https://search.shopping.naver.com/search/all?query='+q],
+    ['쿠팡','https://www.coupang.com/np/search?q='+q],
+    ['11번가','https://search.11st.co.kr/Search.tmall?kwd='+q],
+    ['G마켓','https://www.gmarket.co.kr/n/search?keyword='+q],
+    ['당근(중고)','https://www.daangn.com/kr/buy-sell/?search='+q],
+    ['소몰이 중고장터','https://so-mory.com'],
+    ['번개장터','https://m.bunjang.co.kr/search/products?q='+q]
+  ].map(([n,u])=>`<a href="${u}" target="_blank" rel="noopener">${n} →</a>`).join('');
+  $('#mNote').innerHTML=`※ ${CHECKED} 각 판매처 공개 페이지 기준. 네이버·쿠팡은 자동 확인이 막혀 있어 위 실시간 검색 버튼으로 바로 비교하세요. 배송비·재고는 판매처에서 확인.`;
+}
+document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{ document.querySelectorAll('[data-f]').forEach(x=>x.classList.remove('on')); b.classList.add('on'); modalState.f=b.dataset.f; renderCompare(); });
+document.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{ document.querySelectorAll('[data-r]').forEach(x=>x.classList.remove('on')); b.classList.add('on'); modalState.r=b.dataset.r; renderCompare(); });
+function closeModal(){ $('#modal').classList.remove('on'); document.body.style.overflow=''; }
+$('#mClose').onclick=closeModal;
+$('#modal').onclick=e=>{ if(e.target.id==='modal') closeModal(); };
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+
+/* ===================== 내 선택 바 ===================== */
+function renderPickbar(){
+  const bar=$('#pickbar');
+  if(!picks.length){ bar.classList.remove('on'); document.body.classList.remove('haspick'); return; }
+  const sum=picks.reduce((s,x)=>s+(x.price||0),0);
+  const rel=[...new Set(picks.flatMap(x=>(PRODUCTS.find(p=>p.id===x.pid)||{related:[]}).related))].filter(r=>!picks.some(x=>x.name===r))[0];
+  bar.innerHTML=`<div class="in"><span class="ttl">🛒 내 선택 ${picks.length}개</span>`
+   +picks.map(x=>`<span class="item">${x.name} · ${x.seller} · ${won(x.price)} <a href="${x.url}" target="_blank" rel="noopener" data-go="1">D · 구매하러 가기</a><button data-del="${x.key}" title="빼기">×</button></span>`).join('')
+   +`<span class="sum">합계 <b>${won(sum)}</b> + 배송비</span>`
+   +(rel?`<button class="next" id="nextA">다시 A · ‘${rel}’ →</button>`:'')+`</div>`;
+  bar.classList.add('on'); document.body.classList.add('haspick');
+  bar.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{ picks=picks.filter(x=>x.key!==b.dataset.del); savePicks(); renderPickbar(); if($('#modal').classList.contains('on')) renderCompare(); });
+  bar.querySelectorAll('[data-go]').forEach(a=>a.addEventListener('click',()=>{ if($('#modal').classList.contains('on')) renderStepper('D'); }));
+  const n=$('#nextA'); if(n) n.onclick=()=>{ const t=PRODUCTS.find(p=>p.name===rel); closeModal(); if(t) openCompare(t.id); };
+}
+
+/* 시작 */
+renderLead(); renderAll(); renderPickbar();
+
+</script>
+</body>
+</html>
