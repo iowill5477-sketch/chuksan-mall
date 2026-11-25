@@ -259,6 +259,75 @@ footer{margin-top:50px;padding:26px 0;border-top:1px solid var(--line);color:var
   .pick a{margin-left:0;width:100%;text-align:center;padding:13px}
   .ctable-wrap{display:none}
   .mcards{display:block}
+
+  /* --- 휴대폰 컴팩트 v2 --- */
+  header .wrap{height:56px}
+  .logo{font-size:17px}
+  .logo span{display:none}
+  nav.open{top:56px}
+  .hero{padding:18px 0 14px}
+  .hero h1{font-size:22px;line-height:1.35;letter-spacing:-0.6px;word-break:keep-all}
+  .hero p.lead{display:none}
+  .trust{flex-wrap:wrap;gap:6px;margin:10px 0 12px;overflow:visible}
+  .trust div{font-size:12px;padding:4px 10px}
+  .search-box{padding:12px;border-radius:14px}
+  .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;overflow:visible}
+  .tab{padding:8px 4px;font-size:13px;text-align:center}
+  .tab .lx{display:none}
+  .sbar input{min-width:0;padding:12px;font-size:16px}
+  .sbar button{padding:0 16px}
+  .hint{display:none}
+  #chips{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  #chips > .hint{display:none}
+  .chip{padding:7px 4px;font-size:12.5px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  .sec-title{flex-direction:column;align-items:flex-start;gap:2px;margin:24px 0 10px}
+  .sec-title h2{font-size:19px}
+  .sec-title p{font-size:12.5px}
+
+  /* 축종: 한 줄 4칸 탭, 화면 위에 고정 */
+  .species{grid-template-columns:repeat(4,1fr);gap:6px;position:sticky;top:56px;z-index:15;background:var(--bg);padding:6px 0}
+  .sp{padding:10px 4px;border-radius:12px;text-align:center}
+  .sp:hover{transform:none;box-shadow:none}
+  .sp .hd{justify-content:center}
+  .sp .hd svg,.sp .cnt,.sp .prods{display:none}
+  .sp h3{font-size:15px}
+  .sp.on{outline:none;background:currentColor}
+  .sp.on h3{color:#fff}
+
+  /* 업체: 아래로 보는 목록 */
+  #vendorRow{display:flex;flex-direction:column;gap:8px;overflow:visible;padding:0}
+  .vcard{flex:none;display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:12px;border-radius:12px}
+  .vcard .stype{grid-column:1;justify-self:start;margin:0}
+  .vcard h4{grid-column:1;font-size:15.5px}
+  .vcard p{display:none}
+  .vcard{align-items:center}
+  .vcard .stype{align-self:start;line-height:1.5}
+  .vcard .vbtns{flex-direction:row}
+  .vcard .vstat{grid-column:1/-1}
+  .vcard .vbtns{grid-column:2;grid-row:1/4;align-self:center;margin:0}
+  .vbtns .vsel,.vbtns a{padding:8px 10px;font-size:12.5px;text-align:center}
+
+  /* 핵심·전체 제품: 2칸 카드 */
+  #hotRow{display:grid;grid-template-columns:1fr 1fr;gap:8px;overflow:visible;padding:0}
+  .hcard{padding:10px;border-radius:12px}
+  .hcard .img{height:78px}
+  .hcard .img svg{width:58px;height:58px}
+  .hcard h4{font-size:13.5px;margin:6px 0 0;line-height:1.3}
+  .hcard .range b{font-size:15px}
+  .hcard .srcs{display:none}
+  .grid{grid-template-columns:1fr 1fr;gap:8px}
+  .pcard{border-radius:12px}
+  .pcard .img{height:86px}
+  .pcard .img svg{width:62px;height:62px}
+  .pcard .body{padding:10px;gap:4px}
+  .pcard h4{font-size:13.5px;line-height:1.3}
+  .pcard .range{font-size:11.5px}
+  .pcard .range b{font-size:15px}
+  .pcard .srcs{display:none}
+  .pcard .cta{padding:7px;font-size:12.5px}
+  .tag{font-size:10px;padding:1px 5px}
+  .toolbar .info{font-size:12.5px}
 }
 </style>
 </head>
@@ -284,9 +353,9 @@ footer{margin-top:50px;padding:26px 0;border-top:1px solid var(--line);color:var
     <div class="trust" id="trust"></div>
     <div class="search-box">
       <div class="tabs" id="tabs">
-        <button class="tab on" data-mode="name"><b>1</b>제품명으로 찾기</button>
-        <button class="tab" data-mode="desc"><b>2</b>설명으로 찾기</button>
-        <button class="tab" data-mode="related"><b>3</b>연관검색어로 찾기</button>
+        <button class="tab on" data-mode="name"><b>1</b>제품명<span class="lx">으로 찾기</span></button>
+        <button class="tab" data-mode="desc"><b>2</b>설명<span class="lx">으로 찾기</span></button>
+        <button class="tab" data-mode="related"><b>3</b>연관검색어<span class="lx">로 찾기</span></button>
       </div>
       <div class="sbar">
         <input id="q" autocomplete="off" placeholder="예) 포유틀, 침지컵, 이표, 보온등">
@@ -887,7 +956,7 @@ function renderSpecies(){
     state.species = state.species===el.dataset.sp ? null : el.dataset.sp;
     state.vendor = null;
     renderAll();
-    document.getElementById('vendors').scrollIntoView({behavior:'smooth'});
+    if(window.innerWidth>560) document.getElementById('vendors').scrollIntoView({behavior:'smooth'});
   });
 }
 
