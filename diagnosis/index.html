@@ -3,107 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thanks for Giving · 우리 목장 간이 진단 · 전문가·제품 연결</title>
+<title>Thanks for Giving · 낙농 30초 진단 · 고민을 고르면 맞는 전문가·제품까지</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
 <style>
 :root{
-  --ink:#1f2421; --sub:#6b6f69; --line:#e6e3dc; --bg:#f4f3ef; --panel:#f7f6f2; --card:#fff;
-  --green:#1f9d74; --green2:#e3f1ec; --green3:#0b5a47; --red:#d94545; --red2:#fcebeb;
-  --blue:#1d6fc4; --blue2:#e6f1fb; --gold:#d8b25a; --brown:#9a6a12;
+  --ink:#1f2a24; --sub:#5d6b63; --line:#e4e2da; --bg:#faf8f3; --card:#fff;
+  --brand:#2d5f8a; --brand2:#e8f0f7; --mall:#2f5d46; --mall2:#e9f0ea; --accent:#c8862b; --accent2:#fbf1e2;
+  --good:#2f7d4f; --mid:#c8862b; --bad:#b5463a;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Pretendard,-apple-system,"Malgun Gothic",sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-tap-highlight-color:transparent}
 a{color:inherit;text-decoration:none}
 button,input,select,textarea{font-family:inherit}
 button{cursor:pointer}
-.page{max-width:1040px;margin:0 auto;background:#fff;min-height:100vh}
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px}
 
-/* 맨 위 Thanks for Giving 배너 (목업) */
-.tfg{position:relative;overflow:hidden;background:linear-gradient(100deg,#1e3467 0%,#2b4a85 45%,#6c99cf 100%);color:#fff}
-.tfg .in{display:flex;align-items:center;gap:18px;padding:16px 22px 14px}
-.tfg img{height:120px;width:auto;flex:none;filter:drop-shadow(0 4px 10px rgba(0,0,0,.25))}
-.tfg h1{font-family:"Times New Roman",Georgia,"Nanum Myeongjo",serif;font-weight:400;font-size:44px;color:var(--gold);letter-spacing:.5px;text-shadow:0 0 18px rgba(255,214,120,.35)}
-.tfg .sp{position:absolute;border-radius:50%;background:#ffd977;box-shadow:0 0 10px 3px rgba(255,217,119,.6)}
-.tfg .lk{position:absolute;top:10px;right:12px;display:flex;gap:6px}
-.tfg .lk a{font-size:12px;font-weight:700;color:#fff;background:rgba(255,255,255,.16);padding:5px 10px;border-radius:20px}
+header{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+header .wrap{display:flex;align-items:center;gap:10px;height:58px}
+.logo{font-weight:800;font-size:18px;color:var(--brand);cursor:pointer}
+.logo span{font-size:12px;font-weight:700;color:var(--accent);background:var(--accent2);padding:3px 8px;border-radius:20px;margin-left:6px}
+.hl{margin-left:auto;display:flex;gap:6px}
+.hl a{font-size:13px;font-weight:700;padding:7px 11px;border-radius:9px;background:var(--brand2);color:var(--brand)}
+.hl a.m{background:var(--mall2);color:var(--mall)}
 
-.body{padding:22px}
-.panel{background:var(--panel);border-radius:20px;padding:22px}
-.ptitle{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px}
-.ptitle h2{font-size:22px;font-weight:600}
-.ptitle small{font-size:14px;color:var(--sub)}
+/* 가로 진행 표시 */
+.prog{display:flex;align-items:center;gap:0;margin:16px 0 6px;overflow-x:auto}
+.pg{display:flex;align-items:center;flex:1;min-width:84px}
+.pg div{flex:1;text-align:center;font-size:12px;font-weight:800;color:#a8a69d;padding:7px 4px;border-radius:9px;background:#f0eee7;white-space:nowrap}
+.pg.on div{background:var(--brand);color:#fff}
+.pg.done div{background:var(--brand2);color:var(--brand)}
+.pg i{font-style:normal;color:#c5c2b8;padding:0 3px;font-weight:900}
 
-/* A·B·C 진단 카드: PC는 가로 한 줄 */
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.dc{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:16px 18px;text-align:left;cursor:pointer;transition:.12s}
-.dc:hover{border-color:#bfc8c2}
-.dc.weak{border:2.5px solid var(--red)}
-.dc .top{display:flex;justify-content:space-between;align-items:center}
-.dc .lt{background:var(--green2);color:var(--green3);font-weight:700;font-size:16px;padding:2px 10px;border-radius:7px}
-.dc .lb{color:var(--sub);font-size:15px}
-.dc .v{font-size:36px;font-weight:600;margin:6px 0 4px;letter-spacing:-.5px}
-.dc .v.pre{font-size:22px;color:#a3a69f;margin:14px 0 10px}
-.dc .bar{height:8px;background:#ebe9e3;border-radius:9px;overflow:hidden}
-.dc .bar i{display:block;height:100%;background:var(--green)}
-.dc .s{font-size:14px;color:var(--sub);margin-top:10px}
-.dc.weak .s{color:var(--red)}
-.more{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center;font-size:14px;color:var(--sub)}
-.more button{background:#fff;border:1px solid var(--line);border-radius:20px;padding:6px 12px;font-size:14px}
-.more button.done{border-color:var(--green);color:var(--green3)}
-.foot{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:16px}
-.foot p{font-size:15px;color:var(--sub)}
-.cta{background:#1f1f1f;color:#fff;border:0;border-radius:14px;padding:16px 26px;font-size:17px;font-weight:600;white-space:nowrap}
-.todo{background:#fff;border:1.5px solid var(--red2);border-left:5px solid var(--red);border-radius:14px;padding:14px 16px;margin-top:14px}
-.todo b{font-size:16px}
-.todo .why{font-size:14px;color:var(--sub);margin:3px 0 6px}
-.todo ol{padding-left:18px;font-size:15px}
-.todo .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+/* A 고민 고르기 */
+.hero{padding:22px 0 6px}
+.hero h1{font-size:28px;font-weight:800;letter-spacing:-.5px;line-height:1.3}
+.hero h1 em{font-style:normal;color:var(--brand)}
+.hero p{color:var(--sub);margin-top:6px}
+.trust{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
+.trust div{font-size:13px;background:#fff;border:1px solid var(--line);padding:5px 10px;border-radius:20px;color:var(--sub)}
+.trust b{color:var(--ink)}
+.worries{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.wbtn{background:#fff;border:2px solid var(--line);border-radius:18px;padding:18px 16px;text-align:left;transition:.12s;min-height:118px;display:flex;flex-direction:column;gap:4px}
+.wbtn:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 8px 22px rgba(45,95,138,.1)}
+.wbtn .ic{font-size:30px;line-height:1}
+.wbtn b{font-size:17px;margin-top:4px}
+.wbtn small{color:var(--sub);font-size:13px}
+.wbtn.done{border-color:var(--good)}
+.wbtn.done::after{content:"✓ 진단 완료";font-size:12px;font-weight:800;color:var(--good)}
+.alt{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.alt a,.alt button{display:flex;align-items:center;gap:12px;background:var(--brand2);border:0;border-radius:14px;padding:14px 16px;text-align:left;color:var(--brand)}
+.alt .ic{font-size:24px}
+.alt b{display:block;font-size:15px}
+.alt small{font-size:12px;color:var(--sub)}
 
-/* 전문가(왼쪽) · 제품(오른쪽) */
-.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px}
-.box{border:1.5px solid var(--line);border-radius:20px;padding:20px}
-.bh{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.bh h3{font-size:20px;font-weight:600}
-.bh a,.bh button{color:var(--blue);font-size:15px;background:none;border:0}
-.tabs{display:flex;gap:7px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid var(--line)}
-.tab{background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:6px 13px;font-size:15px;color:#555}
-.tab.on{background:var(--blue2);border-color:var(--blue2);color:var(--blue)}
-.it{display:flex;align-items:center;gap:13px;padding:14px 0;border-bottom:1px solid var(--line)}
-.it:last-of-type{border-bottom:0}
-.av{width:46px;height:46px;border-radius:50%;background:var(--blue2);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:18px;flex:none}
-.av.sq{border-radius:12px;background:#f1efe9;color:#555}
-.it .t{flex:1;min-width:0}
-.it b{font-size:17px;font-weight:500;display:block}
-.it small{font-size:14px;color:var(--sub)}
-.rec{background:var(--red2);color:var(--red);font-size:13px;font-weight:600;padding:3px 8px;border-radius:6px;white-space:nowrap}
-.go{font-size:13px;font-weight:600;color:var(--green3);background:var(--green2);padding:5px 9px;border-radius:7px;white-space:nowrap}
-.ad{display:block;background:#f6f3ec;border-radius:12px;padding:13px 16px;margin:14px 0 4px;font-size:15px;color:#555}
-.ad em{font-style:normal;color:var(--brown);font-weight:600}
-.empty{padding:16px 2px;font-size:15px;color:var(--sub)}
-.empty b{color:var(--ink);font-weight:600}
-.wbtn{display:block;width:100%;background:#fff;border:1.5px solid #cfccc4;border-radius:12px;padding:14px;font-size:17px;margin-top:12px}
-.sbtn{background:var(--ink);color:#fff;border:0;border-radius:10px;padding:9px 14px;font-size:14px;font-weight:600}
-.sbtn.l{background:#fff;color:var(--ink);border:1.5px solid #cfccc4}
-
-/* 문항 화면 */
-.qbox{max-width:620px;margin:0 auto;background:var(--panel);border-radius:20px;padding:24px}
-.qbox .tag{font-size:14px;font-weight:700;color:var(--green3)}
-.qbar{height:7px;background:#e4e1da;border-radius:9px;margin:10px 0 18px;overflow:hidden}
-.qbar i{display:block;height:100%;background:var(--green);transition:.25s}
-.qbox h2{font-size:23px;font-weight:600;line-height:1.35}
+/* B 한 문항씩 */
+.qbox{background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px;margin-top:12px;max-width:680px;margin-left:auto;margin-right:auto;box-shadow:0 6px 24px rgba(45,95,138,.06)}
+.qbox .tag{font-size:13px;font-weight:800;color:var(--brand)}
+.qbar{height:6px;background:#eee;border-radius:9px;margin:10px 0 18px;overflow:hidden}
+.qbar i{display:block;height:100%;background:var(--brand);transition:.25s}
+.qbox h2{font-size:22px;font-weight:800;line-height:1.35}
 .qbox .help{color:var(--sub);font-size:14px;margin-top:4px}
 .opts{display:flex;flex-direction:column;gap:10px;margin-top:18px}
-.opt{background:#fff;border:2px solid var(--line);border-radius:14px;padding:16px;font-size:18px;text-align:left}
-.opt:hover,.opt.sel{border-color:var(--green);background:var(--green2)}
+.opt{background:#fcfbf8;border:2px solid var(--line);border-radius:14px;padding:15px 16px;font-size:17px;font-weight:600;text-align:left}
+.opt:hover{border-color:var(--brand);background:var(--brand2)}
+.opt.sel{border-color:var(--brand);background:var(--brand2);color:var(--brand)}
 .opt.na{background:transparent;border-style:dashed;color:var(--sub);font-size:15px}
 .qnav{display:flex;justify-content:space-between;margin-top:16px}
-.lnk{background:none;border:0;color:var(--sub);font-size:15px;padding:6px}
-.toast{background:var(--green2);color:var(--green3);font-weight:600;border-radius:12px;padding:10px 14px;margin-bottom:14px;text-align:center}
+.lnk{background:none;border:0;color:var(--sub);font-size:14px;font-weight:700;padding:6px}
 
-.note{font-size:12px;color:var(--sub);margin:22px 0 6px;line-height:1.65}
+/* C 결과 */
+.rtop{display:flex;gap:14px;margin-top:14px;flex-wrap:wrap}
+.score{background:var(--brand);color:#fff;border-radius:18px;padding:18px 22px;min-width:210px}
+.score .s{font-size:48px;font-weight:900;line-height:1.05}
+.score small{opacity:.9}
+.areas{flex:1;display:flex;gap:10px;overflow-x:auto}
+.ar{flex:1;min-width:118px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px}
+.ar .n{font-size:13px;font-weight:800;color:var(--sub)}
+.ar .v{font-size:26px;font-weight:900}
+.ar .x{font-size:12px;color:var(--sub)}
+.ar.add{border-style:dashed;display:flex;align-items:center;justify-content:center;color:var(--brand);font-weight:800;cursor:pointer;background:transparent}
+.bar{height:6px;background:#eee;border-radius:9px;overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%}
+.headline{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-top:12px;font-size:16px}
+
+.sec{display:flex;align-items:baseline;gap:10px;margin:26px 0 12px;flex-wrap:wrap}
+.sec h3{font-size:19px;font-weight:800}
+.sec p{color:var(--sub);font-size:14px}
+
+.weak{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px}
+.wk{flex:1;min-width:290px;background:#fff;border:2px solid var(--accent);border-radius:16px;padding:16px}
+.wk .h{display:flex;justify-content:space-between;gap:8px}
+.wk .h b{font-size:16px}
+.wk .st{color:var(--accent);font-weight:900}
+.wk .now{font-size:13px;color:var(--sub);margin:3px 0 8px}
+.wk .why{font-size:14px;background:var(--accent2);border-radius:10px;padding:8px 10px;margin-bottom:8px}
+.wk ol{padding-left:18px;font-size:14px}
+
+/* D 연결: 왼쪽 전문가 / 오른쪽 제품 */
+.match{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.col{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px}
+.col>h4{font-size:16px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.col>h4 small{font-size:12px;color:var(--sub);font-weight:600}
+.ex{border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start}
+.ex .av{width:46px;height:46px;border-radius:50%;background:var(--brand2);display:flex;align-items:center;justify-content:center;font-size:22px;flex:none}
+.ex .t{flex:1}
+.ex b{font-size:15px}
+.ex .d{font-size:13px;color:var(--sub)}
+.ex .why{font-size:13px;color:var(--brand);font-weight:700;margin-top:4px}
+.ex button{margin-top:8px}
+.pd{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:11px 12px;margin-bottom:8px}
+.pd .ic{font-size:20px}
+.pd .t{flex:1}
+.pd b{font-size:15px}
+.pd small{display:block;font-size:12px;color:var(--sub)}
+.pd .go{font-size:13px;font-weight:800;color:var(--mall);background:var(--mall2);padding:6px 10px;border-radius:8px;white-space:nowrap}
+.empty{font-size:14px;color:var(--sub);padding:10px 2px}
+
+/* E 가격 사다리 */
+.ladder{display:flex;align-items:stretch;overflow-x:auto;padding-bottom:4px}
+.lv{flex:1;min-width:210px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column}
+.lv.star{border:2px solid var(--accent)}
+.lv .k{font-size:12px;font-weight:800;color:var(--brand)}
+.lv h4{font-size:16px;margin:2px 0}
+.lv .pr{font-size:22px;font-weight:900}
+.lv .pr small{font-size:12px;color:var(--accent);font-weight:800;margin-left:4px}
+.lv ul{font-size:13px;color:var(--sub);padding-left:16px;margin:6px 0 12px;flex:1}
+.lv.back{background:var(--brand);color:#fff;border-color:var(--brand)}
+.lv.back .k,.lv.back ul{color:#dbe8f3}
+.la{display:flex;align-items:center;color:#c5c2b8;font-weight:900;padding:0 6px}
+
+.btn{border:0;border-radius:11px;padding:12px 18px;font-size:15px;font-weight:800}
+.btn.p{background:var(--brand);color:#fff}
+.btn.a{background:var(--accent);color:#fff}
+.btn.w{background:#fff;color:var(--brand)}
+.btn.g{background:#efede6;color:var(--sub)}
+.btn.s{padding:8px 12px;font-size:13px;border-radius:9px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+
+.prov{margin-top:28px;background:var(--mall2);border-radius:16px;padding:16px 18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.prov .t{flex:1;min-width:220px}
+.prov b{font-size:16px;color:var(--mall)}
+.prov small{display:block;color:var(--sub);font-size:13px}
+
+.note{font-size:12px;color:var(--sub);margin:24px 0 40px;line-height:1.65}
 
 /* 신청 모달 */
-.modal{position:fixed;inset:0;background:rgba(20,25,22,.45);display:none;align-items:flex-end;justify-content:center;z-index:50}
+.modal{position:fixed;inset:0;background:rgba(20,30,25,.45);display:none;align-items:flex-end;justify-content:center;z-index:50}
 .modal.on{display:flex}
 .mbox{background:#fff;border-radius:20px 20px 0 0;padding:22px;max-width:520px;width:100%;max-height:92vh;overflow:auto}
 @media(min-width:700px){.modal{align-items:center}.mbox{border-radius:20px}}
@@ -113,31 +158,84 @@ button{cursor:pointer}
 .mbox input,.mbox select,.mbox textarea{width:100%;font-size:16px;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px}
 .mbox .agree{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--sub);font-weight:500;margin-top:12px}
 .mbox .agree input{width:auto;margin-top:3px}
-.mbox .row{display:flex;gap:10px;margin-top:16px}
-.mbox .row button{flex:1;border:0;border-radius:11px;padding:13px;font-size:16px;font-weight:700}
-.mbox .ok{display:none;margin-top:12px;padding:12px;border-radius:10px;background:var(--green2);color:var(--green3);font-weight:700}
+.mbox .ok{display:none;margin-top:12px;padding:12px;border-radius:10px;background:var(--mall2);color:var(--mall);font-weight:700}
 .hide{display:none}
 
-@media(max-width:820px){.cards{grid-template-columns:1fr}.two{grid-template-columns:1fr}}
-@media(max-width:520px){.body{padding:16px}.panel{padding:18px}.tfg img{height:92px}.tfg h1{font-size:30px}.tfg .in{gap:12px;padding:14px 14px 10px}
- .foot{flex-direction:row}.foot p{font-size:14px}.cta{padding:14px 18px;font-size:16px}.dc .v{font-size:32px}}
+@media(max-width:820px){.worries{grid-template-columns:1fr 1fr}.match{grid-template-columns:1fr}.alt{grid-template-columns:1fr}}
+@media(max-width:480px){.hero h1{font-size:23px}.wbtn{min-height:104px;padding:14px}.wbtn b{font-size:16px}.score{width:100%}.qbox{padding:18px}.qbox h2{font-size:20px}.hl a.d{display:none}}
+/* Thanks for Giving — 헤더 전용 스타일 */
+@font-face{font-family:"Tilt Neon";src:url("tilt-neon.woff2") format("woff2")}
+
+.tfg-header{position:relative;overflow:hidden;display:flex;justify-content:space-between;align-items:center;
+  padding:14px 20px;background:linear-gradient(90deg,#1E3466 0%,#2F5596 55%,#6E9BD1 100%)}
+
+/* 금빛 별 */
+.tfg-star{position:absolute;width:4px;height:4px;border-radius:50%;background:#F5D06F;
+  box-shadow:0 0 6px 2px rgba(245,208,111,.75);animation:tfg-twinkle 2.4s ease-in-out infinite}
+.tfg-star.sm{width:3px;height:3px}
+@keyframes tfg-twinkle{0%,100%{opacity:.15;transform:scale(.7)}50%{opacity:1;transform:scale(1.2)}}
+
+/* 로고: 금빛 소 + 네온 YULDANG */
+.tfg-brand{position:relative;display:flex;align-items:center;gap:14px}
+.tfg-logo{display:flex;flex-direction:column;align-items:center;gap:3px}
+.tfg-logo img{height:48px;filter:drop-shadow(0 0 5px rgba(245,208,111,.55))}
+.tfg-logo span{font-family:"Tilt Neon",sans-serif;font-size:12px;letter-spacing:2.5px;color:#F3E6C4;
+  text-shadow:0 0 3px rgba(245,208,111,.55),0 0 7px rgba(245,208,111,.25);animation:tfg-neon 6s ease-in-out infinite}
+@keyframes tfg-neon{0%,100%{opacity:.9}50%{opacity:1}}
+
+/* 황금 반짝이 제목 */
+.tfg-title{font-family:Georgia,"Times New Roman",serif;font-size:28px;font-weight:500;letter-spacing:.5px;margin:0;
+  background:linear-gradient(100deg,#B8860B 0%,#F5D06F 25%,#FFF6C8 45%,#F5D06F 60%,#B8860B 100%);
+  background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 6px rgba(245,208,111,.6));animation:tfg-shine 3.5s linear infinite}
+@keyframes tfg-shine{0%{background-position:100% 0}100%{background-position:-150% 0}}
+
+/* 메뉴 */
+.tfg-nav{position:relative;display:flex;gap:16px;font-size:13px}
+.tfg-nav a{color:#fff;text-decoration:none}
+.tfg-menu-btn{display:none;position:relative;background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+
+/* 휴대폰 */
+@media (max-width:600px){
+  .tfg-title{font-size:22px}
+  .tfg-nav{display:none}
+  .tfg-nav.open{display:flex;flex-direction:column;position:absolute;right:16px;top:64px;
+    background:#1E3466;padding:12px 16px;border-radius:8px;z-index:10}
+  .tfg-menu-btn{display:block}
+}
+/* 움직임 줄이기 설정을 켠 사용자는 애니메이션 끔 */
+@media (prefers-reduced-motion:reduce){.tfg-star,.tfg-title,.tfg-logo span{animation:none}}
+
 </style>
 </head>
 <body>
-<div class="page">
 
-<div class="tfg">
-  <span class="sp" style="width:6px;height:6px;left:44%;top:22%"></span>
-  <span class="sp" style="width:4px;height:4px;left:80%;top:15%"></span>
-  <span class="sp" style="width:3px;height:3px;left:58%;top:70%;opacity:.7"></span>
-  <span class="sp" style="width:5px;height:5px;left:92%;top:55%;opacity:.8"></span>
-  <div class="lk"><a href="detail.html">정밀진단</a><a href="../">축산몰</a></div>
-  <div class="in"><img src="tfg-logo.png" alt="YULDANG"><h1>Thanks for Giving</h1></div>
-</div>
+<header class="tfg-header">
+  <span class="tfg-star" style="top:12px;left:44%"></span>
+  <span class="tfg-star sm" style="top:36px;left:56%;animation-delay:.7s"></span>
+  <span class="tfg-star" style="top:16px;left:66%;animation-delay:1.4s"></span>
+  <span class="tfg-star sm" style="top:52px;left:50%;animation-delay:.3s"></span>
+  <span class="tfg-star sm" style="top:8px;left:80%;animation-delay:1.9s"></span>
+  <div class="tfg-brand">
+    <div class="tfg-logo"><img src="logo-yuldang-cow-gold.png" alt="율당 금빛 소 로고"><span>YULDANG</span></div>
+    <h1 class="tfg-title">Thanks for Giving</h1>
+  </div>
+  <button class="tfg-menu-btn" aria-label="메뉴" onclick="document.querySelector('.tfg-nav').classList.toggle('open')">☰</button>
+  <nav class="tfg-nav"><a href="./">간이 진단</a><a href="detail.html">정밀진단</a><a href="#" id="tfgPro">전문가 등록</a><a href="../">축산몰</a></nav>
+</header>
+<header><div class="wrap">
+  <div class="logo" id="home">🩺 낙농 진단<span>30초 무료</span></div>
+  <div class="hl"><a class="d" href="detail.html">정밀진단</a><a class="m" href="../">🛒 축산몰</a></div>
+</div></header>
 
-<div class="body" id="view"></div>
-
-</div>
+<main class="wrap">
+  <div class="prog" id="prog"></div>
+  <div id="view"></div>
+  <p class="note">
+    ※ 진단 기준(점수 구간)과 리포트 가격은 서비스 준비 단계의 <b>가정값</b>입니다. 목장 규모·사양 방식에 따라 달라질 수 있으며, 정확한 판단은 실제 기록(검정성적·납유 명세)으로 확인합니다.<br>
+    ※ 답변은 이 기기에만 저장되고, 신청서를 보낼 때만 함께 전달됩니다.
+  </p>
+</main>
 
 <!-- 신청 모달 (Netlify Forms) -->
 <div class="modal" id="modal"><div class="mbox">
@@ -147,19 +245,23 @@ button{cursor:pointer}
     <input type="hidden" name="type" id="fType">
     <input type="hidden" name="summary" id="fSum">
     <p class="hide"><label>비워두세요<input name="bot-field"></label></p>
-    <label>성함 (업체명)</label><input name="name" required>
+    <label>성함</label><input name="name" required>
     <label>연락처</label><input name="phone" type="tel" required placeholder="010-">
     <label>지역</label><input name="region" placeholder="예) 충남 당진">
     <div id="expW"><label>분야</label>
-      <select name="expert" id="fExp"><option>번식</option><option>사양</option><option>경영</option><option>환경</option><option>인증</option><option>6차</option><option>사료</option><option>첨가제</option><option>기자재</option></select></div>
+      <select name="expert" id="fExp">
+        <option>쿼터·납유 관리</option><option>번식·인공수정·수정란이식</option><option>수의사 (유방염·질병)</option>
+        <option>사양·영양 (TMR·사료)</option><option>송아지·육성우</option><option>경영·재무</option><option>착유기·설비</option><option>기자재·사료 업체</option>
+      </select></div>
     <label id="memoL">하고 싶은 말 (선택)</label><textarea name="memo" rows="3"></textarea>
     <label class="agree"><input type="checkbox" required> 연락을 위해 성함·연락처·진단 결과를 수집하는 데 동의합니다. (목적 달성 후 파기)</label>
-    <div class="row"><button type="button" id="mX" style="background:#efede6;color:#555">닫기</button><button style="background:#1f1f1f;color:#fff">보내기</button></div>
+    <div class="row"><button type="button" class="btn g" id="mX">닫기</button><button class="btn p" style="flex:1">보내기</button></div>
     <div class="ok" id="ok"></div>
   </form>
 </div></div>
 
 <script>
+/* ===== 고민(영역)별 30초 문항: 선택지 점수 100/70/40/10, 모름=제외 ===== */
 const W=[
  {id:'quota',ic:'🥛',name:'쿼터·납유',ask:'쿼터가 넘치거나 모자라요',exp:'쿼터·납유 관리',qs:[
    {id:'q1',t:'쿼터 대비 실제 납유량은 어느 정도인가요?',h:'최근 3개월 평균 기준',o:[['95~103% 거의 딱 맞음',100],['90~95% 또는 103~110%',60],['90% 미만 (많이 모자람)',20],['110% 넘음 (많이 넘침)',20]],
@@ -224,145 +326,145 @@ const PNAME={'이표펜':['이표펜 (발정 표시)','🏷️'],'보정기':['�
  '라이너':['착유 라이너','🔧'],'여과지':['착유 여과지·필터','🧻'],'착유 앞치마':['착유 앞치마·토시','🧤'],'사료통':['소 사료통','🪣'],'먹이자석':['소 먹이자석','🧲'],
  '방한복':['송아지 방한복','🧥'],'보온등':['축사 보온등','💡'],'송아지방':['송아지방 (인큐베이터)','🏠'],'초유 투입기':['초유 투입기','🍼'],'포유병':['포유병 (젖병)','🍼'],
  '포유틀':['송아지 포유틀','🍼'],'보온 전기매트':['가축 보온 전기매트','🔥']};
+/* 전문가 유형 (실제 전문가 등록 전: 유형만 표시) */
+const EXP={'쿼터·납유 관리':['🥛','납유 계획·쿼터 매입/임대 손익'],'번식·인공수정·수정란이식':['🧬','발정·수정 계획, 반복우, 수정란이식'],
+ '수의사 (유방염·질병)':['🩺','유방염 원인균, 치료·예방 계획'],'사양·영양 (TMR·사료)':['🌾','TMR 설계, 조사료 분석, 사료비'],
+ '송아지·육성우':['🍼','초유·포유·보온, 육성 성장 관리'],'경영·재무':['📊','현금흐름, 상환 조정, 지원사업']};
+const PRICE=[ /* 가정값: 정식 가격 확정 전 */
+ {k:'무료',h:'전문가 상담 요청',p:'0원',l:['요청 1번이면 맞는 전문가가 연락','비교하고 고르기'],b:'상담 요청',t:'match'},
+ {k:'★ 1단계',h:'간이 원인분석 리포트',p:'9,900원',l:['오늘 답변 + 체크리스트','약점별 원인·할 일'],b:'리포트 신청',t:'lite',star:1},
+ {k:'★ 2단계',h:'정밀 컨설팅 보고서',p:'190,000원',l:['검정성적·납유 명세 분석','3개월 개선 계획 + 방문'],b:'보고서 신청',t:'full',star:1}];
 
-/* 화면 구성: 맨 위 간이 진단 A 쿼터·두수 / B 번식 / C 경영 (+ 더 진단) */
-const MAIN=[['quota','A','쿼터·두수'],['repro','B','번식'],['mgmt','C','경영']];
-const EXTRA=['milk','feed','calf'];
-const ETABS=['번식','사양','경영','환경','인증','6차'];
-const PTABS=['사료','첨가제','기자재'];
-const AREA_ETAB={quota:'경영',repro:'번식',mgmt:'경영',milk:'사양',feed:'사양',calf:'사양'};
-const AREA_PTAB={quota:'기자재',repro:'기자재',mgmt:'기자재',milk:'기자재',feed:'사료',calf:'기자재'};
-const ETAB_DESC={번식:'발정·수정 계획, 반복우, 수정란이식',사양:'TMR·사료 설계, 유방염·송아지 관리',경영:'쿼터·납유 계획, 현금흐름, 지원사업',
- 환경:'분뇨·악취·퇴비, 축사 환경',인증:'HACCP·동물복지·무항생제 인증','6차':'유가공·체험·직판 (요거트 등)'};
-/* 등록된 전문가·업체가 생기면 여기에 추가: {tab:'번식',name:'홍길동',role:'수의사',desc:'경력 10년 · 충남',verified:true} */
-const EXPERTS=[];
-const SPONSORS=[]; /* 제품 등록 업체: {tab:'첨가제',name:'제품명',co:'업체명',q:'축산몰 검색어'} */
-const MALL={기자재:['이표펜','보정기','침지컵','라이너','분방착유','여과지','사료통','먹이자석','초유 투입기','포유병','방한복','보온등','송아지방'],사료:['사료통','먹이자석'],첨가제:[]};
-
-let S={view:'home',w:null,qi:0,chain:false,etab:null,ptab:null,toast:''};
-let ANS={};
-try{ ANS=JSON.parse(localStorage.getItem('dx_quick_v1')||'{}').ans||{}; }catch(e){}
-const save=()=>{ try{ localStorage.setItem('dx_quick_v1',JSON.stringify({ans:ANS})); }catch(e){} };
+let S={step:'home',w:null,qi:0,ans:{}};
+try{ const s=JSON.parse(localStorage.getItem('dx_quick_v1')||'null'); if(s&&s.ans) S.ans=s.ans; }catch(e){}
+const save=()=>{ try{ localStorage.setItem('dx_quick_v1',JSON.stringify({ans:S.ans})); }catch(e){} };
 const $=s=>document.querySelector(s);
-const WA=id=>W.find(w=>w.id===id);
-const answered=q=>ANS[q.id]&&ANS[q.id]!=='na';
-const done=w=>w.qs.some(answered);
-const score=w=>{ const v=w.qs.filter(answered).map(q=>ANS[q.id].s); return v.length?Math.round(v.reduce((a,b)=>a+b,0)/v.length):null; };
-const worstQ=w=>w.qs.filter(answered).sort((a,b)=>ANS[a.id].s-ANS[b.id].s)[0];
-function weakest(){ const d=W.filter(done).map(w=>({w,s:score(w)})).sort((a,b)=>a.s-b.s); return d.length&&d[0].s<80?d[0]:null; }
+const col=s=>s>=80?'var(--good)':s>=50?'var(--mid)':'var(--bad)';
+const grade=s=>s>=80?'양호':s>=50?'보통 · 개선 여지':'주의 · 우선 개선';
+const done=w=>w.qs.some(q=>S.ans[q.id]!=null&&S.ans[q.id]!=='na');
+function areaScore(w){ const v=w.qs.map(q=>S.ans[q.id]).filter(x=>x!=null&&x!=='na').map(a=>a.s); return v.length?Math.round(v.reduce((a,b)=>a+b,0)/v.length):null; }
 
-function render(){ (S.view==='q'?vQ:vHome)(); }
+function prog(){
+  const steps=[['A','고민'],['B','30초 진단'],['C','결과'],['D','연결'],['E','신청']];
+  const cur={home:0,q:1,result:2}[S.step]??0;
+  $('#prog').innerHTML=steps.map((s,i)=>`<div class="pg ${i===cur?'on':i<cur?'done':''}"><div>${s[0]} · ${s[1]}</div>${i<4?'<i>→</i>':''}</div>`).join('');
+}
+function render(){ prog(); ({home:vHome,q:vQ,result:vResult})[S.step](); window.scrollTo({top:0,behavior:'smooth'}); }
 
-/* ===== 메인: 간이 진단 → 전문가 → 제품 ===== */
+/* A. 고민 고르기 */
 function vHome(){
-  const wk=weakest();
-  if(!S.etab) S.etab=wk?AREA_ETAB[wk.w.id]:'번식';
-  if(!S.ptab) S.ptab=wk?AREA_PTAB[wk.w.id]:'기자재';
-  const shown=[...MAIN.map(m=>m[0]),...EXTRA.filter(id=>done(WA(id)))];
-  const card=id=>{ const w=WA(id), m=MAIN.find(x=>x[0]===id), sc=score(w), isW=wk&&wk.w.id===id, wq=sc!=null?worstQ(w):null;
-    const sub=sc==null?`${w.qs.length}문항 · 약 20초`:isW?`취약 · ${SHORT[wq.id]} (${w.qs.find(q=>q.id===wq.id).o[ANS[wq.id].i][0]})`:(sc>=80?'양호':`${SHORT[wq.id]} 보통`);
-    return `<button class="dc ${isW?'weak':''}" data-start="${id}"><div class="top"><span class="lt">${m?m[1]:w.ic}</span><span class="lb">${m?m[2]:w.name}</span></div>
-      ${sc==null?`<div class="v pre">진단 전 →</div>`:`<div class="v">${sc}점</div>`}
-      <div class="bar"><i style="width:${sc??0}%;${isW?'background:var(--green)':''}"></i></div><div class="s">${sub}</div></button>`; };
-  const nextMain=MAIN.map(m=>m[0]).find(id=>!done(WA(id)));
   const any=W.some(done);
-  const wq=wk?worstQ(wk.w):null;
-  $('#view').innerHTML=`
-  ${S.toast?`<div class="toast">${S.toast}</div>`:''}
-  <section class="panel">
-    <div class="ptitle"><h2>우리 목장 간이 진단</h2><small>무료 · 1분 · 받기 → 해석 → 결론</small></div>
-    <div class="cards">${shown.map(card).join('')}</div>
-    <div class="more">더 진단하기: ${EXTRA.map(id=>{const w=WA(id);return `<button class="${done(w)?'done':''}" data-start="${id}">${w.ic} ${w.name}${done(w)?' ✓':''}</button>`;}).join('')}</div>
-    ${wk?`<div class="todo"><b>★ 이번 주 할 일 · ${SHORT[wq.id]}</b><div class="why">${wq.fix.why}</div>
-      <ol>${wq.fix.a.map(t=>`<li>${t}</li>`).join('')}</ol>
-      <div class="row"><button class="sbtn" data-req="lite">간이 리포트 9,900원 (가정)</button><button class="sbtn l" data-req="full">정밀 보고서 190,000원 (가정)</button><button class="sbtn l" data-req="remind">3개월 뒤 재진단 알림</button></div></div>`:''}
-    <div class="foot"><p>↓ 진단 결과에 맞춰 아래 전문가·제품이 정렬돼요</p>
-      ${nextMain?`<button class="cta" id="start">${any?'이어서 진단':'진단 시작하기'}</button>`:`<button class="cta" data-req="match">전문가 상담 요청</button>`}</div>
+  $('#view').innerHTML=`<section class="hero">
+    <h1>어떤 게 <em>제일 고민</em>이세요?</h1>
+    <p>하나만 눌러도 됩니다. 버튼으로 4번만 답하면 약한 곳과 맞는 전문가·제품을 바로 보여드려요.</p>
+    <div class="trust"><div>⏱ <b>30초</b> · 숫자 몰라도 OK</div><div>💸 진단 <b>무료</b></div><div>🛒 제품은 <b>축산몰 최저가</b>로 연결</div></div>
   </section>
-
-  <div class="two">
-    <section class="box">
-      <div class="bh"><h3>전문가 연결</h3><button data-req="match">상담 요청</button></div>
-      <div class="tabs" id="et">${ETABS.map(t=>`<button class="tab ${t===S.etab?'on':''}" data-t="${t}">${t}</button>`).join('')}</div>
-      ${expertList(wk)}
-      <button class="wbtn" data-req="pro" data-tab="${S.etab}">전문가로 등록하기</button>
-    </section>
-    <section class="box">
-      <div class="bh"><h3>제품 연결·홍보</h3><a href="../">전체 보기</a></div>
-      <div class="tabs" id="pt">${PTABS.map(t=>`<button class="tab ${t===S.ptab?'on':''}" data-t="${t}">${t}</button>`).join('')}</div>
-      <button class="ad" data-req="ad" style="width:100%;text-align:left;border:0"><em>광고</em> · 이 자리에 업체 신제품 배너를 걸 수 있어요 (모집 중)</button>
-      ${productList(wk)}
-      <button class="wbtn" data-req="pro" data-tab="${S.ptab}">제품 등록하기</button>
-    </section>
+  <div class="worries">${W.map(w=>`<button class="wbtn ${done(w)?'done':''}" data-w="${w.id}"><span class="ic">${w.ic}</span><b>${w.ask}</b><small>${w.name}</small></button>`).join('')}</div>
+  <div class="alt">
+    ${any?`<button id="seeRes"><span class="ic">📋</span><span><b>지금까지 결과 보기</b><small>${W.filter(done).map(w=>w.name).join(' · ')}</small></span></button>`:
+    `<a href="detail.html"><span class="ic">🔢</span><span><b>숫자로 정밀진단</b><small>쿼터·번식·유질·사료·경영 20개 항목</small></span></a>`}
+    <button id="photo"><span class="ic">📷</span><span><b>검정성적표 사진으로 진단 요청</b><small>입력 없이 자료만 보내면 분석해 드려요</small></span></button>
   </div>
-  <p class="note">※ 진단 점수 구간과 리포트 가격은 서비스 준비 단계의 <b>가정값</b>입니다. 정확한 판단은 실제 기록(검정성적·납유 명세)으로 확인합니다. 답변은 이 기기에만 저장되고, 신청할 때만 함께 전달됩니다.</p>`;
-  S.toast='';
-  document.querySelectorAll('[data-start]').forEach(b=>b.onclick=()=>startArea(b.dataset.start,false));
-  const st=$('#start'); if(st) st.onclick=()=>startArea(nextMain,true);
-  document.querySelectorAll('#et .tab').forEach(b=>b.onclick=()=>{S.etab=b.dataset.t;vHome();});
-  document.querySelectorAll('#pt .tab').forEach(b=>b.onclick=()=>{S.ptab=b.dataset.t;vHome();});
-  document.querySelectorAll('[data-req]').forEach(b=>b.onclick=()=>openReq(b.dataset.req,b.dataset.tab||S.etab));
-}
-function expertList(wk){
-  const rec=wk&&AREA_ETAB[wk.w.id]===S.etab;
-  const list=EXPERTS.filter(e=>e.tab===S.etab);
-  if(list.length) return list.map(e=>`<div class="it"><div class="av">${e.name[0]}</div><div class="t"><b>${e.name} ${e.role}</b><small>${e.tab} · ${e.desc} · ${e.verified?'검증됨':'검증 대기'}</small></div>${rec?`<span class="rec">${MAIN.find(m=>m[0]===wk.w.id)?.[1]||''} 추천</span>`:''}</div>`).join('');
-  return `<div class="it"><div class="av">${S.etab[0]}</div><div class="t"><b>${S.etab} 전문가</b><small>${ETAB_DESC[S.etab]}</small></div>${rec?`<span class="rec">${(MAIN.find(m=>m[0]===wk.w.id)||[0,'★'])[1]} 추천</span>`:''}</div>
-    <div class="empty">지금 <b>${S.etab} 분야 전문가를 모집</b>하고 있어요. 상담을 요청하시면 맞는 분을 찾아 연결해 드립니다.<br><button class="sbtn" style="margin-top:10px" data-req="match" data-tab="${S.etab}">무료 상담 요청</button></div>`;
-}
-function productList(wk){
-  const recQ=wk?new Set(worstQ(wk.w).fix.p.concat(wk.w.qs.flatMap(q=>q.fix.p))):new Set();
-  const top=wk?new Set(worstQ(wk.w).fix.p):new Set();
-  const sp=SPONSORS.filter(x=>x.tab===S.ptab).map(x=>`<a class="it" href="../?q=${encodeURIComponent(x.q)}"><div class="av sq">${S.ptab[0]}</div><div class="t"><b>${x.name}</b><small>${x.co}</small></div></a>`);
-  let items=MALL[S.ptab].slice().sort((a,b)=>(top.has(b)-top.has(a))||(recQ.has(b)-recQ.has(a))).slice(0,4);
-  const mall=items.map(q=>`<a class="it" href="../?q=${encodeURIComponent(q)}"><div class="av sq">${(PNAME[q]||[q,'📦'])[1]}</div><div class="t"><b>${(PNAME[q]||[q])[0]}</b><small>축산몰 · 업체별 최저가 비교</small></div>${top.has(q)?`<span class="rec">${(MAIN.find(m=>m[0]===wk.w.id)||[0,'★'])[1]} 추천</span>`:`<span class="go">비교</span>`}</a>`);
-  const all=sp.concat(mall);
-  return all.length?all.join(''):`<div class="empty"><b>${S.ptab} 등록 업체를 모집</b>하고 있어요. 지금은 축산몰에서 찾아보실 수 있어요.<br><a class="sbtn l" style="display:inline-block;margin-top:10px" href="../">축산몰에서 찾기</a></div>`;
+  <div class="prov"><div class="t"><b>수의사·인공수정사·컨설턴트·기자재 업체이신가요?</b><small>지역 낙농가의 상담 요청을 받아보세요. 등록은 무료입니다.</small></div><button class="btn w" id="pro">전문가·업체 등록 →</button></div>`;
+  document.querySelectorAll('.wbtn').forEach(b=>b.onclick=()=>{ S.w=b.dataset.w; S.qi=0; S.step='q'; render(); });
+  const sr=$('#seeRes'); if(sr) sr.onclick=()=>{ S.step='result'; render(); };
+  $('#photo').onclick=()=>openReq('photo'); $('#pro').onclick=()=>openReq('pro');
 }
 
-/* ===== 한 문항씩 ===== */
-function startArea(id,chain){ S.w=id; S.qi=0; S.chain=chain; S.view='q'; render(); window.scrollTo({top:0}); }
+/* B. 한 문항씩 */
 function vQ(){
-  const w=WA(S.w), q=w.qs[S.qi], a=ANS[q.id], m=MAIN.find(x=>x[0]===w.id);
+  const w=W.find(x=>x.id===S.w), q=w.qs[S.qi], a=S.ans[q.id];
   $('#view').innerHTML=`<div class="qbox">
-    <div class="tag">${m?m[1]+' · '+m[2]:w.ic+' '+w.name} · ${S.qi+1} / ${w.qs.length}</div>
-    <div class="qbar"><i style="width:${S.qi/w.qs.length*100}%"></i></div>
+    <div class="tag">${w.ic} ${w.name} · ${S.qi+1} / ${w.qs.length}</div>
+    <div class="qbar"><i style="width:${(S.qi)/w.qs.length*100}%"></i></div>
     <h2>${q.t}</h2>${q.h?`<p class="help">${q.h}</p>`:''}
     <div class="opts">${q.o.map((o,i)=>`<button class="opt ${a&&a!=='na'&&a.i===i?'sel':''}" data-i="${i}">${o[0]}</button>`).join('')}
-      <button class="opt na" data-i="na">잘 모르겠어요 (건너뛰기)</button></div>
-    <div class="qnav"><button class="lnk" id="back">← ${S.qi?'이전':'처음으로'}</button><button class="lnk" id="out">결과 보기 →</button></div></div>`;
+      <button class="opt na ${a==='na'?'sel':''}" data-i="na">잘 모르겠어요 (건너뛰기)</button></div>
+    <div class="qnav"><button class="lnk" id="back">← ${S.qi?'이전 질문':'고민 다시 고르기'}</button>${S.qi===w.qs.length-1?'':`<button class="lnk" id="skipAll">결과 바로 보기 →</button>`}</div>
+  </div>`;
   document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
-    const i=b.dataset.i; ANS[q.id]=i==='na'?'na':{i:+i,s:q.o[+i][1]}; save(); b.classList.add('sel');
-    setTimeout(()=>{
-      if(S.qi<w.qs.length-1){ S.qi++; vQ(); return; }
-      const nxt=S.chain&&MAIN.map(x=>x[0]).find(id=>!done(WA(id)));
-      if(nxt){ S.w=nxt; S.qi=0; vQ(); return; }
-      goHome(`${m?m[1]+' '+m[2]:w.name} 진단 완료! 아래 전문가·제품이 결과에 맞춰 정렬됐어요`);
-    },160);
+    const i=b.dataset.i; S.ans[q.id]= i==='na'?'na':{i:+i,s:q.o[+i][1]}; save();
+    b.classList.add('sel');
+    setTimeout(()=>{ if(S.qi<w.qs.length-1){ S.qi++; vQ(); } else { S.step='result'; render(); } },160);
   });
-  $('#back').onclick=()=>{ if(S.qi){S.qi--;vQ();} else goHome(''); };
-  $('#out').onclick=()=>goHome('');
+  $('#back').onclick=()=>{ if(S.qi){ S.qi--; vQ(); } else { S.step='home'; render(); } };
+  const sk=$('#skipAll'); if(sk) sk.onclick=()=>{ S.step='result'; render(); };
 }
-function goHome(t){ const wk=weakest(); S.etab=wk?AREA_ETAB[wk.w.id]:S.etab; S.ptab=wk?AREA_PTAB[wk.w.id]:S.ptab; S.toast=t; S.view='home'; render(); window.scrollTo({top:0}); }
 
-/* ===== 신청 ===== */
+/* C·D·E. 결과 → 연결 → 신청 */
+function compute(){
+  const areas=W.filter(done).map(w=>({w,s:areaScore(w)}));
+  const total=areas.length?Math.round(areas.reduce((a,x)=>a+x.s,0)/areas.length):null;
+  const weak=areas.flatMap(x=>x.w.qs.filter(q=>S.ans[q.id]&&S.ans[q.id]!=='na'&&S.ans[q.id].s<80).map(q=>({w:x.w,q,s:S.ans[q.id].s,a:q.o[S.ans[q.id].i][0]}))).sort((p,q)=>p.s-q.s);
+  return {areas,total,weak};
+}
+function vResult(){
+  const r=compute();
+  if(r.total==null){ $('#view').innerHTML=`<div class="qbox"><h2>답한 문항이 없어요</h2><p class="help">"잘 모르겠어요"만 고르셨네요. 다른 고민을 골라보시거나 검정성적표 사진으로 요청해 주세요.</p><div class="row"><button class="btn p" id="h">고민 다시 고르기</button></div></div>`; $('#h').onclick=()=>{S.step='home';render();}; return; }
+  const top=r.weak.slice(0,2);
+  const exps=[...new Set((top.length?top:r.areas.map(x=>({w:x.w}))).map(x=>x.w.exp))];
+  const prods=[...new Set(top.flatMap(x=>x.q.fix.p))].slice(0,5);
+  const left=W.filter(w=>!done(w));
+  $('#view').innerHTML=`
+  <div class="rtop">
+    <div class="score"><small>진단 점수</small><div class="s">${r.total}</div><small>${grade(r.total)}</small></div>
+    <div class="areas">${r.areas.map(x=>`<div class="ar"><div class="n">${x.w.ic} ${x.w.name}</div><div class="v" style="color:${col(x.s)}">${x.s}</div><div class="bar"><i style="width:${x.s}%;background:${col(x.s)}"></i></div></div>`).join('')}
+      ${left.length?`<div class="ar add" id="more">+ 다른 고민도<br>진단하기</div>`:''}</div>
+  </div>
+  <div class="headline">${top.length?`★ 가장 먼저 손볼 곳은 <b>${top.map(x=>SHORT[x.q.id]).join('</b>, <b>')}</b>입니다.`:'답하신 항목은 모두 양호합니다. 다른 고민도 진단해 보세요.'}</div>
+
+  ${top.length?`<div class="sec"><h3>★ 우선 손볼 곳</h3><p>왜 중요한지 → 이번 주 할 일</p></div>
+  <div class="weak">${top.map(x=>`<div class="wk"><div class="h"><b><span class="st">★</span> ${SHORT[x.q.id]}</b><span style="color:${col(x.s)};font-weight:800">${x.s}점</span></div>
+    <div class="now">${x.q.t} → <b>${x.a}</b></div><div class="why">💡 ${x.q.fix.why}</div>
+    <ol>${x.q.fix.a.map(t=>`<li>${t}</li>`).join('')}</ol></div>`).join('')}</div>`:''}
+
+  <div class="sec"><h3>D · 맞는 전문가와 제품</h3><p>왼쪽은 사람, 오른쪽은 물건</p></div>
+  <div class="match">
+    <div class="col"><h4>👤 전문가 연결 <small>요청 1번 → 맞는 분이 연락</small></h4>
+      ${exps.map(e=>`<div class="ex"><div class="av">${EXP[e][0]}</div><div class="t"><b>${e}</b><div class="d">${EXP[e][1]}</div>
+        <div class="why">✔ 추천 이유: ${(top.find(x=>x.w.exp===e)||{w:{name:''}}).w.name||r.areas[0].w.name} 점수가 낮게 나왔어요</div>
+        <button class="btn p s" data-exp="${e}">무료 상담 요청</button></div></div>`).join('')}
+    </div>
+    <div class="col"><h4>🛒 필요한 제품 <small>축산몰 가격 비교</small></h4>
+      ${prods.length?prods.map(p=>`<a class="pd" href="../?q=${encodeURIComponent(p)}"><span class="ic">${(PNAME[p]||[p,'📦'])[1]}</span><span class="t"><b>${(PNAME[p]||[p])[0]}</b><small>업체별 가격·규격 한 번에</small></span><span class="go">최저가 보기</span></a>`).join('')
+        :`<div class="empty">이 고민은 제품보다 <b>계획·관리</b>가 먼저입니다. 왼쪽 전문가 상담을 추천해요.</div>`}
+      <a class="pd" href="../"><span class="ic">🔍</span><span class="t"><b>축산몰에서 직접 찾기</b><small>낙농 기자재 전체</small></span><span class="go">이동</span></a>
+    </div>
+  </div>
+
+  <div class="sec"><h3>E · 더 정확하게</h3><p>무료 상담 → 간이 리포트 → 정밀 보고서 → 다시 진단</p></div>
+  <div class="ladder">${PRICE.map((x,i)=>`<div class="lv ${x.star?'star':''}"><div class="k">${x.k}</div><h4>${x.h}</h4><div class="pr">${x.p}${x.p!=='0원'?'<small>가정</small>':''}</div>
+      <ul>${x.l.map(t=>`<li>${t}</li>`).join('')}</ul><button class="btn ${x.star?'a':'p'} s" data-req="${x.t}">${x.b}</button></div><div class="la">→</div>`).join('')}
+    <div class="lv back"><div class="k">다시 A로</div><h4>3개월 뒤 재진단</h4><div class="pr">무료</div><ul><li>점수 변화로 효과 확인</li><li>알림을 보내드려요</li></ul><button class="btn w s" data-req="remind">알림 신청</button></div>
+  </div>
+  <div class="row"><button class="btn g" id="home2">← 고민 다시 고르기</button><button class="btn g" id="reset">답변 모두 지우기</button><a class="btn g" href="detail.html">🔢 숫자로 정밀진단</a></div>`;
+  const mo=$('#more'); if(mo) mo.onclick=()=>{ S.step='home'; render(); };
+  document.querySelectorAll('[data-exp]').forEach(b=>b.onclick=()=>openReq('match',b.dataset.exp));
+  document.querySelectorAll('[data-req]').forEach(b=>b.onclick=()=>openReq(b.dataset.req,exps[0]));
+  $('#home2').onclick=()=>{ S.step='home'; render(); };
+  $('#reset').onclick=()=>{ if(confirm('답변을 모두 지울까요?')){ S.ans={}; save(); S.step='home'; render(); } };
+}
+
+/* 신청 */
 const REQ={
- match:['무료 전문가 상담 요청','진단 결과를 보고 맞는 전문가를 찾아 연락드립니다.',1],
- lite:['간이 원인분석 리포트 (9,900원 · 가정)','결제 방법과 결과 받는 방법을 연락드려 안내합니다.',0],
- full:['정밀 컨설팅 보고서 (190,000원 · 가정)','필요한 자료(검정성적·납유 명세)와 일정을 안내합니다.',0],
- remind:['3개월 뒤 재진단 알림','3개월 뒤 문자로 재진단 링크를 보내드립니다.',0],
- pro:['전문가·업체 등록','분야와 활동 지역을 남겨주세요. 등록 절차를 안내드립니다.',1],
- ad:['광고 배너 문의','노출 위치·기간·비용을 안내드립니다.',1]
+ match:['👤 무료 전문가 상담 요청','진단 결과를 보고 맞는 전문가가 연락드립니다.',1],
+ lite:['📄 간이 원인분석 리포트 신청 (9,900원·가정)','결제 방법과 결과 받는 방법을 연락드려 안내합니다.',0],
+ full:['📑 정밀 컨설팅 보고서 신청 (190,000원·가정)','필요한 자료(검정성적·납유 명세)와 일정을 연락드려 안내합니다.',0],
+ remind:['🔔 3개월 뒤 재진단 알림','3개월 뒤 문자로 재진단 링크를 보내드립니다.',0],
+ photo:['📷 검정성적표 사진으로 진단 요청','연락처를 남기시면 사진 받을 방법(카톡·문자)을 안내드립니다.',0],
+ pro:['🤝 전문가·업체 등록','분야와 활동 지역을 남겨주세요. 등록 절차를 안내드립니다.',1]
 };
 function summary(){
-  const d=W.filter(done); if(!d.length) return '진단 답변 없음';
-  return d.map(w=>`${w.name} ${score(w)}점`).join(', ')+' | '+d.flatMap(w=>w.qs.filter(answered).map(q=>`${SHORT[q.id]}: ${q.o[ANS[q.id].i][0]}`)).join(' / ');
+  const r=compute(); if(r.total==null) return '진단 답변 없음';
+  return `점수 ${r.total} | `+r.areas.map(x=>`${x.w.name} ${x.s}`).join(', ')+' | 답변: '+
+    W.flatMap(w=>w.qs.filter(q=>S.ans[q.id]&&S.ans[q.id]!=='na').map(q=>`${q.t} → ${q.o[S.ans[q.id].i][0]}`)).join(' / ');
 }
-function openReq(t,tab){
-  const c=REQ[t]; $('#fType').value=t; $('#mT').textContent=c[0]; $('#mS').textContent=c[1];
-  $('#expW').style.display=c[2]?'':'none'; if(tab&&[...$('#fExp').options].some(o=>o.value===tab)) $('#fExp').value=tab;
-  $('#memoL').textContent=(t==='pro'||t==='ad')?'소개 (업체명·경력·제품·활동 지역)':'하고 싶은 말 (선택)';
-  $('#fSum').value=(t==='pro'||t==='ad')?'(등록·광고 문의)':summary();
+function openReq(t,exp){
+  const c=REQ[t];
+  $('#fType').value=t; $('#mT').textContent=c[0]; $('#mS').textContent=c[1];
+  $('#expW').style.display=c[2]?'':'none'; if(exp&&[...$('#fExp').options].some(o=>o.value===exp)) $('#fExp').value=exp;
+  $('#memoL').textContent=t==='pro'?'소개 (업체명·경력·활동 지역)':'하고 싶은 말 (선택)';
+  $('#fSum').value=t==='pro'?'(전문가 등록)':summary();
   $('#ok').style.display='none'; $('#modal').classList.add('on');
 }
 $('#mX').onclick=()=>$('#modal').classList.remove('on');
@@ -374,6 +476,8 @@ $('#fm').onsubmit=e=>{
    .catch(()=>{ $('#ok').textContent='전송에 실패했어요. 잠시 후 다시 시도해 주세요.'; })
    .finally(()=>{ $('#ok').style.display='block'; });
 };
+const tp=document.getElementById('tfgPro'); if(tp) tp.onclick=e=>{e.preventDefault();openReq('pro');};
+$('#home').onclick=()=>{ S.step='home'; render(); };
 render();
 </script>
 </body>
