@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>낙농 목장 진단 · 3분 무료 진단 → 맞춤 제품·전문가 연결</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>
+:root{
+  --ink:#1f2a24; --sub:#5d6b63; --line:#e4e2da; --bg:#faf8f3; --card:#fff;
+  --brand:#2d5f8a; --brand2:#e8f0f7; --mall:#2f5d46; --accent:#c8862b;
+  --good:#2f7d4f; --mid:#c8862b; --bad:#b5463a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Pretendard,-apple-system,"Malgun Gothic",sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+header{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+header .wrap{display:flex;align-items:center;gap:14px;height:60px}
+.logo{font-weight:800;font-size:19px;color:var(--brand)}
+.logo span{font-size:12px;font-weight:600;color:var(--sub);background:var(--brand2);padding:3px 8px;border-radius:20px;margin-left:6px}
+.tomall{margin-left:auto;font-size:14px;font-weight:700;color:var(--mall);background:#e9f0ea;padding:8px 14px;border-radius:9px}
+
+.hero{padding:30px 0 10px}
+.hero h1{font-size:28px;font-weight:800;letter-spacing:-.4px}
+.hero h1 em{font-style:normal;color:var(--brand)}
+.hero p{color:var(--sub);margin-top:6px}
+
+/* 가로 단계 표시 A→E→결과 */
+.steps{display:flex;gap:0;margin:20px 0 16px;overflow-x:auto;padding-bottom:4px}
+.st{flex:1;min-width:112px;display:flex;align-items:center}
+.st button{flex:1;border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 8px;text-align:left;color:var(--sub)}
+.st button .k{display:block;font-size:12px;font-weight:800;letter-spacing:.5px}
+.st button .n{font-size:14px;font-weight:700}
+.st.on button{border-color:var(--brand);background:var(--brand);color:#fff}
+.st.done button{border-color:var(--brand);color:var(--brand)}
+.st .ar{color:#b9b6ad;padding:0 4px;font-weight:800}
+
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 6px 24px rgba(45,95,138,.06)}
+.panel h2{font-size:20px;font-weight:800}
+.panel .why{color:var(--sub);font-size:14px;margin:4px 0 18px}
+.fields{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.f{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fcfbf8}
+.f label{display:block;font-size:14px;font-weight:700}
+.f .t{font-size:12px;color:var(--sub);margin:2px 0 8px}
+.f .in{display:flex;align-items:center;gap:6px}
+.f input,.f select{width:100%;font-size:17px;padding:10px 12px;border:1.5px solid var(--line);border-radius:9px;background:#fff;outline:none}
+.f input:focus{border-color:var(--brand)}
+.f .u{font-size:13px;color:var(--sub);white-space:nowrap}
+.nav{display:flex;gap:10px;justify-content:space-between;margin-top:18px;align-items:center}
+.btn{border:0;border-radius:11px;padding:13px 22px;font-size:16px;font-weight:800}
+.btn.p{background:var(--brand);color:#fff}
+.btn.g{background:#efede6;color:var(--sub)}
+.skip{font-size:13px;color:var(--sub)}
+
+/* 결과 */
+.res-top{display:flex;gap:16px;align-items:stretch;flex-wrap:wrap}
+.total{background:var(--brand);color:#fff;border-radius:16px;padding:18px 22px;min-width:200px}
+.total .s{font-size:44px;font-weight:900;line-height:1.1}
+.total .g{font-size:14px;opacity:.9}
+.areas{flex:1;display:flex;gap:10px;overflow-x:auto}
+.area{flex:1;min-width:140px;border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff}
+.area .k{font-size:12px;font-weight:800;color:var(--sub)}
+.area .nm{font-weight:800}
+.area .sc{font-size:28px;font-weight:900}
+.bar{height:7px;background:#eee;border-radius:9px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%}
+.na{color:var(--sub);font-size:13px}
+
+.sec{display:flex;align-items:baseline;gap:10px;margin:28px 0 12px}
+.sec h3{font-size:19px;font-weight:800}
+.sec p{color:var(--sub);font-size:14px}
+
+/* 약점 → 할 일 → 제품 → 전문가 : 가로 흐름 */
+.weak{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px}
+.wcard{min-width:300px;flex:1;border:2px solid var(--line);border-radius:16px;background:#fff;padding:16px}
+.wcard.star{border-color:var(--accent)}
+.wcard .hd{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.wcard .hd b{font-size:16px}
+.wcard .star-t{color:var(--accent);font-weight:900}
+.wcard .v{font-size:13px;color:var(--sub);margin:4px 0 10px}
+.wcard ol{padding-left:18px;font-size:14px}
+.wcard ol li{margin:3px 0}
+.wcard .lk{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.pchip{background:#e9f0ea;color:var(--mall);font-size:13px;font-weight:700;padding:6px 11px;border-radius:20px}
+.echip{background:var(--brand2);color:var(--brand);font-size:13px;font-weight:700;padding:6px 11px;border-radius:20px;border:0}
+
+.flow{display:flex;align-items:stretch;overflow-x:auto;gap:0;padding-bottom:6px}
+.fs{flex:1;min-width:170px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
+.fs .k{font-size:12px;font-weight:800;color:var(--brand)}
+.fs h4{font-size:15px;margin:2px 0}
+.fs p{font-size:13px;color:var(--sub)}
+.fs.star{border:2px solid var(--accent)}
+.fs.back{background:var(--brand);color:#fff;border-color:var(--brand)}
+.fs.back .k,.fs.back p{color:#e3edf6}
+.fa{display:flex;align-items:center;color:#b9b6ad;font-weight:900;padding:0 6px}
+
+.cta{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cbox{border:1px solid var(--line);border-radius:16px;background:#fff;padding:18px}
+.cbox h4{font-size:17px}
+.cbox .pr{font-size:13px;color:var(--accent);font-weight:800;margin:2px 0 8px}
+.cbox ul{font-size:14px;color:var(--sub);padding-left:18px;margin-bottom:12px}
+
+.modal{position:fixed;inset:0;background:rgba(20,30,25,.45);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal.on{display:flex}
+.mbox{background:#fff;border-radius:18px;padding:22px;max-width:460px;width:100%;max-height:92vh;overflow:auto}
+.mbox h3{font-size:19px}
+.mbox .s{color:var(--sub);font-size:14px;margin:4px 0 14px}
+.mbox label{display:block;font-size:14px;font-weight:700;margin:10px 0 4px}
+.mbox input,.mbox select,.mbox textarea{width:100%;font-size:16px;padding:10px 12px;border:1.5px solid var(--line);border-radius:9px}
+.mbox .agree{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--sub);margin-top:12px;font-weight:500}
+.mbox .agree input{width:auto;margin-top:3px}
+.mbox .row{display:flex;gap:8px;margin-top:16px}
+.mbox .row .btn{flex:1}
+.ok{padding:12px;background:#e9f0ea;color:var(--mall);border-radius:10px;font-weight:700;margin-top:12px;display:none}
+
+.note{font-size:12px;color:var(--sub);margin:26px 0 40px;line-height:1.6}
+.hide{display:none}
+
+@media(max-width:900px){.fields{grid-template-columns:1fr 1fr}.cta{grid-template-columns:1fr}}
+@media(max-width:520px){.fields{grid-template-columns:1fr}.hero h1{font-size:23px}.total{width:100%}.st{min-width:96px}}
+</style>
+</head>
+<body>
+
+<header><div class="wrap">
+  <div class="logo">🩺 낙농 목장 진단<span>무료 3분</span></div>
+  <a class="tomall" href="../">← 축산몰 통합검색</a>
+</div></header>
+
+<section class="hero"><div class="wrap">
+  <h1>우리 목장 <em>약한 곳 2개</em>를 찾아, 바로 해결책까지</h1>
+  <p>아는 숫자만 넣으세요. 모르는 칸은 비워두면 그 항목만 빼고 계산합니다.</p>
+</div></section>
+
+<main class="wrap">
+  <div class="steps" id="steps"></div>
+  <div id="stage"></div>
+  <p class="note">
+    ※ 목표치·경고치는 일반적인 낙농 관리 지침을 바탕으로 잡은 <b>가정값</b>입니다. 목장 규모·사양 방식에 따라 달라질 수 있으며, 정확한 판단은 상세 컨설팅 보고서에서 실제 기록(검정성적·납유 내역 등)으로 확인합니다.<br>
+    ※ 입력값은 이 기기에만 저장되며, 신청서를 보낼 때만 함께 전달됩니다.
+  </p>
+</main>
+
+<!-- 신청 모달 -->
+<div class="modal" id="modal"><div class="mbox">
+  <h3 id="mTitle">신청</h3>
+  <p class="s" id="mSub"></p>
+  <form id="reqForm" name="dx-request" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+    <input type="hidden" name="form-name" value="dx-request">
+    <input type="hidden" name="type" id="fType">
+    <input type="hidden" name="summary" id="fSummary">
+    <p class="hide"><label>비워두세요 <input name="bot-field"></label></p>
+    <label>성함</label><input name="name" required>
+    <label>연락처</label><input name="phone" type="tel" required placeholder="010-">
+    <label>목장명</label><input name="farm" id="fFarm">
+    <label>지역</label><input name="region" id="fRegion">
+    <div id="expertWrap">
+      <label>필요한 전문가</label>
+      <select name="expert" id="fExpert">
+        <option>번식·인공수정·수정란이식</option>
+        <option>수의사 (유방염·질병)</option>
+        <option>사양·영양 (TMR·사료)</option>
+        <option>착유기·설비 점검</option>
+        <option>경영·재무 컨설팅</option>
+      </select>
+    </div>
+    <label>하고 싶은 말 (선택)</label><textarea name="memo" rows="3"></textarea>
+    <label class="agree"><input type="checkbox" required> 상담 연락을 위해 성함·연락처·진단 결과를 수집하는 데 동의합니다. (목적 달성 후 파기)</label>
+    <div class="row"><button type="button" class="btn g" id="mClose">닫기</button><button class="btn p" type="submit">보내기</button></div>
+    <div class="ok" id="ok">접수됐습니다. 영업일 기준 1~2일 안에 연락드릴게요.</div>
+  </form>
+</div></div>
+
+<script>
+/* ---------- 진단 항목 (목표=좋음, 경고=나쁨, 그 사이는 비례 점수) ---------- */
+const AREAS=[
+ {id:'repro',k:'B',name:'번식',why:'번식이 늦어지면 착유 일수와 송아지 수가 같이 줄어듭니다.',items:[
+  {id:'ci',name:'분만간격',u:'일',goal:395,bad:480,low:true},
+  {id:'open',name:'평균 공태일수',u:'일',goal:120,bad:180,low:true},
+  {id:'conc',name:'첫 수정 수태율',u:'%',goal:45,bad:25},
+  {id:'spc',name:'수태당 수정횟수',u:'회',goal:2.0,bad:3.5,low:true,step:0.1}]},
+ {id:'milk',k:'C',name:'유량·유질',why:'유대는 양 × 등급입니다. 체세포·세균 등급이 한 칸만 떨어져도 단가가 깎입니다.',items:[
+  {id:'yield',name:'착유우 두당 일 유량',u:'kg',goal:33,bad:25,step:0.1},
+  {id:'scc',name:'체세포수',u:'만/ml',goal:20,bad:50,low:true},
+  {id:'bact',name:'세균수',u:'만/ml',goal:3,bad:25,low:true,step:0.1},
+  {id:'mast',name:'월 임상 유방염 발생률',u:'%',goal:2,bad:8,low:true,step:0.1}]},
+ {id:'feed',k:'D',name:'사료·송아지',why:'사료비는 생산비에서 가장 큰 몫이고, 송아지는 다음 세대 착유우입니다.',items:[
+  {id:'fe',name:'사료효율 (유량÷건물섭취량)',u:'배',goal:1.4,bad:1.1,step:0.01},
+  {id:'fcr',name:'유사비 (사료비÷유대)',u:'%',goal:55,bad:75,low:true},
+  {id:'calf',name:'송아지 폐사율',u:'%',goal:5,bad:15,low:true,step:0.1},
+  {id:'afc',name:'초산 분만월령',u:'개월',goal:24,bad:30,low:true,step:0.1}]},
+ {id:'mgmt',k:'E',name:'경영',why:'같은 두수라도 착유 비율·쿼터 활용·인력 효율에서 수익 차이가 납니다.',items:[
+  {id:'lact',name:'착유우 비율 (착유우÷경산우)',u:'%',goal:85,bad:70},
+  {id:'quota',name:'쿼터 대비 납유율',u:'%',band:[95,103],bad:[80,115]},
+  {id:'cull',name:'연간 도태율',u:'%',band:[25,33],bad:[15,45]},
+  {id:'labor',name:'1인당 관리 경산우',u:'두',goal:40,bad:20}]}
+];
+
+/* 약점 → 할 일 / 축산몰 제품(검색어) / 전문가 */
+const FIX={
+ ci:{a:['발정 관찰 하루 3회 + 기록','분만 후 60일 전후 첫 수정','공태 100일 넘은 소 수의사 검진'],p:['이표펜','보정기'],e:'번식·인공수정·수정란이식'},
+ open:{a:['분만 후 40일 자궁 회복 검진','발정 놓친 소 목록 매주 확인','수정 적기(발정 후 12시간) 지키기'],p:['이표펜','보정기'],e:'번식·인공수정·수정란이식'},
+ conc:{a:['정액 보관·융해 온도 점검','분만 전후 영양(체형점수) 점검','반복 수정우 별도 관리'],p:['보정기'],e:'번식·인공수정·수정란이식'},
+ spc:{a:['수정 시점 기록과 수태 결과 비교','반복 수정우 3회 이상 → 정밀 검진','수정사·정액 종류별 수태율 비교'],p:['보정기'],e:'번식·인공수정·수정란이식'},
+ yield:{a:['착유우 사료 설계(TMR) 재점검','물 급여·사조 공간 확인','비유 단계별 그룹 나누기'],p:['사료통','먹이자석'],e:'사양·영양 (TMR·사료)'},
+ scc:{a:['착유 전·후 유두 침지(프리딥·포스트딥)','라이너 교체 주기 지키기','고체세포 소 분방 착유·격리'],p:['침지컵','침지 스프레이','라이너','분방착유'],e:'수의사 (유방염·질병)'},
+ bact:{a:['착유기 세척 온도·세제 점검','여과지 매 착유 교체','원유 냉각 속도 확인'],p:['여과지','라이너 마개','라이너'],e:'착유기·설비 점검'},
+ mast:{a:['유방염 소 기록 → 재발우 판단','착유 순서: 건강우 → 감염우','건유기 치료·관리 점검'],p:['침지컵','분방착유','착유 앞치마'],e:'수의사 (유방염·질병)'},
+ fe:{a:['사료 잔량 매일 확인','건물(DM) 기준으로 급여량 재계산','조사료 품질 분석'],p:['사료통','먹이자석'],e:'사양·영양 (TMR·사료)'},
+ fcr:{a:['사료 단가·급여량 월별 점검','저능력우 도태 검토','조사료 자급 비율 확인'],p:['사료통'],e:'사양·영양 (TMR·사료)'},
+ calf:{a:['초유 4L, 생후 6시간 안에','겨울철 보온(방한복·보온등)','포유 도구 세척·소독'],p:['초유 투입기','포유병','방한복','송아지방','보온등'],e:'수의사 (유방염·질병)'},
+ afc:{a:['육성우 체중 월 1회 측정','이유 후 성장 단계별 사료','수정 기준 체중 도달 시 수정'],p:['포유틀','포유병'],e:'사양·영양 (TMR·사료)'},
+ lact:{a:['건유 기간 60일 안팎으로','장기 건유·불임우 정리','분만 일정 고르게 분산'],p:[],e:'경영·재무 컨설팅'},
+ quota:{a:['월별 납유량과 쿼터 비교','초과·미달 원인(분만 몰림 등) 확인','쿼터 조정·임대 검토'],p:[],e:'경영·재무 컨설팅'},
+ cull:{a:['도태 이유 기록(번식·유방염·다리)','도태 기준 문서로 정하기','후보 육성우 수 맞추기'],p:[],e:'경영·재무 컨설팅'},
+ labor:{a:['하루 작업 시간표 기록','반복 작업 자동화 후보 찾기','외부 인력·공동 작업 검토'],p:[],e:'경영·재무 컨설팅'}
+};
+
+const STEPS=[{k:'A',name:'기본 정보'},...AREAS.map(a=>({k:a.k,name:a.name})),{k:'★',name:'결과'}];
+let cur=0;
+let data={};
+try{ data=JSON.parse(localStorage.getItem('dx_v1')||'{}'); }catch(e){}
+const save=()=>{ try{ localStorage.setItem('dx_v1',JSON.stringify(data)); }catch(e){} };
+const $=s=>document.querySelector(s);
+const num=v=>(v===''||v==null||isNaN(+v))?null:+v;
+
+function scoreItem(it,v){
+  if(v==null) return null;
+  if(it.band){
+    const [g1,g2]=it.band,[b1,b2]=it.bad;
+    if(v>=g1&&v<=g2) return 100;
+    if(v<g1) return Math.max(0,Math.round(100*(v-b1)/(g1-b1)));
+    return Math.max(0,Math.round(100*(b2-v)/(b2-g2)));
+  }
+  const r=it.low?(it.bad-v)/(it.bad-it.goal):(v-it.bad)/(it.goal-it.bad);
+  return Math.max(0,Math.min(100,Math.round(r*100)));
+}
+const tgt=it=>it.band?`목표 ${it.band[0]}~${it.band[1]}${it.u}`:`목표 ${it.low?'≤':'≥'} ${it.goal}${it.u}`;
+const col=s=>s>=80?'var(--good)':s>=50?'var(--mid)':'var(--bad)';
+const grade=s=>s>=80?'양호':s>=50?'보통 · 개선 여지':'주의 · 우선 개선';
+
+function renderSteps(){
+  $('#steps').innerHTML=STEPS.map((s,i)=>`<div class="st ${i===cur?'on':i<cur?'done':''}"><button data-i="${i}"><span class="k">${s.k}</span><span class="n">${s.name}</span></button>${i<STEPS.length-1?'<span class="ar">→</span>':''}</div>`).join('');
+  document.querySelectorAll('.st button').forEach(b=>b.onclick=()=>go(+b.dataset.i));
+}
+function field(id,label,t,u,type='number',step){
+  const v=data[id]??'';
+  return `<div class="f"><label for="${id}">${label}</label><div class="t">${t}</div><div class="in"><input id="${id}" type="${type}" ${type==='number'?`inputmode="decimal" step="${step||1}"`:''} value="${v}">${u?`<span class="u">${u}</span>`:''}</div></div>`;
+}
+function renderStage(){
+  const st=$('#stage');
+  if(cur===0){
+    st.innerHTML=`<div class="panel"><h2>A · 기본 정보</h2><p class="why">결과를 목장 규모에 맞게 보여주기 위한 정보입니다.</p>
+      <div class="fields">${field('farm','목장명','선택','','text')}${field('region','지역','예) 충남 당진','','text')}${field('cows','경산우 두수','분만 경험 있는 소','두')}${field('milking','착유우 두수','지금 짜는 소','두')}</div>
+      ${nav()}</div>`;
+  }else if(cur<=AREAS.length){
+    const a=AREAS[cur-1];
+    st.innerHTML=`<div class="panel"><h2>${a.k} · ${a.name}</h2><p class="why">${a.why}</p>
+      <div class="fields">${a.items.map(it=>field(it.id,it.name,tgt(it),it.u,'number',it.step)).join('')}</div>${nav()}</div>`;
+  }else{ renderResult(); return; }
+  st.querySelectorAll('input').forEach(i=>i.oninput=()=>{ data[i.id]=i.value; autoFill(); save(); });
+  bindNav();
+}
+function autoFill(){
+  const c=num(data.cows),m=num(data.milking);
+  if(c&&m&&!data._lactTouched) data.lact=Math.round(m/c*100);
+}
+function nav(){ return `<div class="nav"><button class="btn g" id="prev" ${cur===0?'style="visibility:hidden"':''}>← 이전</button><span class="skip">모르는 칸은 비워도 됩니다</span><button class="btn p" id="next">${cur===AREAS.length?'결과 보기 ★':'다음 →'}</button></div>`; }
+function bindNav(){
+  $('#prev').onclick=()=>go(cur-1); $('#next').onclick=()=>go(cur+1);
+  const l=document.getElementById('lact'); if(l) l.addEventListener('input',()=>{data._lactTouched=true;save();});
+}
+function go(i){ cur=Math.max(0,Math.min(STEPS.length-1,i)); renderSteps(); renderStage(); window.scrollTo({top:0,behavior:'smooth'}); }
+
+function compute(){
+  const areas=AREAS.map(a=>{
+    const items=a.items.map(it=>({it,v:num(data[it.id]),s:scoreItem(it,num(data[it.id]))}));
+    const got=items.filter(x=>x.s!=null);
+    return {a,items,score:got.length?Math.round(got.reduce((t,x)=>t+x.s,0)/got.length):null,n:got.length};
+  });
+  const scored=areas.filter(x=>x.score!=null);
+  const total=scored.length?Math.round(scored.reduce((t,x)=>t+x.score,0)/scored.length):null;
+  const weak=areas.flatMap(x=>x.items.filter(i=>i.s!=null&&i.s<80).map(i=>({...i,area:x.a}))).sort((p,q)=>p.s-q.s);
+  return {areas,total,weak};
+}
+function renderResult(){
+  const r=compute(), st=$('#stage');
+  if(r.total==null){
+    st.innerHTML=`<div class="panel"><h2>아직 입력된 숫자가 없어요</h2><p class="why">B~E 중 아는 항목 몇 개만 넣어도 진단할 수 있습니다.</p><div class="nav"><button class="btn p" onclick="go(1)">B · 번식부터 입력 →</button></div></div>`;
+    return;
+  }
+  const top=r.weak.slice(0,2), rest=r.weak.slice(2,4);
+  const wcard=(w,star)=>{ const f=FIX[w.it.id];
+    return `<div class="wcard ${star?'star':''}">
+      <div class="hd"><b>${star?'<span class="star-t">★ </span>':''}${w.it.name}</b><span style="color:${col(w.s)};font-weight:800">${w.s}점</span></div>
+      <div class="v">${w.area.name} · 지금 ${w.v}${w.it.u} → ${tgt(w.it)}</div>
+      <ol>${f.a.map(x=>`<li>${x}</li>`).join('')}</ol>
+      <div class="lk">${f.p.map(q=>`<a class="pchip" href="../?q=${encodeURIComponent(q)}">🛒 ${q} 비교</a>`).join('')}
+      <button class="echip" data-exp="${f.e}">👤 ${f.e.split(' ')[0]} 전문가 연결</button></div></div>`; };
+  const headline=top.length?`가장 먼저 손볼 곳은 <b>${top.map(w=>w.it.name).join('</b>, <b>')}</b>입니다.`:'입력한 항목은 모두 목표 수준입니다.';
+  st.innerHTML=`<div class="panel">
+    <div class="res-top">
+      <div class="total"><div class="g">${data.farm?data.farm+' · ':''}종합 점수</div><div class="s">${r.total}</div><div class="g">${grade(r.total)}</div></div>
+      <div class="areas">${r.areas.map(x=>`<div class="area"><div class="k">${x.a.k}</div><div class="nm">${x.a.name}</div>
+        ${x.score==null?'<div class="na">입력 없음</div>':`<div class="sc" style="color:${col(x.score)}">${x.score}</div><div class="bar"><i style="width:${x.score}%;background:${col(x.score)}"></i></div><div class="na">${x.n}/4 항목</div>`}</div>`).join('')}</div>
+    </div>
+    <p style="margin-top:14px;font-size:16px">${headline}</p>
+  </div>
+  ${top.length?`<div class="sec"><h3>★ 우선 개선 2곳</h3><p>할 일 → 필요한 제품 → 전문가까지 한 번에</p></div>
+  <div class="weak">${top.map(w=>wcard(w,true)).join('')}${rest.map(w=>wcard(w,false)).join('')}</div>`:''}
+
+  <div class="sec"><h3>다음 단계</h3><p>진단 → 보고서 → 매칭 → 실행 → 다시 진단</p></div>
+  <div class="flow">
+    <div class="fs"><div class="k">A · 진단</div><h4>무료 점수 확인</h4><p>지금 보고 계신 화면</p></div><div class="fa">→</div>
+    <div class="fs star"><div class="k">B · ★ 보고서</div><h4>상세 컨설팅 보고서</h4><p>실제 기록으로 원인 분석</p></div><div class="fa">→</div>
+    <div class="fs star"><div class="k">C · ★ 매칭</div><h4>전문가·제품 연결</h4><p>약점별 맞춤 연결</p></div><div class="fa">→</div>
+    <div class="fs"><div class="k">D · 실행</div><h4>3개월 개선</h4><p>할 일 목록대로 실행</p></div><div class="fa">→</div>
+    <div class="fs back"><div class="k">다시 A로</div><h4>재진단</h4><p>점수 변화로 효과 확인</p></div>
+  </div>
+
+  <div class="sec"><h3>더 정확하게 보고 싶다면</h3></div>
+  <div class="cta">
+    <div class="cbox"><h4>📄 상세 컨설팅 보고서</h4><div class="pr">유료 · 비용은 신청 후 안내</div>
+      <ul><li>검정성적·납유 내역 등 실제 기록 분석</li><li>약점별 원인과 3개월 개선 계획</li><li>현장 경력 18년 낙농 전문가 작성</li></ul>
+      <button class="btn p" id="reqReport">보고서 신청</button></div>
+    <div class="cbox"><h4>🤝 전문가 매칭</h4><div class="pr">번식·수의·사양·설비·경영</div>
+      <ul><li>약점에 맞는 전문가를 골라 연결</li><li>방문 상담·의뢰 일정 조율</li><li>필요 자재는 축산몰에서 가격 비교</li></ul>
+      <button class="btn p" id="reqMatch">전문가 연결 신청</button></div>
+  </div>
+  <div class="nav"><button class="btn g" onclick="go(1)">← 숫자 고치기</button><button class="btn g" id="reset">처음부터 다시</button></div>`;
+  $('#reqReport').onclick=()=>openReq('report');
+  $('#reqMatch').onclick=()=>openReq('match',top[0]&&FIX[top[0].it.id].e);
+  document.querySelectorAll('.echip').forEach(b=>b.onclick=()=>openReq('match',b.dataset.exp));
+  $('#reset').onclick=()=>{ if(confirm('입력한 숫자를 모두 지울까요?')){ data={}; save(); go(0);} };
+}
+function summary(){
+  const r=compute();
+  return `종합 ${r.total} | `+r.areas.map(x=>`${x.a.name} ${x.score??'-'}`).join(', ')+
+    ` | 경산우 ${data.cows||'-'} 착유우 ${data.milking||'-'} | 약점: `+r.weak.slice(0,3).map(w=>`${w.it.name} ${w.v}${w.it.u}`).join(', ')+
+    ` | 입력: `+AREAS.flatMap(a=>a.items).filter(it=>num(data[it.id])!=null).map(it=>`${it.name}=${data[it.id]}`).join('; ');
+}
+function openReq(type,expert){
+  $('#fType').value=type==='report'?'상세 보고서':'전문가 매칭';
+  $('#mTitle').textContent=type==='report'?'📄 상세 컨설팅 보고서 신청':'🤝 전문가 연결 신청';
+  $('#mSub').textContent=type==='report'?'진단 결과가 함께 전달됩니다. 비용과 필요한 자료를 연락드려 안내합니다.':'진단 결과를 보고 맞는 전문가를 골라 연락드립니다.';
+  $('#expertWrap').style.display=type==='match'?'':'none';
+  if(expert) $('#fExpert').value=expert;
+  $('#fFarm').value=data.farm||''; $('#fRegion').value=data.region||'';
+  $('#fSummary').value=summary();
+  $('#ok').style.display='none';
+  $('#modal').classList.add('on');
+}
+$('#mClose').onclick=()=>$('#modal').classList.remove('on');
+$('#reqForm').onsubmit=e=>{
+  e.preventDefault();
+  const body=new URLSearchParams(new FormData(e.target)).toString();
+  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body})
+    .then(r=>{ if(!r.ok) throw 0; $('#ok').textContent='접수됐습니다. 영업일 기준 1~2일 안에 연락드릴게요.'; })
+    .catch(()=>{ $('#ok').textContent='전송에 실패했어요. 잠시 후 다시 시도해 주세요.'; })
+    .finally(()=>{ $('#ok').style.display='block'; });
+};
+go(0);
+</script>
+</body>
+</html>

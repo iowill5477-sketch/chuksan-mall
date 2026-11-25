@@ -368,6 +368,14 @@ footer{margin-top:50px;padding:26px 0;border-top:1px solid var(--line);color:var
   .pcard .cta{display:none}
   .toolbar .info{font-size:12.5px}
 }
+/* 진단 앱 배너 */
+.dx-banner{display:flex;align-items:center;gap:18px;margin:22px 0 0;padding:18px 22px;background:var(--dairy);color:#fff;border-radius:16px;box-shadow:0 6px 24px rgba(45,95,138,.18)}
+.dx-banner .ic{font-size:30px}
+.dx-banner .tx{flex:1}
+.dx-banner b{display:block;font-size:18px;font-weight:800}
+.dx-banner small{opacity:.85;font-size:14px}
+.dx-banner .go{background:#fff;color:var(--dairy);font-weight:800;padding:11px 18px;border-radius:10px;white-space:nowrap}
+@media(max-width:640px){.dx-banner{flex-wrap:wrap;padding:16px}.dx-banner .go{width:100%;text-align:center}}
 </style>
 </head>
 <body>
@@ -381,6 +389,7 @@ footer{margin-top:50px;padding:26px 0;border-top:1px solid var(--line);color:var
       <a href="#vendors">업체별</a>
       <a href="#results">제품 비교</a>
       <a href="#how">이용 방법</a>
+      <a href="diagnosis/" style="color:var(--dairy)">🩺 목장 진단</a>
     </nav>
   </div>
 </header>
@@ -405,6 +414,11 @@ footer{margin-top:50px;padding:26px 0;border-top:1px solid var(--line);color:var
       <div class="chips" id="chips"></div>
     </div>
     <div class="movers" id="movers" style="display:none"></div>
+    <a class="dx-banner" href="diagnosis/">
+      <span class="ic">🩺</span>
+      <span class="tx"><b>우리 목장, 3분 무료 진단</b><small>번식·유질·사료·경영 점수 → 약한 곳에 맞는 제품·전문가 연결</small></span>
+      <span class="go">진단 시작 →</span>
+    </a>
   </div>
 </section>
 
@@ -1248,6 +1262,10 @@ function renderPickbar(){
 
 /* 시작 */
 renderLead(); renderAll(); renderPickbar();
+/* 진단 앱 등 외부에서 ?q=제품명 으로 들어오면 바로 검색 */
+(function(){ const q=new URLSearchParams(location.search).get('q'); if(!q) return;
+  $('#q').value=q; state.query=q; state.mode='name'; runSearch();
+  setTimeout(()=>document.getElementById('results').scrollIntoView({behavior:'smooth'}),250); })();
 
 
 /* ===================== 가격 기록 (매주 갱신 → 변동·30일 최저) ===================== */
